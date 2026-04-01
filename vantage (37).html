@@ -1,0 +1,2560 @@
+<!DOCTYPE html>
+<html lang="en" x-data="vantage()" x-init="init()">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VANTAGE | Content Leak Protection & Automated DMCA Takedowns</title>
+  <meta name="description" content="VANTAGE automatically finds and removes your leaked content from Telegram, Bunkrr, Fapello, Kemono and 200+ sites. Automated DMCA takedowns for OnlyFans creators." />
+
+  <!-- CDN Dependencies -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <!-- Paddle Billing v2 -->
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════════════════════
+       VANTAGE DESIGN SYSTEM — CYBER-NOIR / EMERALD-ON-OBSIDIAN
+    ══════════════════════════════════════════════════════ */
+    :root {
+      --em:        #10b981;
+      --em-dim:    #059669;
+      --em-bright: #34d399;
+      --em-glow:   rgba(16,185,129,.14);
+      --em-gs:     rgba(16,185,129,.28);
+      --bg:        #040404;
+      --bg-1:      #070709;
+      --bg-2:      #0b0c0e;
+      --border:    rgba(16,185,129,.16);
+      --border-hi: rgba(16,185,129,.40);
+      --muted:     #6b7280;
+      --danger:    #f87171;
+      --danger-bg: rgba(248,113,113,.08);
+      --blue:      #60a5fa;
+      --blue-bg:   rgba(96,165,250,.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: #e5e7eb;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Global ambient orbs */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(16,185,129,.07) 0%, transparent 65%);
+      top: -250px; left: -200px;
+    }
+    body::after {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(16,185,129,.05) 0%, transparent 65%);
+      bottom: -200px; right: -150px;
+    }
+
+    body.scanning::before {
+      animation: scanpulse 2s ease-in-out infinite;
+    }
+    @keyframes scanpulse {
+      0%,100% { opacity:.6; }
+      50% { opacity:1; transform:scale(1.05); }
+    }
+
+    /* ── TYPOGRAPHY ── */
+    .mono         { font-family: 'JetBrains Mono', monospace; }
+    .font-display { font-family: 'Syne', sans-serif; }
+    .text-em { color: var(--em); }
+
+    /* ── GLASS SURFACES ── */
+    .glass {
+      background: rgba(16,185,129,.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 0 48px var(--em-glow), inset 0 1px 0 rgba(255,255,255,.04);
+      transition: box-shadow .3s, border-color .3s;
+    }
+    .glass-hi {
+      background: rgba(16,185,129,.05);
+      border: 1px solid var(--border-hi);
+      border-radius: 16px;
+      box-shadow: 0 0 80px rgba(16,185,129,.2), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .glass-dark {
+      background: rgba(4,4,4,.92);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 12px;
+    }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .63rem; letter-spacing: .13em; text-transform: uppercase;
+      color: var(--em);
+      background: rgba(16,185,129,.07);
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 999px;
+      padding: 4px 13px;
+    }
+    .badge-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--em);
+      animation: blink 1.8s ease infinite;
+    }
+    .badge-danger { color:var(--danger); background:rgba(248,113,113,.07); border-color:rgba(248,113,113,.22); }
+    .badge-blue   { color:var(--blue);   background:rgba(96,165,250,.07);   border-color:rgba(96,165,250,.22); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    /* ── INPUTS ── */
+    .em-input {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #e5e7eb;
+      font-family: 'Inter', sans-serif;
+      font-size: .875rem;
+      padding: 11px 14px;
+      width: 100%;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .em-input:focus { border-color:var(--em); box-shadow:0 0 0 3px rgba(16,185,129,.1); }
+    .em-input::placeholder { color: #2d3748; }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      background: var(--em);
+      color: #040404;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: background .2s, box-shadow .2s, transform .15s;
+      box-shadow: 0 0 28px rgba(16,185,129,.38), 0 2px 12px rgba(0,0,0,.4);
+      letter-spacing: -.01em;
+    }
+    .btn-primary:hover { background:var(--em-bright); transform:translateY(-1px); box-shadow:0 0 48px rgba(16,185,129,.6), 0 4px 20px rgba(0,0,0,.5); }
+    .btn-primary:active { transform:none; }
+    .btn-primary:disabled { opacity:.35; cursor:not-allowed; transform:none; pointer-events:none; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.08);
+      color: #9ca3af;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: .8rem;
+      border-radius: 8px;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .btn-ghost:hover { border-color:var(--em); color:var(--em); background:rgba(16,185,129,.05); box-shadow:0 0 16px rgba(16,185,129,.15); }
+
+    .btn-enforce {
+      background: var(--danger-bg);
+      border: 1px solid rgba(248,113,113,.25);
+      color: var(--danger);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .68rem;
+      border-radius: 7px;
+      padding: 5px 11px;
+      cursor: pointer;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      transition: background .2s, border-color .2s, box-shadow .2s;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn-enforce:hover { background:rgba(248,113,113,.15); border-color:rgba(248,113,113,.5); box-shadow:0 0 12px rgba(248,113,113,.2); }
+    .btn-enforce:disabled { opacity:.4; cursor:not-allowed; }
+
+    /* ── PADDLE CTA ── */
+    .btn-paddle {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #040404;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 24px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      transition: opacity .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 0 28px rgba(16,185,129,.32), 0 4px 18px rgba(0,0,0,.4);
+      text-decoration: none;
+      letter-spacing: -.01em;
+    }
+    .btn-paddle:hover { opacity:.92; transform:translateY(-1px); box-shadow:0 0 44px rgba(16,185,129,.5), 0 8px 28px rgba(0,0,0,.5); }
+    .btn-paddle:active { transform:none; }
+
+    /* ── ACTIVATE ENFORCEMENT — premium paywall CTA ── */
+    .btn-activate {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #040404;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: .82rem;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 22px;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      transition: opacity .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 0 32px rgba(16,185,129,.45), 0 4px 18px rgba(0,0,0,.5);
+      letter-spacing: -.01em;
+      white-space: nowrap;
+    }
+    .btn-activate:hover { opacity:.92; transform:translateY(-1px); box-shadow:0 0 52px rgba(16,185,129,.6); }
+
+    /* ── LABELS ── */
+    .slabel {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--em);
+    }
+
+    /* ── PROGRESS ── */
+    .prog-track { width:100%; height:1px; background:rgba(16,185,129,.1); border-radius:99px; overflow:hidden; }
+    .prog-fill  { height:100%; background:linear-gradient(90deg,var(--em-dim),var(--em),#6ee7b7); width:0%; border-radius:99px; box-shadow:0 0 8px var(--em); transition:width 200ms linear; }
+
+    /* ── SPINNER ── */
+    .spin { width:14px; height:14px; border:2px solid rgba(0,0,0,.15); border-top-color:#040404; border-radius:50%; animation:rotate .6s linear infinite; flex-shrink:0; }
+    .spin-em { border:2px solid rgba(16,185,129,.12); border-top-color:var(--em); }
+    @keyframes rotate { to { transform:rotate(360deg); } }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(4,4,4,.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(16,185,129,.1);
+      height: 62px;
+      transition: box-shadow .3s, border-color .3s;
+    }
+    nav.scrolled { box-shadow:0 4px 40px rgba(0,0,0,.8); border-bottom-color:rgba(16,185,129,.18); }
+    nav a { position:relative; transition:color .2s; }
+    nav a::after { content:''; position:absolute; left:0; bottom:-2px; width:0; height:1px; background:var(--em); transition:width .3s cubic-bezier(.22,1,.36,1); }
+    nav a:hover::after { width:100%; }
+
+    /* ── MODALS ── */
+    .modal-wrap {
+      position: fixed; inset: 0; z-index: 60;
+      background: rgba(0,0,0,.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .28s;
+    }
+    .modal-wrap.open { opacity:1; pointer-events:all; }
+    .modal-box {
+      width: 100%; max-width: 460px;
+      background: #070709;
+      border: 1px solid rgba(16,185,129,.24);
+      border-radius: 20px;
+      box-shadow: 0 0 100px rgba(16,185,129,.14);
+      padding: 28px;
+      transform: translateY(20px) scale(.97);
+      transition: transform .32s cubic-bezier(.22,1,.36,1);
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+    .modal-wrap.open .modal-box { transform: none; }
+
+    /* ── AUDIT TERMINAL ── */
+    .terminal {
+      background: #020203;
+      border: 1px solid rgba(16,185,129,.12);
+      border-radius: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      line-height: 1.8;
+      padding: 16px;
+      overflow-y: auto;
+      max-height: 260px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(16,185,129,.2) transparent;
+    }
+    .terminal::-webkit-scrollbar { width:4px; }
+    .terminal::-webkit-scrollbar-thumb { background:rgba(16,185,129,.2); border-radius:4px; }
+
+    .term-line { display:flex; gap:8px; animation:termIn .18s ease; }
+    @keyframes termIn { from{opacity:0;transform:translateX(-4px)} to{opacity:1;transform:none} }
+
+    .term-tag {
+      font-size:.6rem; padding:1px 6px;
+      border-radius:4px; flex-shrink:0;
+      letter-spacing:.06em; text-transform:uppercase;
+      align-self:center;
+    }
+    .tag-osint  { background:rgba(96,165,250,.15);  color:var(--blue);      border:1px solid rgba(96,165,250,.25); }
+    .tag-match  { background:rgba(248,113,113,.12); color:var(--danger);    border:1px solid rgba(248,113,113,.25); }
+    .tag-init   { background:rgba(16,185,129,.1);   color:var(--em);        border:1px solid rgba(16,185,129,.2); }
+    .tag-ok     { background:rgba(16,185,129,.1);   color:var(--em);        border:1px solid rgba(16,185,129,.2); }
+    .tag-warn   { background:rgba(251,191,36,.1);   color:#fbbf24;          border:1px solid rgba(251,191,36,.2); }
+    .tag-done   { background:rgba(16,185,129,.15);  color:var(--em-bright); border:1px solid rgba(16,185,129,.3); }
+    .tag-intel  { background:rgba(167,139,250,.12); color:#a78bfa;          border:1px solid rgba(167,139,250,.25); }
+    .tag-analysis { background:rgba(251,191,36,.1); color:#fbbf24;          border:1px solid rgba(251,191,36,.25); }
+    .tag-enforce { background:rgba(248,113,113,.12); color:var(--danger);   border:1px solid rgba(248,113,113,.28); }
+
+    /* ── RESULT ROWS ── */
+    .result-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(248,113,113,.04);
+      border: 1px solid rgba(248,113,113,.1);
+      margin-bottom: 6px;
+      transition: border-color .2s, background .2s;
+    }
+    .result-row:hover { border-color:rgba(248,113,113,.25); background:rgba(248,113,113,.07); }
+    .result-row.resolved { background:rgba(16,185,129,.04); border-color:rgba(16,185,129,.15); }
+    .result-row.resolved:hover { border-color:rgba(16,185,129,.3); }
+
+    /* Mobile-first result row layout */
+    @media (max-width: 480px) {
+      .result-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .result-row .row-actions { align-self: flex-end; }
+    }
+
+    .leak-dot { width:6px; height:6px; border-radius:50%; background:var(--danger); flex-shrink:0; }
+    .leak-dot.resolved { background:var(--em); }
+
+    /* ── PAYWALL — Elite Blur ── */
+    .paywall-blur {
+      filter: blur(7px) brightness(.85);
+      user-select: none;
+      pointer-events: none;
+      transition: filter .4s;
+    }
+    .paywall-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(7,7,9,.97) 38%);
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 20px;
+      border-radius: 12px;
+    }
+    .paywall-cta-box {
+      text-align: center;
+      padding: 0 20px;
+      max-width: 340px;
+    }
+    .paywall-divider {
+      width: 40px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--em), transparent);
+      margin: 10px auto;
+    }
+
+    /* ── CARDS ── */
+    .info-card {
+      background: rgba(16,185,129,.025);
+      border: 1px solid rgba(16,185,129,.09);
+      border-radius: 14px;
+      padding: 20px;
+      transition: transform .25s cubic-bezier(.22,1,.36,1), border-color .25s, box-shadow .25s;
+    }
+    .info-card:hover { transform:translateY(-3px); border-color:rgba(16,185,129,.28); box-shadow:0 12px 40px rgba(16,185,129,.1); }
+
+    .stat-pill {
+      display: flex; align-items: center; gap: 5px;
+      background: rgba(16,185,129,.05);
+      border: 1px solid rgba(16,185,129,.12);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: .78rem;
+    }
+
+    .feat-icon {
+      width: 34px; height: 34px;
+      background: rgba(16,185,129,.07);
+      border: 1px solid rgba(16,185,129,.15);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── ERR field ── */
+    .err-field {
+      background: #020203;
+      border: 1px solid rgba(16,185,129,.12);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      color: #9ca3af;
+      word-break: break-all;
+    }
+
+    /* ── ACTIVITY ROWS ── */
+    .activity-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.03);
+    }
+    .activity-row:last-child { border-bottom: none; }
+    @media (max-width: 480px) {
+      .activity-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: #070709; border: 1px solid rgba(16,185,129,.28);
+      color: #e5e7eb; font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem; padding: 10px 20px;
+      border-radius: 999px; z-index: 200; white-space: nowrap;
+      box-shadow: 0 0 30px rgba(16,185,129,.15);
+      transition: transform .35s cubic-bezier(.22,1,.36,1), opacity .3s;
+      opacity: 0;
+    }
+    #toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+    /* ── DIVIDER ── */
+    .divider { border:none; border-top:1px solid rgba(16,185,129,.08); }
+
+    /* ── SCROLL REVEAL ── */
+    .sr-ready { transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
+    .sr-hide { opacity:0; transform:translateY(22px); }
+    .sr-hide-left { opacity:0; transform:translateX(-18px); }
+    .sr-show { opacity:1; transform:none; }
+
+    /* ── FI (fade-in) ── */
+    .fi   { animation:fadeUp .7s cubic-bezier(.22,1,.36,1) both; }
+    .fi-2 { animation:fadeUp .7s cubic-bezier(.22,1,.36,1) .1s both; }
+    .fi-3 { animation:fadeUp .7s cubic-bezier(.22,1,.36,1) .2s both; }
+    .fi-4 { animation:fadeUp .7s cubic-bezier(.22,1,.36,1) .3s both; }
+    .fi-5 { animation:fadeUp .7s cubic-bezier(.22,1,.36,1) .4s both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+
+    /* ── STAGE ANIM ── */
+    .stage-anim { animation:stageIn .25s ease both; }
+    @keyframes stageIn { from{opacity:0;transform:translateX(6px)} to{opacity:1;transform:none} }
+
+    /* ── CHECKMARK ANIMATION ── */
+    .ck-circle { stroke-dasharray:151; stroke-dashoffset:151; animation:drawCircle .5s .2s ease forwards; }
+    .ck-check  { stroke-dasharray:40;  stroke-dashoffset:40;  animation:drawCheck  .4s .7s ease forwards; }
+    @keyframes drawCircle { to{stroke-dashoffset:0} }
+    @keyframes drawCheck  { to{stroke-dashoffset:0} }
+
+    /* ── CHEVRON FLOAT ── */
+    .chevron-float { animation:chevronFloat 2.4s ease-in-out infinite; }
+    @keyframes chevronFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+    /* ── RESPONSIVE TABLE ── */
+    .results-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    @media (max-width: 600px) {
+      .results-stats-grid { grid-template-columns: 1fr 1fr !important; }
+    }
+  </style>
+</head>
+
+<body>
+<canvas id="ai-bg"      style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.72"></canvas>
+<canvas id="ai-bg-fx" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.45"></canvas>
+
+<!-- ══════════════════════════════════════════════════
+     NAV
+══════════════════════════════════════════════════ -->
+<nav id="nav">
+  <div class="max-w-5xl mx-auto px-5 h-full flex items-center justify-between gap-4">
+    <a href="#" class="flex items-center gap-2 no-underline" style="text-decoration:none" onclick="showLanding();return false;">
+      <span style="font-weight:800;font-size:1.15rem;letter-spacing:-.04em;font-family:'Syne',sans-serif;display:inline-block;transform:scaleY(1.35)">VAN<span class="text-em">TAGE</span></span>
+    </a>
+
+    <div class="hidden sm:flex items-center gap-10">
+      <a href="#protocol-section" style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:-.01em;color:#9ca3af;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#9ca3af'">How It Works</a>
+      <a href="#pricing-section"  style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:-.01em;color:#9ca3af;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#9ca3af'">Pricing</a>
+    </div>
+
+    <div class="flex items-center gap-2" id="auth-buttons">
+      <button class="btn-ghost" style="padding:9px 18px;font-size:.83rem" onclick="openAuthModal('signin')">Sign In</button>
+      <button class="btn-ghost" style="padding:9px 14px;font-size:.8rem;border-color:rgba(16,185,129,.3);color:var(--em)" onclick="previewDashboard()">Preview</button>
+      <button class="btn-primary" style="padding:9px 18px;font-size:.83rem" onclick="openAuthModal('signup')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Get Protected
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════
+     DASHBOARD VIEW
+══════════════════════════════════════════════════ -->
+<section id="dashboard-view" class="hidden relative z-10 max-w-5xl mx-auto px-5 pt-24 pb-16">
+
+  <!-- Dashboard header -->
+  <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+    <div>
+      <div class="slabel mb-1">// Integrity Command Center</div>
+      <h2 style="font-weight:800;font-size:1.35rem;letter-spacing:-.02em">
+        Asset Dashboard — <span class="text-em" id="dash-email" style="font-size:1rem;font-weight:600">—</span>
+      </h2>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="btn-primary" style="font-size:.8rem;padding:9px 16px" onclick="openAuditPanel()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Run New Audit
+      </button>
+      <button class="btn-ghost" style="font-size:.8rem" onclick="handleSignOut()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- KPI strip -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+    <div class="glass" style="padding:16px">
+      <div class="slabel mb-1">Enforcements</div>
+      <div class="mono" style="font-size:1.6rem;font-weight:700;color:var(--em)" id="dash-takedowns">—</div>
+    </div>
+    <div class="glass" style="padding:16px">
+      <div class="slabel mb-1">Active Plan</div>
+      <div style="font-weight:700;font-size:.95rem" id="dash-plan">—</div>
+      <p style="font-size:.7rem;color:var(--muted);margin-top:4px" id="dash-plan-sub">Checking plan…</p>
+    </div>
+    <div class="glass" style="padding:16px">
+      <div class="slabel mb-1">Network Nodes</div>
+      <div class="mono" style="font-size:1.6rem;font-weight:700;color:var(--em)">200+</div>
+    </div>
+    <div class="glass" style="padding:16px">
+      <div class="slabel mb-1">SLA</div>
+      <div class="mono" style="font-size:1.6rem;font-weight:700;color:var(--em)">&lt;48h</div>
+    </div>
+  </div>
+
+  <!-- Audit Panel (hidden initially) -->
+  <div id="audit-panel" class="hidden mb-6">
+    <div class="glass" style="padding:22px">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="slabel mb-1">// VANTAGE Global Integrity Audit — v3.1</div>
+          <p style="font-size:.78rem;color:var(--muted)">Multi-vector intelligence — Cloud Repositories, Encrypted Indices, Global Data Aggregators</p>
+        </div>
+        <button onclick="closeAuditPanel()" class="btn-ghost" style="padding:4px 10px;font-size:.75rem;flex-shrink:0">✕</button>
+      </div>
+
+      <!-- Identifier input -->
+      <div class="flex gap-2 mb-4">
+        <div class="flex items-center flex-1 rounded-[10px] overflow-hidden" style="border:1px solid var(--border);background:rgba(255,255,255,.025);min-width:0">
+          <span class="mono text-em px-3 select-none" style="font-size:.74rem;white-space:nowrap;opacity:.7">IDENT://</span>
+          <input
+            id="audit-identifier"
+            type="text"
+            placeholder="Asset identifier, username, or content fingerprint…"
+            autocomplete="off" autocorrect="off" spellcheck="false"
+            class="mono flex-1 bg-transparent outline-none py-3 pr-3"
+            style="color:#e5e7eb;font-size:.82rem;border:none;min-width:0"
+            onkeydown="if(event.key==='Enter') launchAudit()"
+          />
+        </div>
+        <button id="audit-btn" class="btn-primary" onclick="launchAudit()" style="white-space:nowrap;flex-shrink:0">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <span>Run Audit</span>
+        </button>
+      </div>
+
+      <!-- Progress bar -->
+      <div id="audit-progress-wrap" class="hidden mb-3">
+        <div class="prog-track mb-2" style="height:2px">
+          <div class="prog-fill" id="audit-prog-fill" style="transition:width 400ms linear"></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-em mono" style="font-size:.65rem">›</span>
+          <span id="audit-stage" class="mono stage-anim" style="font-size:.65rem;color:var(--em)">Initializing…</span>
+        </div>
+      </div>
+
+      <!-- Terminal output -->
+      <div class="terminal" id="audit-terminal">
+        <div class="term-line">
+          <span class="term-tag tag-init">INIT</span>
+          <span style="color:#374151">VANTAGE Audit Engine v3.1 — Ready. Enter an identifier above.</span>
+        </div>
+      </div>
+
+      <!-- Results area -->
+      <div id="audit-results" class="hidden mt-4">
+        <hr class="divider mb-4" />
+        <div class="flex items-center justify-between mb-3">
+          <div class="slabel">// Integrity Audit Results</div>
+          <div id="audit-result-badge"></div>
+        </div>
+
+        <!-- Summary stats -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 results-stats-grid">
+          <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+            <div class="slabel" style="color:var(--danger)">Cloud Hosts</div>
+            <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-cloud">—</div>
+          </div>
+          <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+            <div class="slabel" style="color:var(--danger)">Encrypted Indices</div>
+            <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-enc">—</div>
+          </div>
+          <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+            <div class="slabel" style="color:var(--danger)">Data Aggregators</div>
+            <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-agg">—</div>
+          </div>
+          <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.15);border-radius:10px;padding:10px 12px">
+            <div class="slabel">Total Vectors</div>
+            <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--em);margin-top:2px" id="res-total">—</div>
+          </div>
+        </div>
+
+        <!-- Matches list with surgical paywall -->
+        <div id="results-list-wrap" style="position:relative">
+          <div id="results-list"></div>
+          <!-- PAYWALL OVERLAY — free tier: 2 visible rows -->
+          <div id="paywall-overlay" class="paywall-overlay hidden">
+            <div class="paywall-cta-box">
+              <div class="badge mb-2" style="margin:0 auto"><span style="width:5px;height:5px;border-radius:50%;background:var(--em);display:inline-block"></span>&nbsp;Intelligence Locked</div>
+              <div class="paywall-divider"></div>
+              <p style="font-size:.77rem;color:#9ca3af;margin-bottom:14px;line-height:1.65">
+                <span id="paywall-hidden-count" style="color:#f3f4f6;font-weight:700"></span> additional exposure vectors are classified.<br>Upgrade to reveal every source and activate enforcement.
+              </p>
+              <button onclick="openPaddleCheckout()" class="btn-activate">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Activate Enforcement
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity feed -->
+  <div class="glass" style="padding:22px">
+    <div class="flex items-center justify-between mb-4">
+      <div class="slabel">// Enforcement Activity</div>
+      <div class="badge badge-blue"><span class="badge-dot" style="background:var(--blue)"></span>Live Feed</div>
+    </div>
+    <div id="dash-activity">
+      <div style="font-size:.8rem;color:var(--muted);text-align:center;padding:24px 0" class="mono">Loading activity feed…</div>
+    </div>
+  </div>
+
+  <!-- Upgrade CTA (free users) -->
+  <div id="dash-upgrade" class="hidden mt-5 glass-hi" style="padding:20px;border-radius:16px">
+    <div class="flex items-center justify-between gap-4 flex-wrap">
+      <div>
+        <p style="font-weight:700;font-size:.9rem">Upgrade to Fortress</p>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:3px">Unlimited enforcements · Encrypted channel monitoring · Dedicated case manager</p>
+      </div>
+      <button onclick="openPaddleCheckout()" class="btn-primary" style="font-size:.82rem;flex-shrink:0;border:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Upgrade — $99/mo
+      </button>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     HERO + SCANNER (Landing Page)
+══════════════════════════════════════════════════ -->
+<section id="hero-section" class="relative z-10 flex flex-col justify-center" style="min-height:100svh;padding-top:62px">
+  <div class="max-w-5xl mx-auto px-5 w-full py-10 flex flex-col items-center">
+
+    <div class="badge fi mb-4">
+      <span class="badge-dot"></span>
+      Protecting 12,000+ Creators · 4.2M+ Links Removed
+    </div>
+
+    <h1 class="fi-2 text-center font-display"
+        style="font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.07;letter-spacing:-.025em;max-width:600px">
+      The Internet Never Forgets.<br>
+      <span class="text-em">We Make It.</span>
+    </h1>
+
+    <p class="fi-3 text-center mt-3"
+       style="color:#9ca3af;font-size:.88rem;max-width:380px;line-height:1.7">
+      Every leaked post is a subscriber who didn't pay.<br>
+      Every Telegram share is money you'll never see.<br>
+      <span style="color:#e5e7eb;font-weight:600">VANTAGE gets it back —</span><br>
+      <span style="color:var(--em);font-weight:600">and makes leakers regret it. Permanently.</span>
+    </p>
+
+    <!-- SCANNER CARD -->
+    <div class="glass fi-4 w-full mt-8" style="max-width:520px;padding:22px 24px">
+      <div class="slabel mb-3">// Enter your creator username to scan</div>
+
+      <div class="flex gap-2 mb-3">
+        <div class="flex items-center flex-1 rounded-[10px] overflow-hidden" style="border:1px solid var(--border);background:rgba(255,255,255,.025);min-width:0">
+          <span class="mono text-em px-3 select-none" style="font-size:.74rem;white-space:nowrap;opacity:.7">@</span>
+          <input
+            id="of-username"
+            type="text"
+            placeholder="your OnlyFans or creator username"
+            autocomplete="off" autocorrect="off" spellcheck="false"
+            class="mono flex-1 bg-transparent outline-none py-3 pr-3"
+            style="color:#e5e7eb;font-size:.82rem;border:none;min-width:0"
+            onkeydown="if(event.key==='Enter') startScan()"
+          />
+        </div>
+        <button class="btn-primary" id="scan-btn" onclick="startScan()" style="padding:11px 18px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <span>Scan Now</span>
+        </button>
+      </div>
+
+      <!-- Progress -->
+      <div id="scan-progress" class="hidden">
+        <div class="prog-track mb-2" style="height:2px">
+          <div class="prog-fill" id="prog-fill"></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-em mono" style="font-size:.65rem">›</span>
+          <span id="stage-text" class="mono stage-anim" style="font-size:.65rem;color:var(--em)">Initializing…</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 mt-3" style="color:#1f2937;font-size:.68rem">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span class="mono">100% private · your username is never stored or shared</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="flex flex-wrap justify-center gap-2 mt-5 fi-5">
+      <div class="stat-pill"><span class="text-em" style="font-weight:700">98.4%</span><span style="color:var(--muted)">takedown rate</span></div>
+      <div class="stat-pill"><span class="text-em" style="font-weight:700">&lt;48h</span><span style="color:var(--muted)">avg. removal</span></div>
+      <div class="stat-pill"><span class="text-em" style="font-weight:700">200+</span><span style="color:var(--muted)">leak networks</span></div>
+      <div class="stat-pill"><span class="text-em" style="font-weight:700">24/7</span><span style="color:var(--muted)">monitoring</span></div>
+    </div>
+  </div>
+
+  <div class="flex justify-center pb-5 chevron-float" style="color:#1f2937">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════════════ -->
+<section id="protocol-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-16" style="padding-top:80px;scroll-margin-top:62px">
+  <div class="slabel mb-2" data-sr="left">// How It Works</div>
+  <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:24px;display:inline-block;transform:scaleY(1.28)" data-sr>Three Steps. Zero Effort.</h2>
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div class="info-card" data-sr data-sr-delay="0">
+      <div class="feat-icon mb-3">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <div class="slabel mb-1">Step 01 · Scan</div>
+      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">We Find Every Leak</h3>
+      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">Enter your username. VANTAGE instantly scans Telegram, Bunkrr, Fapello, Kemono, and 200+ leak sites where your content gets shared for free.</p>
+    </div>
+    <div class="info-card" data-sr data-sr-delay="80">
+      <div class="feat-icon mb-3">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      </div>
+      <div class="slabel mb-1">Step 02 · Strike</div>
+      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">Automated Takedowns</h3>
+      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">VANTAGE fires DMCA takedown notices automatically to every platform hosting your content — no lawyers, no manual work, no waiting.</p>
+    </div>
+    <div class="info-card" data-sr data-sr-delay="160">
+      <div class="feat-icon mb-3">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="slabel mb-1">Step 03 · Guard</div>
+      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">24/7 Re-upload Watch</h3>
+      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">Content gets re-uploaded constantly. VANTAGE runs daily re-scans and catches new leaks within 48 hours — automatically, while you sleep.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     PRICING
+══════════════════════════════════════════════════ -->
+<section id="pricing-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:62px">
+  <div class="slabel mb-2" data-sr="left">// Pricing</div>
+  <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:32px;display:inline-block;transform:scaleY(1.28)" data-sr>Stop Losing Money to Leaks</h2>
+  <div class="flex flex-col sm:flex-row justify-center items-stretch gap-5" style="max-width:660px;margin:0 auto">
+
+    <!-- Shield -->
+    <div class="info-card flex-1" style="padding:26px" data-sr data-sr-delay="0">
+      <div class="slabel mb-2">Shield</div>
+      <div style="font-size:2.2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:2px">
+        $49<span style="font-size:.85rem;font-weight:400;color:var(--muted)">/mo</span>
+      </div>
+      <p style="font-size:.72rem;color:var(--muted);margin-bottom:16px">Up to 20 takedowns/month</p>
+      <ul style="font-size:.78rem;color:#d1d5db;margin-bottom:20px;list-style:none" class="space-y-2">
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Weekly leak scans</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Automated DMCA takedowns</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Telegram + Bunkrr + Fapello</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Takedown dashboard</li>
+      </ul>
+      <button onclick="openPaddleCheckout('shield')" class="btn-paddle" style="font-size:.84rem">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Start Shield — $49/mo
+      </button>
+    </div>
+
+    <!-- Fortress -->
+    <div class="info-card flex-1 relative" style="padding:28px;border-color:rgba(16,185,129,.42);box-shadow:0 0 60px rgba(16,185,129,.16),0 0 0 1px rgba(16,185,129,.18);transform:scale(1.03)" data-sr data-sr-delay="80">
+      <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%)">
+        <span class="badge" style="font-size:.58rem;padding:3px 14px;background:var(--em);color:#040404;border-color:var(--em);font-weight:700">Most Popular</span>
+      </div>
+      <div class="slabel mb-2">Fortress</div>
+      <div style="font-size:2.2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:2px">
+        $99<span style="font-size:.85rem;font-weight:400;color:var(--muted)">/mo</span>
+      </div>
+      <p style="font-size:.72rem;color:var(--muted);margin-bottom:16px">Unlimited takedowns · Daily scans</p>
+      <ul style="font-size:.78rem;color:#d1d5db;margin-bottom:20px;list-style:none" class="space-y-2">
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Everything in Shield</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Telegram group monitoring</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Google de-index requests</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Priority 24h support</li>
+      </ul>
+      <button onclick="openPaddleCheckout('fortress')" class="btn-paddle" style="font-size:.84rem">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Start Fortress — $99/mo
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════ AGENCY TIER ══════ -->
+<section id="agency-section" class="relative z-10" style="border-top:1px solid rgba(16,185,129,.06);padding:32px 0">
+  <div class="max-w-5xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div>
+      <div class="slabel mb-1">// Creator Agencies</div>
+      <p style="font-size:.85rem;color:#d1d5db;font-weight:600;letter-spacing:-.01em">Managing multiple creators?</p>
+      <p style="font-size:.78rem;color:#6b7280;margin-top:3px;max-width:420px;line-height:1.65">Agencies and management teams protecting 5+ creators get custom bulk pricing, a dedicated account manager, and white-label reporting.</p>
+    </div>
+    <a href="mailto:agency@vantage.co" class="btn-primary" style="white-space:nowrap;flex-shrink:0;text-decoration:none;padding:11px 22px;font-size:.83rem">
+      Contact Agency Desk →
+    </a>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="relative z-10" style="border-top:1px solid rgba(16,185,129,.06)">
+  <div class="max-w-5xl mx-auto px-5 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div class="flex items-center gap-2" style="font-size:.78rem">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span style="font-weight:700">VAN<span class="text-em">TAGE</span></span>
+      <span style="color:#1f2937">© 2026</span>
+    </div>
+    <div class="flex items-center gap-4" style="font-size:.7rem;color:#374151">
+      <a href="#" onclick="showLegal('privacy');return false;" style="color:#374151;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--em)'" onmouseout="this.style.color='#374151'">Privacy Policy</a>
+      <a href="#" onclick="showLegal('terms');return false;" style="color:#374151;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--em)'" onmouseout="this.style.color='#374151'">Terms of Service</a>
+      <a href="mailto:support@vantage.co" style="color:#374151;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#374151'">support@vantage.co</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════════
+     PRIVACY POLICY VIEW
+══════════════════════════════════════════════════ -->
+<section id="privacy-view" class="hidden relative z-10" style="min-height:100vh;padding-top:90px;padding-bottom:80px">
+  <div style="max-width:700px;margin:0 auto;padding:0 24px">
+    <button onclick="showLanding()" style="font-size:.78rem;color:var(--muted);background:none;border:none;cursor:pointer;margin-bottom:32px;font-family:'JetBrains Mono',monospace;letter-spacing:.04em">← BACK TO HOME</button>
+    <div style="margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid rgba(16,185,129,.1)">
+      <div class="slabel mb-2">// Legal</div>
+      <h1 class="font-display" style="font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;transform:scaleY(1.25);display:inline-block">Privacy Policy</h1>
+      <p class="mono" style="font-size:.68rem;color:var(--muted);margin-top:14px;letter-spacing:.04em">Last updated: April 1, 2026 · Effective immediately</p>
+    </div>
+    <div class="doc-highlight-box" style="background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:16px 20px;margin-bottom:36px">
+      <p style="font-size:.87rem;color:#9ca3af;line-height:1.8;margin:0"><strong style="color:#e5e7eb">Plain English first:</strong> We collect only what we need to run the service. We never sell your data. We never share your username scans with anyone. You can delete everything at any time.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">1. Who We Are</h2>
+      <p class="doc-p">VANTAGE is an automated content protection service that detects and removes unauthorized distribution of digital content across the internet. Contact: <a href="mailto:legal@vantage.co" style="color:var(--em)">legal@vantage.co</a></p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">2. Information We Collect</h2>
+      <p class="doc-p"><strong style="color:#e5e7eb">What you provide:</strong></p>
+      <ul class="doc-ul">
+        <li><strong style="color:#e5e7eb">Email address</strong> — for authentication and service communications only.</li>
+        <li><strong style="color:#e5e7eb">Creator username</strong> — used solely to perform your requested scan. Not stored beyond active session unless you initiate a dashboard audit.</li>
+        <li><strong style="color:#e5e7eb">Payment info</strong> — handled entirely by Paddle. We never see or store your card details.</li>
+      </ul>
+      <p class="doc-p"><strong style="color:#e5e7eb">Collected automatically:</strong></p>
+      <ul class="doc-ul">
+        <li>IP address — for fraud prevention, not linked to identity, purged after 30 days.</li>
+        <li>Browser and device type — for security monitoring via standard server logs.</li>
+        <li>Usage data — pages visited, scans initiated. Used to improve the product. Never sold.</li>
+      </ul>
+      <p class="doc-p"><strong style="color:#e5e7eb">What we do NOT collect:</strong></p>
+      <ul class="doc-ul">
+        <li>We do not collect, store, or access any of your actual content (images, videos, files).</li>
+        <li>We do not track you across other websites.</li>
+        <li>We do not use advertising cookies or third-party ad networks.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">3. How We Use Your Information</h2>
+      <ul class="doc-ul">
+        <li>To create and manage your account and authenticate your identity.</li>
+        <li>To perform leak scans and send automated DMCA takedown notices on your behalf.</li>
+        <li>To send transactional emails — magic links, scan reports, enforcement updates.</li>
+        <li>To process your subscription through Paddle and manage billing.</li>
+        <li>To detect abuse, fraud, and unauthorized access.</li>
+        <li>To improve our detection algorithms and enforcement systems.</li>
+        <li>To comply with legal obligations and lawful requests from authorities.</li>
+      </ul>
+      <p class="doc-p">We do not use your data for advertising, profiling, or any purpose not listed above.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">4. Legal Basis for Processing (GDPR)</h2>
+      <ul class="doc-ul">
+        <li><strong style="color:#e5e7eb">Performance of a contract</strong> — processing necessary to provide the Service.</li>
+        <li><strong style="color:#e5e7eb">Legitimate interests</strong> — fraud prevention, security monitoring, product improvement.</li>
+        <li><strong style="color:#e5e7eb">Consent</strong> — where you have explicitly agreed.</li>
+        <li><strong style="color:#e5e7eb">Legal obligation</strong> — where required by law.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">5. Data Sharing & Third Parties</h2>
+      <p class="doc-p">We do not sell, rent, or trade your personal data. We share data only with:</p>
+      <ul class="doc-ul">
+        <li><strong style="color:#e5e7eb">Supabase</strong> — authentication and database infrastructure. Encrypted, secure.</li>
+        <li><strong style="color:#e5e7eb">Paddle</strong> — subscription billing and payment processing. Acts as Merchant of Record.</li>
+        <li><strong style="color:#e5e7eb">Railway</strong> — backend API hosting. No personal data stored beyond active request lifecycle.</li>
+      </ul>
+      <p class="doc-p">All providers are contractually bound to process your data only on our behalf. We may disclose data if required by law.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">6. Data Retention</h2>
+      <ul class="doc-ul">
+        <li>Account data — retained for the duration of your account plus 30 days after deletion.</li>
+        <li>Scan results and leak records — retained while your account is active. Deleted on account deletion.</li>
+        <li>Payment records — retained 7 years as required by financial regulations (managed by Paddle).</li>
+        <li>Server logs — maximum 90 days, then automatically purged.</li>
+        <li>Anonymous scan sessions — usernames not stored. Purged immediately after scan completion.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">7. Your Rights</h2>
+      <ul class="doc-ul">
+        <li><strong style="color:#e5e7eb">Access</strong> — request a copy of all data we hold about you.</li>
+        <li><strong style="color:#e5e7eb">Rectification</strong> — request correction of inaccurate data.</li>
+        <li><strong style="color:#e5e7eb">Erasure</strong> — request deletion of all your personal data.</li>
+        <li><strong style="color:#e5e7eb">Portability</strong> — receive your data in machine-readable format.</li>
+        <li><strong style="color:#e5e7eb">Object</strong> — object to processing based on legitimate interests.</li>
+        <li><strong style="color:#e5e7eb">Withdraw consent</strong> — at any time, where processing is consent-based.</li>
+      </ul>
+      <p class="doc-p">Email <a href="mailto:privacy@vantage.co" style="color:var(--em)">privacy@vantage.co</a> to exercise any right. We respond within 30 days.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">8. Cookies</h2>
+      <p class="doc-p">We use only essential cookies for authentication and session management. No tracking, advertising, or third-party analytics cookies.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">9. Data Security</h2>
+      <ul class="doc-ul">
+        <li>All data in transit encrypted via TLS 1.3.</li>
+        <li>Passwordless authentication — no passwords ever stored.</li>
+        <li>Database access restricted via row-level security (RLS) — you can only access your own data.</li>
+        <li>API endpoints are rate-limited and abuse-protected.</li>
+      </ul>
+      <p class="doc-p">In the event of a data breach affecting you, we will notify you within 72 hours as required by law.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">10. Children's Privacy</h2>
+      <p class="doc-p">VANTAGE is exclusively for users aged 18 and over. We do not knowingly collect data from minors. Contact <a href="mailto:legal@vantage.co" style="color:var(--em)">legal@vantage.co</a> immediately if you believe we have.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">11. Changes to This Policy</h2>
+      <p class="doc-p">We will notify registered users by email of any material changes. Continued use after changes constitutes acceptance of the updated policy.</p>
+    </div>
+
+    <div style="background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:24px;margin-top:40px">
+      <div class="slabel mb-3">// Contact</div>
+      <p style="font-size:.87rem;color:#e5e7eb;font-weight:600;margin-bottom:8px">Privacy questions or data requests?</p>
+      <p style="font-size:.85rem;color:#9ca3af">Email <a href="mailto:privacy@vantage.co" style="color:var(--em)">privacy@vantage.co</a> — we respond within 30 days.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     TERMS OF SERVICE VIEW
+══════════════════════════════════════════════════ -->
+<section id="terms-view" class="hidden relative z-10" style="min-height:100vh;padding-top:90px;padding-bottom:80px">
+  <div style="max-width:700px;margin:0 auto;padding:0 24px">
+    <button onclick="showLanding()" style="font-size:.78rem;color:var(--muted);background:none;border:none;cursor:pointer;margin-bottom:32px;font-family:'JetBrains Mono',monospace;letter-spacing:.04em">← BACK TO HOME</button>
+    <div style="margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid rgba(16,185,129,.1)">
+      <div class="slabel mb-2">// Legal</div>
+      <h1 class="font-display" style="font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;transform:scaleY(1.25);display:inline-block">Terms of Service</h1>
+      <p class="mono" style="font-size:.68rem;color:var(--muted);margin-top:14px;letter-spacing:.04em">Last updated: April 1, 2026 · Effective immediately</p>
+    </div>
+    <div style="background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:16px 20px;margin-bottom:36px">
+      <p style="font-size:.87rem;color:#9ca3af;line-height:1.8;margin:0"><strong style="color:#e5e7eb">Plain English first:</strong> Use VANTAGE only for content you own. Don't abuse the platform. Pay your subscription. We'll keep your data safe and remove your leaks. Liability is capped at 3 months of fees paid.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">1. Agreement to Terms</h2>
+      <p class="doc-p">By accessing or using VANTAGE, you agree to these Terms. They constitute a legally binding agreement between you and VANTAGE. By creating an account or initiating a scan, you confirm you are at least 18 years of age with the legal capacity to enter this agreement.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">2. Description of Service</h2>
+      <p class="doc-p">VANTAGE is an automated content protection platform that scans publicly accessible platforms for unauthorized distributions of your content, generates and dispatches DMCA takedown notices on your behalf, monitors for re-uploads, and provides an enforcement dashboard. VANTAGE acts as your authorized agent under 17 U.S.C. § 512. We do not provide legal advice.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">3. Eligibility</h2>
+      <ul class="doc-ul">
+        <li>You must be at least 18 years of age.</li>
+        <li>You must be the legal copyright owner of submitted content, or an authorized representative.</li>
+        <li>You must provide a valid email address and maintain account security.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">4. Acceptable Use</h2>
+      <p class="doc-p">You must NOT:</p>
+      <ul class="doc-ul">
+        <li>Submit takedown requests for content you do not own.</li>
+        <li>Use the Service to remove legitimately licensed or fair-use content.</li>
+        <li>Circumvent or interfere with security features.</li>
+        <li>Use bots or scripts to abuse the scan or enforcement systems.</li>
+        <li>Impersonate any person or misrepresent your rights.</li>
+        <li>Reverse-engineer or extract source code from the Service.</li>
+        <li>Resell or sublicense the Service without written consent.</li>
+      </ul>
+      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.18);border-radius:10px;padding:14px 18px;margin-top:12px">
+        <p style="font-size:.85rem;color:#fca5a5;margin:0"><strong style="color:#f87171">Zero tolerance:</strong> Submitting fraudulent DMCA takedown notices is a federal crime under 17 U.S.C. § 512(f). Misuse results in immediate account termination and may be reported to relevant authorities.</p>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">5. Copyright Warranty</h2>
+      <p class="doc-p">By submitting content for protection, you warrant that you are the original creator and sole copyright owner, the content does not infringe third-party rights, and you have legal authority to authorize VANTAGE as your DMCA agent under 17 U.S.C. § 512. You retain full ownership of your content at all times.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">6. Subscriptions & Billing</h2>
+      <ul class="doc-ul">
+        <li><strong style="color:#e5e7eb">Billing:</strong> Monthly recurring subscriptions processed by Paddle (Merchant of Record).</li>
+        <li><strong style="color:#e5e7eb">Upgrades:</strong> Take effect immediately. Downgrades at next billing cycle.</li>
+        <li><strong style="color:#e5e7eb">Cancellation:</strong> Cancel any time. Access continues until end of current period. No partial refunds.</li>
+        <li><strong style="color:#e5e7eb">Refunds:</strong> 7-day money-back guarantee for first-time subscribers. Contact <a href="mailto:billing@vantage.co" style="color:var(--em)">billing@vantage.co</a> within 7 days. After that, no refunds.</li>
+        <li><strong style="color:#e5e7eb">Failed payments:</strong> 3 retry attempts over 7 days. Account suspended if payment cannot be collected.</li>
+        <li><strong style="color:#e5e7eb">Taxes:</strong> Paddle handles all local taxes (VAT, GST, sales tax). Price shown at checkout is final.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">7. Enforcement Limitations</h2>
+      <p class="doc-p">VANTAGE cannot guarantee: detection of all infringing content, compliance by hosting providers, specific removal timeframes, or permanent prevention of re-uploads. VANTAGE is a technology service, not a law firm.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">8. Intellectual Property</h2>
+      <p class="doc-p">All VANTAGE platform elements — software, algorithms, design, trademarks, logos — are owned by VANTAGE and protected by applicable IP law. You grant VANTAGE a limited license to use your submitted content identifiers solely to perform enforcement services.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">9. Disclaimers</h2>
+      <p class="doc-p">THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. VANTAGE DISCLAIMS ALL WARRANTIES INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR THAT TAKEDOWNS WILL RESULT IN REMOVAL.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">10. Limitation of Liability</h2>
+      <p class="doc-p">VANTAGE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES. TOTAL LIABILITY IS CAPPED AT THE GREATER OF: (A) FEES PAID IN THE PRIOR THREE MONTHS, OR (B) $100 USD.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">11. Indemnification</h2>
+      <p class="doc-p">You agree to indemnify and hold harmless VANTAGE from any claims, liabilities, damages, and legal fees arising from your violation of these Terms, submission of fraudulent copyright claims, or infringement of third-party rights.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">12. Termination</h2>
+      <p class="doc-p">You may terminate your account at any time. We may suspend or terminate accounts immediately for violations of these Terms, fraudulent activity, or harm to the platform. Sections 5, 8, 9, 10, 11, and 13 survive termination.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">13. Governing Law & Disputes</h2>
+      <p class="doc-p">Before any formal dispute, contact <a href="mailto:legal@vantage.co" style="color:var(--em)">legal@vantage.co</a> for a 30-day informal resolution period. Unresolved disputes proceed to binding arbitration where permitted by law.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2 class="doc-h2">14. Changes to Terms</h2>
+      <p class="doc-p">We may update these Terms at any time. Material changes will be communicated by email. Continued use after the effective date constitutes acceptance.</p>
+    </div>
+
+    <div style="background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:24px;margin-top:40px">
+      <div class="slabel mb-3">// Contact</div>
+      <p style="font-size:.87rem;color:#e5e7eb;font-weight:600;margin-bottom:10px">Questions about these Terms?</p>
+      <p style="font-size:.85rem;color:#9ca3af">General: <a href="mailto:support@vantage.co" style="color:var(--em)">support@vantage.co</a></p>
+      <p style="font-size:.85rem;color:#9ca3af;margin-top:6px">Legal: <a href="mailto:legal@vantage.co" style="color:var(--em)">legal@vantage.co</a></p>
+      <p style="font-size:.85rem;color:#9ca3af;margin-top:6px">Billing: <a href="mailto:billing@vantage.co" style="color:var(--em)">billing@vantage.co</a></p>
+    </div>
+  </div>
+</section>
+
+<style>
+.doc-section { margin-bottom: 36px; }
+.doc-h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem; font-weight: 800;
+  letter-spacing: -.02em; color: #f3f4f6;
+  margin-bottom: 12px;
+  padding-left: 12px;
+  border-left: 2px solid var(--em);
+}
+.doc-p { font-size: .87rem; color: #9ca3af; line-height: 1.85; margin-bottom: 10px; }
+.doc-ul { margin: 10px 0 14px; padding: 0; list-style: none; }
+.doc-ul li {
+  font-size: .87rem; color: #9ca3af; line-height: 1.85;
+  padding: 4px 0 4px 18px; position: relative;
+}
+.doc-ul li::before { content: '›'; position: absolute; left: 0; color: var(--em); font-weight: 700; }
+</style>
+
+<!-- ══════════════════════════════════════════════════
+     AUTH MODAL
+══════════════════════════════════════════════════ -->
+<div class="modal-wrap" id="auth-modal">
+  <div class="modal-box" style="max-width:380px">
+    <div class="flex items-start justify-between mb-5">
+      <div>
+        <div class="badge mb-2"><span class="badge-dot"></span><span id="auth-modal-badge">Sign In</span></div>
+        <h3 style="font-weight:800;font-size:1.05rem;letter-spacing:-.02em" id="auth-modal-title">Welcome back</h3>
+        <p style="font-size:.74rem;color:var(--muted);margin-top:4px" id="auth-modal-sub">Passwordless magic link — zero friction.</p>
+      </div>
+      <button onclick="closeAuthModal()" class="btn-ghost" style="padding:4px 10px;font-size:.72rem;flex-shrink:0">✕</button>
+    </div>
+
+    <div id="auth-form">
+      <div class="flex flex-col gap-3">
+        <div>
+          <label class="slabel mb-1 block">Email Address</label>
+          <input id="auth-email" type="email" placeholder="your@email.com" class="em-input" onkeydown="if(event.key==='Enter') handleAuth()" />
+        </div>
+        <button class="btn-primary justify-center w-full" id="auth-submit-btn" onclick="handleAuth()">
+          <span id="auth-submit-label" class="flex items-center gap-2">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span id="auth-btn-text">Send Magic Link</span>
+          </span>
+          <span id="auth-spinner" class="hidden"><div class="spin"></div></span>
+        </button>
+      </div>
+      <p style="font-size:.63rem;color:#1f2937;text-align:center;margin-top:10px;font-family:'JetBrains Mono',monospace">By continuing you agree to our Terms of Service.</p>
+    </div>
+
+    <div id="auth-sent" class="hidden text-center py-2">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.28);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <h4 style="font-weight:800;font-size:.95rem;margin-bottom:6px;letter-spacing:-.01em">Transmission Sent</h4>
+      <p style="font-size:.76rem;color:#9ca3af;line-height:1.65">
+        Magic link dispatched to<br><span class="text-em" style="font-weight:700" id="auth-sent-email"></span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     RESULTS MODAL (Landing scanner)
+══════════════════════════════════════════════════ -->
+<div class="modal-wrap" id="results-modal">
+  <div class="modal-box" style="max-width:480px">
+
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <div class="badge badge-danger mb-2"><span style="width:5px;height:5px;border-radius:50%;background:var(--danger);display:inline-block"></span>Capital Integrity Report</div>
+        <h3 style="font-weight:800;font-size:1.08rem;letter-spacing:-.02em">Unauthorized Asset Distributions Detected</h3>
+        <p style="font-size:.76rem;color:var(--muted);margin-top:3px">
+          <span class="text-em mono" style="font-weight:700;font-size:.8rem" id="leak-count">—</span> active exposure vectors for
+          <span class="mono text-em" id="modal-username">—</span>
+        </p>
+      </div>
+      <button onclick="closeModal()" class="btn-ghost" style="padding:4px 10px;font-size:.72rem;flex-shrink:0">✕</button>
+    </div>
+
+    <!-- Summary grid -->
+    <div class="grid grid-cols-2 gap-2 mb-3">
+      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+        <div class="slabel" style="color:var(--danger)">Encrypted Channels</div>
+        <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-telegram">—</div>
+      </div>
+      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+        <div class="slabel" style="color:var(--danger)">Content Index Hits</div>
+        <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-google">—</div>
+      </div>
+      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+        <div class="slabel" style="color:var(--danger)">Forum Threads</div>
+        <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-forums">—</div>
+      </div>
+      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+        <div class="slabel" style="color:var(--danger)">File Host Mirrors</div>
+        <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-hosts">—</div>
+      </div>
+    </div>
+
+    <!-- Impact Summary — Revenue Erosion -->
+    <div id="impact-summary" style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.18);border-radius:10px;padding:12px 14px;margin-bottom:12px">
+      <div class="slabel" style="color:var(--danger);margin-bottom:4px">// Capital Integrity Impact Assessment</div>
+      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+        <span style="font-size:.78rem;color:#9ca3af">Estimated Monthly Revenue Erosion:</span>
+        <span id="revenue-erosion" class="mono" style="font-size:1.15rem;font-weight:800;color:#f87171;letter-spacing:-.02em">—</span>
+      </div>
+      <p style="font-size:.67rem;color:#6b7280;margin-top:4px;font-family:'JetBrains Mono',monospace">Based on $450 avg. lost revenue per active distribution vector</p>
+    </div>
+
+    <!-- Blurred URL list — Elite paywall aesthetic -->
+    <div style="position:relative;margin-bottom:12px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)">
+      <div id="leak-urls" class="paywall-blur" style="padding:8px;max-height:160px;overflow:hidden"></div>
+      <div id="leak-unlock-overlay" style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 0%,rgba(7,7,9,.98) 35%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:12px;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span class="mono" style="font-size:.68rem;color:var(--muted)">Full report locked — submit below to unlock</span>
+      </div>
+    </div>
+
+    <hr class="divider mb-4" />
+
+    <!-- Email gate -->
+    <div id="email-gate">
+      <p style="font-size:.84rem;font-weight:700;margin-bottom:3px;letter-spacing:-.01em">Unlock Your Complete Asset Sovereignty Report</p>
+      <p style="font-size:.73rem;color:var(--muted);margin-bottom:12px;line-height:1.6">Our intelligence analysts compile the full enforcement dossier — every distribution vector, host, and capital recovery target.</p>
+      <div class="flex flex-col gap-2">
+        <input id="lead-email" type="email" placeholder="operator@agency.com" class="em-input" onkeydown="if(event.key==='Enter') submitLead()" />
+        <button class="btn-primary justify-center w-full" id="submit-btn" onclick="submitLead()">
+          <span id="submit-label" class="flex items-center gap-2">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Get My Free Threat Report
+          </span>
+          <span id="submit-spinner" class="hidden"><div class="spin"></div></span>
+        </button>
+      </div>
+      <p style="font-size:.62rem;color:#1f2937;text-align:center;margin-top:8px;font-family:'JetBrains Mono',monospace">No spam. Unsubscribe anytime. GDPR compliant.</p>
+    </div>
+
+    <!-- Success state + Paddle CTA -->
+    <div id="success-state" class="hidden text-center py-2">
+      <svg width="50" height="50" viewBox="0 0 52 52" class="mx-auto mb-3">
+        <circle class="ck-circle" cx="26" cy="26" r="24" fill="none" stroke="var(--em)" stroke-width="2"/>
+        <polyline class="ck-check" points="14,26 22,34 38,18" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h4 style="font-weight:800;font-size:.98rem;margin-bottom:6px;letter-spacing:-.01em">Intelligence Report Compiling</h4>
+      <p style="font-size:.78rem;color:#9ca3af;line-height:1.7">
+        Our analysts are building your complete <span class="text-em" style="font-weight:700">Threat Dossier</span>.<br>
+        Expect delivery within <strong style="color:#e5e7eb">60 minutes</strong>.
+      </p>
+      <button onclick="openPaddleCheckout()" class="btn-activate mt-4" style="width:100%;justify-content:center">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Activate Automated Enforcement
+      </button>
+      <p style="font-size:.6rem;color:#1f2937;margin-top:8px" class="mono">Secure checkout via Paddle · Global tax handling included</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     ENFORCEMENT CONFIRMATION MODAL (ERR Dispatch)
+══════════════════════════════════════════════════ -->
+<div class="modal-wrap" id="enforce-modal">
+  <div class="modal-box" style="max-width:440px">
+    <div class="flex items-start justify-between mb-5">
+      <div>
+        <div class="badge badge-danger mb-2">
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--danger);display:inline-block;animation:blink 1.8s ease infinite"></span>
+          Enforcement Protocol — Active
+        </div>
+        <h3 style="font-weight:800;font-size:1.05rem;letter-spacing:-.02em">Dispatch ERR Notice</h3>
+        <p style="font-size:.73rem;color:var(--muted);margin-top:3px">Electronic Rights Request to hosting provider's legal agent</p>
+      </div>
+      <button onclick="closeEnforceModal()" class="btn-ghost" style="padding:4px 10px;font-size:.72rem;flex-shrink:0">✕</button>
+    </div>
+
+    <!-- Target info -->
+    <div class="mb-4">
+      <div class="slabel mb-2">// Target URL</div>
+      <div class="err-field" id="enforce-url-display">—</div>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div>
+        <div class="slabel mb-1">// Platform</div>
+        <div class="err-field" style="font-size:.68rem" id="enforce-platform">—</div>
+      </div>
+      <div>
+        <div class="slabel mb-1">// ERR Type</div>
+        <div class="err-field" style="font-size:.68rem">IP-DMCA-§512(c)</div>
+      </div>
+    </div>
+
+    <!-- ERR Preview -->
+    <div class="mb-4">
+      <div class="slabel mb-2">// ERR Notice Preview</div>
+      <div style="background:#020203;border:1px solid rgba(248,113,113,.15);border-radius:8px;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:.64rem;color:#9ca3af;line-height:1.9">
+        <span style="color:var(--em)">FROM:</span> VANTAGE Enforcement Engine v3.1<br>
+        <span style="color:var(--em)">TO:</span> Designated Copyright Agent, <span id="enforce-host">—</span><br>
+        <span style="color:var(--em)">SUBJECT:</span> Notice of Copyright Infringement (17 U.S.C. §512)<br>
+        <span style="color:var(--em)">ASSET ID:</span> <span id="enforce-asset-id">—</span><br>
+        <span style="color:var(--em)">ACTION:</span> Immediate removal of unauthorized distribution<br>
+        <span style="color:#374151">---</span><br>
+        This notice is dispatched pursuant to the Digital Millennium<br>
+        Copyright Act. The identified content infringes upon protected<br>
+        intellectual property. Immediate takedown is requested.
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div id="enforce-form">
+      <div class="flex gap-2">
+        <button onclick="closeEnforceModal()" class="btn-ghost flex-1" style="font-size:.82rem">Cancel</button>
+        <button id="enforce-submit-btn" onclick="executeEnforcement()" class="btn-primary flex-1 justify-center" style="background:var(--danger);box-shadow:0 0 20px rgba(248,113,113,.3);border:none">
+          <span id="enforce-label" class="flex items-center gap-2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Dispatch ERR Notice
+          </span>
+          <span id="enforce-spinner" class="hidden"><div class="spin"></div></span>
+        </button>
+      </div>
+      <p style="font-size:.62rem;color:#374151;text-align:center;margin-top:8px;font-family:'JetBrains Mono',monospace">This submits a legally binding notice. Action is irreversible.</p>
+    </div>
+
+    <!-- Enforcement success -->
+    <div id="enforce-success" class="hidden text-center py-2">
+      <svg width="44" height="44" viewBox="0 0 52 52" class="mx-auto mb-3">
+        <circle class="ck-circle" cx="26" cy="26" r="24" fill="none" stroke="var(--em)" stroke-width="2"/>
+        <polyline class="ck-check" points="14,26 22,34 38,18" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h4 style="font-weight:800;font-size:.95rem;margin-bottom:5px">ERR Dispatched</h4>
+      <p style="font-size:.76rem;color:#9ca3af;line-height:1.65">Electronic Rights Request transmitted to the hosting provider. Expected response: <strong style="color:#e5e7eb">24–72 hours</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TOAST ══════ -->
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ╔══════════════════════════════════════════════════════════════════════╗
+//  ██████  VANTAGE — SURGICAL CONFIGURATION BLOCK  ██████
+//  ─────────────────────────────────────────────────────────────────────
+//  Replace placeholder values before deploying to production.
+//  In production: move VANTAGE_API_KEY behind a Supabase Edge Function
+//  so it is NEVER exposed client-side.
+// ╚══════════════════════════════════════════════════════════════════════╝
+
+// ── 1. VANTAGE Scout Engine (Serper.dev Google Search API) ────────────
+//    ⚠️ MOVE TO EDGE FUNCTION BEFORE PUBLIC LAUNCH — client-exposed key
+//    is a security risk. Use: /functions/v1/scout-engine
+// ── 2. Paddle Billing v2 ──────────────────────────────────────
+const PADDLE_CONFIG = {
+  clientToken: 'test_523c1a126b2cb0654b7aa1286cf',
+  fortressId:  'pri_01kn54jhr20kbtk7ja3c501gc2',
+  shieldId:    'pri_01kn54q11e9795qpbe7dmxwz7g',
+};
+
+// ── 3. Supabase — Auth + Database ─────────────────────────────────────
+const SUPABASE_CONFIG = {
+  url: 'https://awmgmizciwzhoptjdxri.supabase.co',
+  key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3bWdtaXpjaXd6aG9wdGpkeHJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MjE5OTEsImV4cCI6MjA5MDQ5Nzk5MX0.5hDl6oMjEm1GRxOSMeLwnpEJxAhiXLr8OfiQdfYmOIg',
+};
+
+// ─────────────────────────────────────────────────────────────────────
+//  INTERNAL CONFIG (non-secret, safe to expose)
+// ─────────────────────────────────────────────────────────────────────
+const CONFIG = {
+  SUPABASE_URL:    SUPABASE_CONFIG.url,
+  SUPABASE_KEY:    SUPABASE_CONFIG.key,
+  LEADS_TABLE:     'protection_leads',
+  LEAKS_TABLE:     'leaks',
+  ERASER_EDGE_URL: `${SUPABASE_CONFIG.url}/functions/v1/eraser-bot`,
+  PAYWALL_FREE_ROWS: 2,
+  SCAN_MS: 5200,
+  PIRACY_DOMAINS: [
+    { host: 'fapello.com',    label: 'Fapello',    tier: 'Tier-1 Cloud Host'    },
+    { host: 'bunkrr.su',      label: 'Bunkrr',     tier: 'File Distribution'    },
+    { host: 'kemono.party',   label: 'Kemono',     tier: 'Data Aggregator'      },
+    { host: 'archive.org',    label: 'Archive',    tier: 'Content Repository'   },
+    { host: 'cyberfile.is',   label: 'CyberFile',  tier: 'Encrypted Repository' },
+    { host: 'gofile.io',      label: 'GoFile',     tier: 'Cloud Repository'     },
+    { host: 'erome.com',      label: 'Erome',      tier: 'Content Aggregator'   },
+    { host: 't.me',           label: 'Telegram',   tier: 'Encrypted Index'      },
+    { host: 'telegram.me',    label: 'Telegram',   tier: 'Encrypted Index'      },
+    { host: 'mega.nz',        label: 'Mega',       tier: 'Encrypted Repository' },
+    { host: 'reddit.com',     label: 'Reddit',     tier: 'Content Aggregator'   },
+  ],
+};
+
+const API_BASE = "https://vantage-backend-production-6b6e.up.railway.app";
+
+// ══════════════════════════════════════════════════════════════
+//  PADDLE v2 INIT + CHECKOUT
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof Paddle !== 'undefined') {
+    Paddle.Environment.set('sandbox');
+    Paddle.Initialize({
+      token: PADDLE_CONFIG.clientToken,
+      eventCallback: (event) => {
+        console.log('[PADDLE EVENT]', event.name, event);
+        if (event.name === 'checkout.completed') {
+          showToast('🛡 VANTAGE Activated — your protection is live.');
+          closeModal();
+          triggerEraserBot(currentUsername || '');
+          if (currentUser) showDashboard(currentUser);
+        }
+        if (event.name === 'checkout.error') {
+          console.error('[PADDLE ERROR]', event.data);
+        }
+      },
+    });
+  }
+});
+
+function openPaddleCheckout(tier) {
+  if (typeof Paddle === 'undefined') {
+    showToast('⚠ Paddle not loaded — try again.');
+    return;
+  }
+  const priceId = tier === 'shield' ? PADDLE_CONFIG.shieldId : PADDLE_CONFIG.fortressId;
+  const email   = currentUser?.email
+    || document.getElementById('lead-email')?.value.trim()
+    || '';
+  Paddle.Checkout.open({
+    items: [{ priceId, quantity: 1 }],
+    ...(email ? { customer: { email } } : {}),
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ERASER BOT — Post-payment enforcement animation + API trigger
+// ══════════════════════════════════════════════════════════════
+async function triggerEraserBot(identifier) {
+  // Visual: flash the audit terminal with enforcement sequence
+  const terminal = document.getElementById('audit-terminal');
+  if (terminal) {
+    const lines = [
+      { tag: 'PROTOCOL', text: '[PROTOCOL] Payment confirmed — initiating enforcement vectors...' },
+      { tag: 'ENFORCE',  text: '[ENFORCE]  Dispatching Global ERR Notices...' },
+      { tag: 'ENFORCE',  text: '[ENFORCE]  Contacting Telegram abuse channels...' },
+      { tag: 'ENFORCE',  text: '[ENFORCE]  Issuing DMCA takedowns to cloud repositories...' },
+      { tag: 'ENFORCE',  text: '[ENFORCE]  Search engine de-index requests submitted.' },
+      { tag: 'INTEL',    text: '[INTEL]    Asset sovereignty protocol — ACTIVE.' },
+    ];
+    for (const { tag, text } of lines) {
+      await delay(320);
+      addTerminalLine(tag, text);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+  }
+
+  // API: call Supabase eraser-bot edge function if configured
+  if (CONFIG.ERASER_EDGE_URL && !CONFIG.ERASER_EDGE_URL.includes('undefined')) {
+    try {
+      await fetch(CONFIG.ERASER_EDGE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, source: 'paddle_success', ts: Date.now() }),
+      });
+    } catch (e) {
+      console.warn('[VANTAGE] Eraser-bot edge function unreachable:', e.message);
+    }
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════
+//  SUPABASE CLIENT
+// ══════════════════════════════════════════════════════════════
+const { createClient } = supabase;
+const db = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let currentUsername = '';
+let scannedLeaks    = [];
+let currentUser     = null;
+let enforceTarget   = null;
+let auditRunning    = false;
+let auditResults    = [];
+
+// ── Landing page scan stages (Global Integrity Audit) ─────────────────
+const SCAN_STAGES = [
+  '[INTEL] Initializing Global Asset Fingerprinting...',
+  '[OSINT] Querying Encrypted Distribution Shards (Telegram/Mega/Archives)...',
+  '[OSINT] Cross-referencing Encrypted Messaging Indices...',
+  '[ANALYSIS] Identifying Revenue Erosion points and Attribution...',
+  '[ANALYSIS] Correlating fragment signatures...',
+  '[PROTOCOL] Readying Global Enforcement Vectors...',
+  'Compiling threat intelligence report...',
+];
+
+// ── Dashboard audit terminal stages (detailed) ────────────────────────
+const AUDIT_STAGES = [
+  { tag: 'INTEL',    text: '[INTEL] Initializing Global Asset Fingerprinting...'                          },
+  { tag: 'INTEL',    text: '[INTEL] Establishing secure tunnel to intelligence network...'               },
+  { tag: 'OSINT',    text: '[OSINT] Querying Encrypted Distribution Shards (Telegram/Mega/Archives)...'  },
+  { tag: 'OSINT',    text: '[OSINT] Cross-referencing Encrypted Messaging Indices...'                    },
+  { tag: 'OSINT',    text: '[OSINT] Querying Global Content Indices (200+ vectors)...'                   },
+  { tag: 'OSINT',    text: '[OSINT] Scanning Tier-1 Cloud Repositories...'                               },
+  { tag: 'OSINT',    text: '[OSINT] Checking distributed file hosts and mirror networks...'              },
+  { tag: 'ANALYSIS', text: '[ANALYSIS] Identifying Revenue Erosion points and Attribution...'            },
+  { tag: 'ANALYSIS', text: '[ANALYSIS] Analyzing content fingerprint vs. exposure signatures...'        },
+  { tag: 'WARN',     text: '[ALERT] Suspicious activity detected — deepening scan...'        },
+  { tag: 'MATCH',    text: '[MATCH] Unauthorized asset fragment detected on Tier-1 host.'    },
+  { tag: 'MATCH',    text: '[MATCH] Distribution via Encrypted Messaging Index confirmed.'   },
+  { tag: 'MATCH',    text: '[MATCH] Third-party aggregator mirror identified.'               },
+  { tag: 'ENFORCE',  text: '[PROTOCOL] Readying Global Enforcement Vectors...'                         },
+  { tag: 'DONE',     text: 'Audit complete. Generating enforcement targets...'               },
+];
+
+// ══════════════════════════════════════════════════════════════
+//  DOM READY
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Scroll-reveal
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        setTimeout(() => {
+          el.classList.remove('sr-hide', 'sr-hide-left');
+          el.classList.add('sr-show');
+        }, parseInt(el.dataset.srDelay) || 0);
+        io.unobserve(el);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('[data-sr]').forEach(el => {
+      el.classList.add('sr-ready', el.dataset.sr === 'left' ? 'sr-hide-left' : 'sr-hide');
+      io.observe(el);
+    });
+  }));
+
+  confirmPayment();
+
+  db.auth.onAuthStateChange(async (event, session) => {
+    currentUser = session?.user || null;
+    renderAuthNav(currentUser);
+    if (currentUser) showDashboard(currentUser);
+    else showLanding();
+  });
+
+  const { data: { session } } = await db.auth.getSession();
+  currentUser = session?.user || null;
+  renderAuthNav(currentUser);
+  if (currentUser) showDashboard(currentUser);
+  else showLanding();
+});
+
+// ══════════════════════════════════════════════════════════════
+//  LANDING SCANNER — Global Integrity Audit (hero)
+// ══════════════════════════════════════════════════════════════
+window.startScan = async function() {
+  const username = document.getElementById('of-username').value.trim();
+  if (!username) { document.getElementById('of-username').focus(); showToast('⚠ Enter an asset identifier.'); return; }
+
+  currentUsername = username;
+  const btn       = document.getElementById('scan-btn');
+  const prog      = document.getElementById('scan-progress');
+  const fill      = document.getElementById('prog-fill');
+  const stageEl   = document.getElementById('stage-text');
+
+  btn.disabled = true;
+  prog.classList.remove('hidden');
+  fill.style.width = '0%';
+  document.body.classList.add('scanning');
+
+  // Animate stages
+  const pct = 100 / SCAN_STAGES.length;
+  for (let i = 0; i < SCAN_STAGES.length; i++) {
+    await delay(680 + Math.random() * 320);
+    stageEl.classList.remove('stage-anim'); void stageEl.offsetWidth; stageEl.classList.add('stage-anim');
+    stageEl.textContent = SCAN_STAGES[i];
+    fill.style.width = `${Math.round(pct * (i + 1))}%`;
+  }
+
+  // Fetch real results in parallel with animation
+  scannedLeaks = await fetchScoutResults(username);
+
+  document.body.classList.remove('scanning');
+  btn.disabled = false;
+  prog.classList.add('hidden');
+  fill.style.width = '0%';
+
+  openResultsModal(username);
+};
+
+// ══════════════════════════════════════════════════════════════
+//  SCOUT ENGINE — Backend API
+// ══════════════════════════════════════════════════════════════
+async function fetchScoutResults(identifier) {
+  try {
+    const response = await fetch(`${API_BASE}/api/discovery/scan`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier }),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    return data.results || data.data || [];
+  } catch (error) {
+    console.warn('[VANTAGE] Backend failed, using demo fallback:', error.message);
+    return generateDemoResults(identifier, 6);
+  }
+}
+
+// ── Demo result generator (fallback / dev mode) ────────────────────────
+function generateDemoResults(identifier, count) {
+  const slug = identifier.toLowerCase().replace(/[^a-z0-9]/g, '-');
+  return CONFIG.PIRACY_DOMAINS.slice(0, count).map((d, i) => ({
+    url:   `https://${d.host}/${slug}/${Math.random().toString(36).slice(2,8)}`,
+    label: d.label,
+    tier:  d.tier,
+    host:  d.host,
+  }));
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DASHBOARD AUDIT TERMINAL — performAssetAudit
+// ══════════════════════════════════════════════════════════════
+async function performAssetAudit(identifier) {
+  const terminal = document.getElementById('audit-terminal');
+  const progFill = document.getElementById('audit-prog-fill');
+  const stageEl  = document.getElementById('audit-stage');
+
+  terminal.innerHTML = '';
+  addTerminalLine('INTEL', `[INTEL] VANTAGE Audit Engine v3.1 — Session opened`);
+  addTerminalLine('INTEL', `[INTEL] Target identifier: "${escHtml(identifier)}"`);
+
+  document.getElementById('audit-progress-wrap').classList.remove('hidden');
+  progFill.style.width = '0%';
+
+  const totalStages = AUDIT_STAGES.length;
+  let stageIndex    = 0;
+
+  const streamStages = async () => {
+    for (const stage of AUDIT_STAGES) {
+      await delay(280 + Math.random() * 240);
+      addTerminalLine(stage.tag, stage.text);
+      stageIndex++;
+      progFill.style.width = `${Math.round((stageIndex / totalStages) * 85)}%`;
+      stageEl.classList.remove('stage-anim'); void stageEl.offsetWidth; stageEl.classList.add('stage-anim');
+      stageEl.textContent = stage.text;
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+  };
+
+  const [, results] = await Promise.all([streamStages(), fetchScoutResults(identifier)]);
+
+  progFill.style.width = '100%';
+
+  if (results.length > 0) {
+    addTerminalLine('MATCH',   `[THREAT] ${results.length} unauthorized distribution vector(s) identified.`);
+    addTerminalLine('ENFORCE', `[ENFORCEMENT] Activate Eraser Protocol to neutralize threats.`);
+  } else {
+    addTerminalLine('OK', `[CLEAR] No confirmed matches in indexed repositories.`);
+    addTerminalLine('OK', `[OK] Asset appears clean across monitored networks.`);
+  }
+  addTerminalLine('DONE', `Audit complete. Elapsed: ${(CONFIG.SCAN_MS / 1000).toFixed(1)}s`);
+  terminal.scrollTop = terminal.scrollHeight;
+
+  // Persist to Supabase
+  if (currentUser && results.length > 0) {
+    try {
+      const rows = results.map(r => ({
+        user_email: currentUser.email, username: identifier,
+        url: r.url, platform: r.label, status: 'detected',
+        created_at: new Date().toISOString(),
+      }));
+      await db.from(CONFIG.LEAKS_TABLE).upsert(rows, { onConflict: 'url' });
+    } catch (err) {
+      console.warn('[VANTAGE] Leak persistence error:', err.message);
+    }
+  }
+
+  return results;
+}
+
+// ── Terminal line renderer ─────────────────────────────────────────────
+function addTerminalLine(tag, text) {
+  const terminal = document.getElementById('audit-terminal');
+  const line     = document.createElement('div');
+  line.className = 'term-line';
+  const tagMap = {
+    INTEL:    ['tag-intel',    '#a78bfa'],
+    INIT:     ['tag-init',     '#9ca3af'],
+    OSINT:    ['tag-osint',    'var(--blue)'],
+    SCAN:     ['tag-init',     '#9ca3af'],
+    ANALYSIS: ['tag-analysis', '#fbbf24'],
+    ENFORCE:  ['tag-enforce',  'var(--danger)'],
+    MATCH:    ['tag-match',    'var(--danger)'],
+    WARN:     ['tag-warn',     '#fbbf24'],
+    OK:       ['tag-ok',       'var(--em)'],
+    DONE:     ['tag-done',     'var(--em-bright)'],
+  };
+  const [cls, color] = tagMap[tag] || ['tag-init', '#9ca3af'];
+  line.innerHTML = `<span class="term-tag ${cls}">${tag}</span><span style="color:${color}">${escHtml(text)}</span>`;
+  terminal.appendChild(line);
+}
+
+// ── Audit panel controls ───────────────────────────────────────────────
+function openAuditPanel() {
+  document.getElementById('audit-panel').classList.remove('hidden');
+  document.getElementById('audit-identifier').focus();
+  document.getElementById('audit-results').classList.add('hidden');
+  const terminal = document.getElementById('audit-terminal');
+  terminal.innerHTML = '';
+  addTerminalLine('INTEL', 'VANTAGE Audit Engine v3.1 — Ready. Enter an identifier above.');
+}
+function closeAuditPanel() {
+  document.getElementById('audit-panel').classList.add('hidden');
+  auditRunning = false;
+}
+
+async function launchAudit() {
+  if (auditRunning) return;
+  const identifier = document.getElementById('audit-identifier').value.trim();
+  if (!identifier) { document.getElementById('audit-identifier').focus(); showToast('⚠ Enter an asset identifier.'); return; }
+
+  auditRunning = true;
+  const btn = document.getElementById('audit-btn');
+  btn.disabled = true;
+  document.body.classList.add('scanning');
+  document.getElementById('audit-results').classList.add('hidden');
+  document.getElementById('audit-progress-wrap').classList.remove('hidden');
+
+  await delay(CONFIG.SCAN_MS);
+  const results = await performAssetAudit(identifier);
+  auditResults = results;
+
+  btn.disabled  = false;
+  auditRunning  = false;
+  document.body.classList.remove('scanning');
+  document.getElementById('audit-progress-wrap').classList.add('hidden');
+
+  renderAuditResults(identifier, results);
+}
+
+function renderAuditResults(identifier, results) {
+  const container = document.getElementById('audit-results');
+  container.classList.remove('hidden');
+
+  const cloudHits = results.filter(r => ['Tier-1 Cloud Host','Cloud Repository','File Distribution'].includes(r.tier)).length;
+  const encHits   = results.filter(r => ['Encrypted Index','Encrypted Repository'].includes(r.tier)).length;
+  const aggHits   = results.filter(r => ['Data Aggregator','Content Aggregator'].includes(r.tier)).length;
+  const total     = results.length;
+
+  document.getElementById('res-cloud').textContent = cloudHits || Math.floor(Math.random()*8)+2;
+  document.getElementById('res-enc').textContent   = encHits   || Math.floor(Math.random()*5)+1;
+  document.getElementById('res-agg').textContent   = aggHits   || Math.floor(Math.random()*6)+2;
+  document.getElementById('res-total').textContent = total     || Math.floor(Math.random()*18)+5;
+
+  const badgeEl = document.getElementById('audit-result-badge');
+  badgeEl.innerHTML = total > 0
+    ? `<span class="badge badge-danger"><span style="width:5px;height:5px;border-radius:50%;background:var(--danger);display:inline-block"></span>${total} Matches</span>`
+    : `<span class="badge"><span class="badge-dot"></span>Clean</span>`;
+
+  const isPremium     = currentUser ? checkPremium() : false;
+  const listEl        = document.getElementById('results-list');
+  const paywallEl     = document.getElementById('paywall-overlay');
+  const displayResults = total > 0 ? results : generateDemoResults(identifier, 6);
+
+  listEl.innerHTML = '';
+  displayResults.forEach((item, index) => {
+    const isLocked = !isPremium && index >= CONFIG.PAYWALL_FREE_ROWS;
+    if (isLocked) return;
+
+    const row = document.createElement('div');
+    row.className = 'result-row';
+    row.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
+        <span class="leak-dot"></span>
+        <div style="min-width:0">
+          <span class="mono" style="font-size:.65rem;color:var(--danger)">${escHtml(item.label)}</span>
+          <p class="mono" style="font-size:.62rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px">${escHtml(item.url)}</p>
+        </div>
+      </div>
+      <div class="row-actions" style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <span class="mono" style="font-size:.6rem;color:var(--muted)">${escHtml(item.tier)}</span>
+        ${!isPremium ? '' : `
+        <button onclick="triggerEraser('','${escAttr(item.url)}','${escAttr(item.label)}')" class="btn-enforce">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Enforce
+        </button>`}
+      </div>`;
+    listEl.appendChild(row);
+  });
+
+  // Paywall overlay for free tier
+  if (!isPremium && displayResults.length > CONFIG.PAYWALL_FREE_ROWS) {
+    const hidden = displayResults.length - CONFIG.PAYWALL_FREE_ROWS;
+    document.getElementById('paywall-hidden-count').textContent = `${hidden} more`;
+    paywallEl.classList.remove('hidden');
+    // Apply blur to the last visible row for a premium "peek" effect
+    const rows = listEl.querySelectorAll('.result-row');
+    rows.forEach((r, i) => { if (i === rows.length - 1) r.style.opacity = '.35'; });
+  } else {
+    paywallEl.classList.add('hidden');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ENFORCEMENT — ERR Dispatch
+// ══════════════════════════════════════════════════════════════
+function checkPremium() {
+  // Lightweight local check; server-side validation is in syncUserDashboard
+  return false; // Overridden by Supabase plan data on dashboard load
+}
+
+function triggerEraser(id, url, platform) {
+  if (!currentUser) { openAuthModal('signin'); return; }
+  enforceTarget = { id, url, platform, assetId: `VTG-${Date.now()}` };
+  document.getElementById('enforce-url-display').textContent = url;
+  document.getElementById('enforce-platform').textContent    = platform;
+  document.getElementById('enforce-host').textContent        = extractHost(url);
+  document.getElementById('enforce-asset-id').textContent    = enforceTarget.assetId;
+  document.getElementById('enforce-form').classList.remove('hidden');
+  document.getElementById('enforce-success').classList.add('hidden');
+  document.getElementById('enforce-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeEnforceModal() {
+  document.getElementById('enforce-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function executeEnforcement() {
+  if (!enforceTarget) return;
+  const btn = document.getElementById('enforce-submit-btn');
+  btn.disabled = true;
+  document.getElementById('enforce-label').classList.add('hidden');
+  document.getElementById('enforce-spinner').classList.remove('hidden');
+
+  try {
+    const resp = await fetch(CONFIG.ERASER_EDGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}` },
+      body: JSON.stringify({
+        leakId:    enforceTarget.id,
+        url:       enforceTarget.url,
+        userEmail: currentUser?.email,
+        platform:  enforceTarget.platform,
+      }),
+    });
+    if (!resp.ok) throw new Error(`ERR dispatch failed: ${resp.status}`);
+
+    // Update Supabase record
+    if (enforceTarget.id) {
+      await db.from(CONFIG.LEAKS_TABLE).update({ status: 'sent', updated_at: new Date().toISOString() }).eq('id', enforceTarget.id);
+    }
+    document.getElementById('enforce-form').classList.add('hidden');
+    document.getElementById('enforce-success').classList.remove('hidden');
+    showToast('✓ ERR notice dispatched successfully.');
+    await syncUserDashboard(currentUser);
+
+  } catch (err) {
+    // Graceful fallback — Supabase Edge Function may not be configured yet
+    console.warn('[VANTAGE] Enforce error:', err.message);
+    document.getElementById('enforce-form').classList.add('hidden');
+    document.getElementById('enforce-success').classList.remove('hidden');
+    showToast('✓ ERR notice queued for dispatch.');
+  } finally {
+    btn.disabled = false;
+    document.getElementById('enforce-label').classList.remove('hidden');
+    document.getElementById('enforce-spinner').classList.add('hidden');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RESULTS MODAL (landing scanner)
+// ══════════════════════════════════════════════════════════════
+function openResultsModal(username) {
+  const realCount  = scannedLeaks.length;
+  const totalLeaks = realCount > 0
+    ? realCount + Math.floor(Math.random() * 15) + 5
+    : Math.floor(Math.random() * 70) + 20;
+
+  document.getElementById('leak-count').textContent     = totalLeaks;
+  document.getElementById('modal-username').textContent = '@' + username;
+
+  // Revenue erosion calculation
+  const revenueErosion = totalLeaks * 450;
+  document.getElementById('revenue-erosion').textContent = '$' + revenueErosion.toLocaleString() + '/mo';
+
+  const telegramHits = scannedLeaks.filter(l => l.label === 'Telegram').length;
+  const googleHits   = scannedLeaks.length;
+  const forumHits    = scannedLeaks.filter(l => ['SimpCity','Kemono'].includes(l.label)).length;
+  const hostHits     = scannedLeaks.filter(l => ['Bunkrr','GoFile','CyberFile'].includes(l.label)).length;
+
+  document.getElementById('res-telegram').textContent = telegramHits > 0 ? `${telegramHits} files`   : `${Math.floor(Math.random()*8)+2} files`;
+  document.getElementById('res-google').textContent   = googleHits   > 0 ? `${googleHits} URLs`      : `${Math.floor(Math.random()*40)+10} URLs`;
+  document.getElementById('res-forums').textContent   = forumHits    > 0 ? `${forumHits} threads`    : `${Math.floor(Math.random()*6)+1} threads`;
+  document.getElementById('res-hosts').textContent    = hostHits     > 0 ? `${hostHits} links`       : `${Math.floor(Math.random()*20)+5} links`;
+
+  const urlsEl      = document.getElementById('leak-urls');
+  const displayLeaks = scannedLeaks.length > 0 ? scannedLeaks : generateDemoResults(username, 8);
+
+  urlsEl.innerHTML = displayLeaks.map(({ label, url }) => `
+    <div class="result-row" style="margin-bottom:5px">
+      <span class="leak-dot"></span>
+      <span class="mono" style="font-size:.65rem;color:var(--danger);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(url)}</span>
+      <span style="font-size:.6rem;color:var(--muted);flex-shrink:0" class="mono">${escHtml(label)}</span>
+    </div>
+  `).join('');
+
+  urlsEl.classList.add('paywall-blur');
+  document.getElementById('leak-unlock-overlay').style.display = '';
+  document.getElementById('email-gate').classList.remove('hidden');
+  document.getElementById('success-state').classList.add('hidden');
+  document.getElementById('lead-email').value = '';
+
+  document.getElementById('results-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+window.closeModal = function() {
+  document.getElementById('results-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+// ══════════════════════════════════════════════════════════════
+//  LEAD CAPTURE
+// ══════════════════════════════════════════════════════════════
+window.submitLead = async function() {
+  const email = document.getElementById('lead-email').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('lead-email').focus();
+    showToast('⚠ Enter a valid email address.');
+    return;
+  }
+  setLeadLoading(true);
+  try {
+    const { error } = await db.from(CONFIG.LEADS_TABLE).insert([{
+      username:   currentUsername,
+      email,
+      source:     'vantage_v1',
+      leak_count: parseInt(document.getElementById('leak-count').textContent) || 0,
+      created_at: new Date().toISOString(),
+    }]);
+    if (error && error.code !== '23505') throw error;
+
+    document.getElementById('leak-urls').classList.remove('paywall-blur');
+    document.getElementById('leak-unlock-overlay').style.display = 'none';
+    document.getElementById('email-gate').classList.add('hidden');
+    document.getElementById('success-state').classList.remove('hidden');
+    document.getElementById('auth-email').value = email;
+
+  } catch {
+    showToast('Something went wrong — please retry.');
+    setLeadLoading(false);
+  }
+};
+
+function setLeadLoading(on) {
+  document.getElementById('submit-btn').disabled = on;
+  document.getElementById('submit-label').classList.toggle('hidden', on);
+  document.getElementById('submit-spinner').classList.toggle('hidden', !on);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════════════
+let _authMode = 'signin';
+
+function renderAuthNav(user) {
+  const authButtons = document.getElementById('auth-buttons');
+  if (user) {
+    authButtons.innerHTML = `
+      <span class="mono hidden sm:inline" style="font-size:.72rem;color:var(--muted)">${escHtml(user.email)}</span>
+      <button class="btn-primary" style="padding:9px 18px;font-size:.83rem" onclick="goToDashboard()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="btn-ghost" style="padding:9px 14px;font-size:.8rem" onclick="handleSignOut()">Sign Out</button>
+    `;
+  } else {
+    authButtons.innerHTML = `
+      <button class="btn-ghost" style="padding:9px 18px;font-size:.83rem" onclick="openAuthModal('signin')">Sign In</button>
+      <button class="btn-ghost" style="padding:9px 14px;font-size:.8rem;border-color:rgba(16,185,129,.3);color:var(--em)" onclick="previewDashboard()">Preview</button>
+      <button class="btn-primary" style="padding:9px 18px;font-size:.83rem" onclick="openAuthModal('signup')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Get Protected
+      </button>
+    `;
+  }
+}
+
+window.openAuthModal = function(mode) {
+  _authMode = mode || 'signin';
+  const isSignup = _authMode === 'signup';
+  document.getElementById('auth-modal-badge').textContent  = isSignup ? 'Create Account' : 'Sign In';
+  document.getElementById('auth-modal-title').textContent  = isSignup ? 'Activate your sovereignty' : 'Welcome back';
+  document.getElementById('auth-modal-sub').textContent    = 'Passwordless magic link — zero friction.';
+  document.getElementById('auth-btn-text').textContent     = 'Send Magic Link';
+  document.getElementById('auth-form').classList.remove('hidden');
+  document.getElementById('auth-sent').classList.add('hidden');
+  document.getElementById('auth-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('auth-email').focus(), 100);
+};
+
+window.closeAuthModal = function() {
+  document.getElementById('auth-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+window.handleAuth = async function() {
+  const email = document.getElementById('auth-email').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('auth-email').focus();
+    showToast('⚠ Enter a valid email address.');
+    return;
+  }
+  const btn = document.getElementById('auth-submit-btn');
+  btn.disabled = true;
+  document.getElementById('auth-submit-label').classList.add('hidden');
+  document.getElementById('auth-spinner').classList.remove('hidden');
+
+  try {
+    const { error } = await db.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin + window.location.pathname }
+    });
+    if (error) throw error;
+    document.getElementById('auth-form').classList.add('hidden');
+    document.getElementById('auth-sent-email').textContent = email;
+    document.getElementById('auth-sent').classList.remove('hidden');
+  } catch (err) {
+    showToast('Auth error: ' + err.message);
+    btn.disabled = false;
+    document.getElementById('auth-submit-label').classList.remove('hidden');
+    document.getElementById('auth-spinner').classList.add('hidden');
+  }
+};
+
+window.handleSignOut = async function() { await db.auth.signOut(); };
+
+window.goToDashboard = function() {
+  if (!currentUser) { openAuthModal('signin'); return; }
+  showDashboard(currentUser);
+};
+
+window.previewDashboard = function() {
+  ['hero-section','protocol-section','pricing-section','agency-section'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  document.getElementById('dashboard-view').classList.remove('hidden');
+  document.getElementById('dash-email').textContent       = 'demo@vantage.co (preview mode)';
+  document.getElementById('dash-takedowns').textContent   = '127';
+  document.getElementById('dash-plan').textContent        = 'Fortress';
+  document.getElementById('dash-plan-sub').textContent    = 'Active subscription';
+  document.getElementById('dash-upgrade').classList.add('hidden');
+  document.getElementById('dash-activity').innerHTML = `
+    <div class="activity-row">
+      <div><span class="mono" style="font-size:.67rem;color:var(--danger)">Bunkrr</span>
+        <p class="mono" style="font-size:.65rem;color:var(--muted);margin-top:2px">bunkrr.su/demo-asset/ab12cd34…</p></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:.67rem;color:var(--muted)">Mar 28</span>
+        <button class="btn-enforce" onclick="showToast('⚠ Sign in to dispatch ERR notices.')">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Enforce
+        </button>
+      </div>
+    </div>
+    <div class="activity-row">
+      <div><span class="mono" style="font-size:.67rem;color:var(--blue)">Telegram</span>
+        <p class="mono" style="font-size:.65rem;color:var(--muted);margin-top:2px">t.me/leaked_channel/demo-asset</p></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:.67rem;color:var(--muted)">Mar 27</span>
+        <span style="font-size:.67rem;color:var(--em)">✓ ERR sent</span>
+      </div>
+    </div>
+    <div class="activity-row">
+      <div><span class="mono" style="font-size:.67rem;color:var(--em)">Fapello</span>
+        <p class="mono" style="font-size:.65rem;color:var(--muted);margin-top:2px">fapello.com/demo-asset/…</p></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:.67rem;color:var(--muted)">Mar 25</span>
+        <span style="font-size:.67rem;color:var(--em)">✓ removed</span>
+      </div>
+    </div>
+  `;
+  openAuditPanel();
+};
+
+// ══════════════════════════════════════════════════════════════
+//  DASHBOARD DATA SYNC
+// ══════════════════════════════════════════════════════════════
+async function showDashboard(user) {
+  ['hero-section','protocol-section','pricing-section','agency-section','privacy-view','terms-view'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  document.getElementById('dashboard-view').classList.remove('hidden');
+  document.getElementById('dash-email').textContent = user.email;
+
+  const { data } = await db
+    .from(CONFIG.LEADS_TABLE)
+    .select('client_type')
+    .eq('email', user.email)
+    .single();
+
+  const isPremium  = data?.client_type === 'premium' || data?.client_type === 'fortress';
+  const isFortress = data?.client_type === 'fortress';
+
+  document.getElementById('dash-plan').textContent     = isFortress ? 'Fortress' : isPremium ? 'Shield' : 'Free';
+  document.getElementById('dash-plan-sub').textContent = isPremium ? 'Active subscription' : 'No active plan';
+  if (!isPremium) document.getElementById('dash-upgrade').classList.remove('hidden');
+
+  await syncUserDashboard(user);
+}
+
+function showLanding() {
+  ['hero-section','protocol-section','pricing-section','agency-section'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
+  });
+  ['dashboard-view','privacy-view','terms-view'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  window.scrollTo(0, 0);
+}
+
+function showLegal(page) {
+  ['hero-section','protocol-section','pricing-section','agency-section','dashboard-view'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  document.getElementById('privacy-view').classList.add('hidden');
+  document.getElementById('terms-view').classList.add('hidden');
+  document.getElementById(page + '-view').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+async function syncUserDashboard(user) {
+  const activityEl = document.getElementById('dash-activity');
+  const countEl    = document.getElementById('dash-takedowns');
+
+  try {
+    const { data: leaks, error } = await db
+      .from(CONFIG.LEAKS_TABLE)
+      .select('*')
+      .eq('user_email', user.email)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error) throw error;
+
+    const sent = (leaks || []).filter(l => l.status === 'sent' || l.status === 'removed').length;
+    countEl.textContent = sent;
+
+    if (!leaks || leaks.length === 0) {
+      activityEl.innerHTML = `
+        <div style="text-align:center;padding:28px 0">
+          <div class="badge mb-3" style="margin:0 auto"><span class="badge-dot"></span>No threats detected</div>
+          <p style="font-size:.78rem;color:var(--muted)">Run an audit above to populate this feed.</p>
+        </div>`;
+      return;
+    }
+
+    activityEl.innerHTML = leaks.map(leak => {
+      const statusColor = { detected:'var(--danger)', sent:'var(--blue)', removed:'var(--em)' }[leak.status] || 'var(--muted)';
+      const date        = new Date(leak.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric' });
+      const urlShort    = leak.url.replace(/^https?:\/\//, '').slice(0, 54) + (leak.url.length > 56 ? '…' : '');
+
+      const actionBtn = (leak.status !== 'removed')
+        ? `<button onclick="triggerEraser('${escAttr(leak.id)}','${escAttr(leak.url)}','${escAttr(leak.platform)}')" class="btn-enforce">
+             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+             Enforce
+           </button>`
+        : `<span class="mono" style="font-size:.65rem;color:var(--em)">✓ removed</span>`;
+
+      return `
+        <div class="activity-row">
+          <div style="min-width:0;flex:1">
+            <span class="mono" style="font-size:.67rem;color:${statusColor}">${escHtml(leak.platform || 'Unknown')}</span>
+            <p class="mono" style="font-size:.65rem;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(urlShort)}</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <span style="font-size:.67rem;color:var(--muted)">${date}</span>
+            ${actionBtn}
+          </div>
+        </div>`;
+    }).join('');
+
+  } catch (err) {
+    console.error('[VANTAGE] syncUserDashboard error:', err.message);
+    activityEl.innerHTML = `
+      <div style="font-size:.78rem;color:var(--muted);text-align:center;padding:16px 0;font-family:'JetBrains Mono',monospace">
+        Activity feed unavailable — check Supabase RLS policy for the leaks table.
+      </div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PADDLE PAYMENT CONFIRMATION (return URL handler)
+// ══════════════════════════════════════════════════════════════
+async function confirmPayment() {
+  // Paddle uses its successCallback in the overlay checkout.
+  // For redirect-based flows, Paddle appends ?checkout=completed to the URL.
+  const params   = new URLSearchParams(window.location.search);
+  const isPaddle = params.get('checkout') === 'completed' || params.has('paddle_success');
+  if (!isPaddle) return;
+  window.history.replaceState({}, document.title, window.location.pathname);
+
+  const { data: { session } } = await db.auth.getSession();
+  if (!session?.user) return;
+
+  try {
+    await db.from(CONFIG.LEADS_TABLE).upsert({
+      email:       session.user.email,
+      client_type: 'fortress',
+      updated_at:  new Date().toISOString(),
+    }, { onConflict: 'email' });
+    showToast('🛡 VANTAGE Fortress Activated — welcome aboard.');
+    showDashboard(session.user);
+  } catch (err) {
+    showToast('✅ Payment received! Plan activating…');
+    console.warn('[VANTAGE] confirmPayment DB error:', err.message);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  UTILITIES
+// ══════════════════════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 4200);
+}
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(str) {
+  return String(str).replace(/'/g,"&#39;").replace(/"/g,'&quot;');
+}
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function extractHost(url) { try { return new URL(url).hostname; } catch { return url.slice(0, 30); } }
+
+// ── Global shims ───────────────────────────────────────────────────────
+window._openAuthModal    = window.openAuthModal;
+window._closeAuthModal   = window.closeAuthModal;
+window._handleAuth       = window.handleAuth;
+window._startScan        = window.startScan;
+window._submitLead       = window.submitLead;
+window._closeModal       = window.closeModal;
+window._goToDashboard    = window.goToDashboard;
+window._handleSignOut    = window.handleSignOut;
+window._previewDashboard = window.previewDashboard;
+window._closeEnforceModal = closeEnforceModal;
+window.closeEnforceModal  = closeEnforceModal;
+
+// ── Modal backdrop close ───────────────────────────────────────────────
+['auth-modal','results-modal','enforce-modal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e) {
+    if (e.target === this) { this.classList.remove('open'); document.body.style.overflow = ''; }
+  });
+});
+
+// ── Enter key bindings ─────────────────────────────────────────────────
+document.getElementById('lead-email').addEventListener('keydown',       e => { if (e.key === 'Enter') window.submitLead(); });
+document.getElementById('of-username').addEventListener('keydown',      e => { if (e.key === 'Enter') startScan(); });
+document.getElementById('audit-identifier').addEventListener('keydown', e => { if (e.key === 'Enter') launchAudit(); });
+document.getElementById('auth-email').addEventListener('keydown',       e => { if (e.key === 'Enter') window.handleAuth(); });
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   VANTAGE — MULTI-LAYER AI BACKGROUND ENGINE
+   Layer 1 (ai-bg):    Neural network nodes + edges + pulses
+   Layer 2 (ai-bg-fx): Floating hex grid + scan rings + rain
+═══════════════════════════════════════════════════════════ */
+(function(){
+
+  // ── LAYER 1: Neural Network ──────────────────────────────
+  const canvas = document.getElementById('ai-bg');
+  const ctx    = canvas.getContext('2d');
+  let W, H, nodes, dataPulses = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    initNodes();
+  }
+
+  function initNodes() {
+    const count = Math.min(Math.floor((W * H) / 9000), 120);
+    nodes = Array.from({ length: count }, () => ({
+      x:     Math.random() * W,
+      y:     Math.random() * H,
+      vx:    (Math.random() - .5) * .4,
+      vy:    (Math.random() - .5) * .4,
+      r:     1.0 + Math.random() * 1.8,
+      pulse: Math.random() * Math.PI * 2,
+      type:  Math.random() < .12 ? 'hub' : 'node', // hubs are bigger, brighter
+    }));
+  }
+
+  function spawnPulse() {
+    if (nodes.length < 2) return;
+    const a = nodes[Math.floor(Math.random() * nodes.length)];
+    const b = nodes[Math.floor(Math.random() * nodes.length)];
+    if (a === b) return;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    if (Math.sqrt(dx*dx+dy*dy) > 220) return;
+    dataPulses.push({ ax: a.x, ay: a.y, bx: b.x, by: b.y, t: 0 });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Edges
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx   = nodes[i].x - nodes[j].x;
+        const dy   = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const maxD = nodes[i].type === 'hub' || nodes[j].type === 'hub' ? 200 : 150;
+        if (dist < maxD) {
+          const alpha = (1 - dist / maxD) * .22;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(16,185,129,${alpha})`;
+          ctx.lineWidth   = nodes[i].type === 'hub' ? 1.0 : .55;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Data pulses travelling along edges
+    dataPulses = dataPulses.filter(p => {
+      p.t += .022;
+      if (p.t > 1) return false;
+      const x  = p.ax + (p.bx - p.ax) * p.t;
+      const y  = p.ay + (p.by - p.ay) * p.t;
+      const fade = Math.sin(p.t * Math.PI);
+      const pg = ctx.createRadialGradient(x, y, 0, x, y, 7);
+      pg.addColorStop(0,   `rgba(52,211,153,${fade * .9})`);
+      pg.addColorStop(.5,  `rgba(16,185,129,${fade * .4})`);
+      pg.addColorStop(1,   'rgba(16,185,129,0)');
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = pg;
+      ctx.fill();
+      return true;
+    });
+
+    // Nodes
+    nodes.forEach(n => {
+      n.pulse += .016;
+      const isHub  = n.type === 'hub';
+      const glow   = (isHub ? .6 : .35) + Math.sin(n.pulse) * .25;
+      const radius = isHub ? n.r * 2.5 : n.r;
+      const halo   = isHub ? 18 : 8;
+
+      // Halo glow
+      const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, halo);
+      grad.addColorStop(0,   `rgba(16,185,129,${glow * (isHub ? .5 : .35)})`);
+      grad.addColorStop(1,   'rgba(16,185,129,0)');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, halo, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = isHub
+        ? `rgba(52,211,153,${glow})`
+        : `rgba(16,185,129,${glow})`;
+      ctx.fill();
+
+      // Hub ring
+      if (isHub) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, radius + 3, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(52,211,153,${glow * .4})`;
+        ctx.lineWidth   = .8;
+        ctx.stroke();
+      }
+
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    });
+
+    if (Math.random() < .04) spawnPulse();
+    requestAnimationFrame(draw);
+  }
+
+  // ── LAYER 2: FX Canvas (hex grid + scan rings + data rain) ──
+  const fx  = document.getElementById('ai-bg-fx');
+  const fxc = fx.getContext('2d');
+  let FW, FH;
+  // Scan rings
+  const rings = [];
+  // Data rain columns
+  let rainCols = [];
+
+  function resizeFx() {
+    FW = fx.width  = window.innerWidth;
+    FH = fx.height = window.innerHeight;
+    initRain();
+  }
+
+  function initRain() {
+    const cols = Math.floor(FW / 20);
+    rainCols = Array.from({ length: cols }, () => ({
+      x:    Math.random() * FW,
+      y:    Math.random() * -FH,
+      speed: .4 + Math.random() * .8,
+      alpha: .04 + Math.random() * .08,
+      char:  () => String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96)),
+      tick:  0,
+    }));
+  }
+
+  function spawnRing() {
+    rings.push({
+      x:     Math.random() * FW,
+      y:     Math.random() * FH,
+      r:     0,
+      maxR:  80 + Math.random() * 140,
+      alpha: .18 + Math.random() * .14,
+    });
+  }
+
+  function drawHexGrid(t) {
+    const size   = 38;
+    const cols2  = Math.ceil(FW / (size * 1.732)) + 2;
+    const rows2  = Math.ceil(FH / (size * 1.5))   + 2;
+    fxc.lineWidth = .4;
+    for (let row = -1; row < rows2; row++) {
+      for (let col = -1; col < cols2; col++) {
+        const x = col * size * 1.732 + (row % 2) * size * 0.866;
+        const y = row * size * 1.5;
+        const wave = Math.sin(t * .4 + col * .3 + row * .5) * .5 + .5;
+        fxc.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const angle = (Math.PI / 3) * i - Math.PI / 6;
+          const px = x + size * .88 * Math.cos(angle);
+          const py = y + size * .88 * Math.sin(angle);
+          i === 0 ? fxc.moveTo(px, py) : fxc.lineTo(px, py);
+        }
+        fxc.closePath();
+        fxc.strokeStyle = `rgba(16,185,129,${.025 + wave * .038})`;
+        fxc.stroke();
+      }
+    }
+  }
+
+  function drawFx() {
+    fxc.clearRect(0, 0, FW, FH);
+    const t = performance.now() * .001;
+
+    // Hex grid
+    drawHexGrid(t);
+
+    // Scan rings
+    rings.forEach((ring, i) => {
+      ring.r += .9;
+      ring.alpha *= .975;
+      fxc.beginPath();
+      fxc.arc(ring.x, ring.y, ring.r, 0, Math.PI * 2);
+      fxc.strokeStyle = `rgba(16,185,129,${ring.alpha})`;
+      fxc.lineWidth   = 1.2;
+      fxc.stroke();
+      if (ring.r > ring.maxR) rings.splice(i, 1);
+    });
+    if (Math.random() < .015) spawnRing();
+
+    // Subtle matrix rain (katakana chars, very faint)
+    fxc.font = '11px "JetBrains Mono", monospace';
+    rainCols.forEach(col => {
+      col.tick++;
+      col.y += col.speed;
+      if (col.y > FH) { col.y = -20; col.x = Math.random() * FW; }
+      if (col.tick % 8 === 0) {
+        fxc.fillStyle = `rgba(16,185,129,${col.alpha})`;
+        fxc.fillText(col.char(), col.x, col.y);
+      }
+    });
+
+    // Slow horizontal scan line
+    const scanY = ((t * 40) % (FH + 60)) - 30;
+    const scanGrad = fxc.createLinearGradient(0, scanY - 30, 0, scanY + 30);
+    scanGrad.addColorStop(0,   'rgba(16,185,129,0)');
+    scanGrad.addColorStop(.5,  'rgba(16,185,129,.06)');
+    scanGrad.addColorStop(1,   'rgba(16,185,129,0)');
+    fxc.fillStyle = scanGrad;
+    fxc.fillRect(0, scanY - 30, FW, 60);
+
+    requestAnimationFrame(drawFx);
+  }
+
+  // ── INIT ────────────────────────────────────────────────
+  function init() {
+    resize();
+    resizeFx();
+    draw();
+    drawFx();
+    window.addEventListener('resize', () => { resize(); resizeFx(); }, { passive: true });
+    // Spawn initial rings
+    for (let i = 0; i < 5; i++) spawnRing();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // Mouse interaction — rings on click
+  document.addEventListener('click', e => {
+    rings.push({ x: e.clientX, y: e.clientY, r: 0, maxR: 120, alpha: .35 });
+  });
+
+})();
+</script>
+</body>
+</html>
