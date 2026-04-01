@@ -2245,12 +2245,23 @@ async function fetchScoutResults(identifier) {
   try {
     const response = await fetch(`${API_BASE}/api/discovery/scan`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifier }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer mysecret123'
+      },
+      body: JSON.stringify({ query: identifier, identifier }),
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
-    return data.results || data.data || [];
+    const raw = data.violations || data.results || data.data || [];
+    // Normalize to { url, label, tier } shape the UI expects
+    return raw.map(r => ({
+      url:   r.url,
+      label: r.platform || 'Unknown',
+      tier:  'Web Index',
+      title: r.title || '',
+      snippet: r.snippet || '',
+    }));
   } catch (error) {
     console.warn('[VANTAGE] Backend failed, using demo fallback:', error.message);
     return generateDemoResults(identifier, 6);
