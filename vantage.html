@@ -2805,7 +2805,7 @@ async function showDashboard(user) {
     .from(CONFIG.LEADS_TABLE)
     .select('client_type')
     .eq('email', user.email)
-    .single();
+    .maybeSingle();
 
   const isPremium  = data?.client_type === 'premium' || data?.client_type === 'fortress';
   const isFortress = data?.client_type === 'fortress';
@@ -2844,17 +2844,37 @@ async function syncUserDashboard(user) {
   const countEl    = document.getElementById('dash-takedowns');
 
   try {
-    const { data: leaks, error } = await db
-      .from(CONFIG.LEAKS_TABLE)
-      .select('*')
-      .eq('user_email', user.email)
-      .order('created_at', { ascending: false })
-      .limit(20);
+    // Pull from violations table (backend saves here) using user auth session
+    const { data: { session } } = await db.auth.getSession();
+    const token = session?.access_token;
+    if (!token) return;
 
-    if (error) throw error;
+    const resp = await fetch(`${API_BASE}/api/discovery/violations?limit=20`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!resp.ok) throw new Error(`violations fetch failed: ${resp.status}`);
+    const json = await resp.json();
+    const leaks = json.violations || [];
 
-    const sent = (leaks || []).filter(l => l.status === 'sent' || l.status === 'removed').length;
+    // Update enforcement count
+    const sent = leaks.filter(l => l.status === 'sent' || l.status === 'removed').length;
     countEl.textContent = sent;
+
+    // Update revenue monitor
+    const erosionRates = { 'Telegram':800,'Fapello':600,'Bunkrr':500,'Kemono':400,'Erome':350,'Reddit':200,'TikTok':300,'Instagram':250,'Default':150 };
+    const monthlyLoss  = leaks.reduce((sum, l) => sum + (erosionRates[l.platform] || erosionRates['Default']), 0);
+    const annualLoss   = monthlyLoss * 12;
+
+    const monthlyEl = document.querySelector('[id*="monthly-erosion"], .kpi-val');
+    const erosionEl = document.getElementById('kpi-monthly');
+    // Update any revenue KPI elements
+    document.querySelectorAll('.kpi-val').forEach((el, i) => {
+      if (i === 0 && monthlyLoss > 0) el.textContent = '$' + monthlyLoss.toLocaleString() + '/mo';
+      if (i === 1 && annualLoss  > 0) el.textContent = '$' + annualLoss.toLocaleString() + '/yr';
+    });
+    // Update vectors active
+    const vectorsEl = document.querySelector('[id*="vectors"]');
+    if (vectorsEl) vectorsEl.textContent = leaks.length;
 
     if (!leaks || leaks.length === 0) {
       activityEl.innerHTML = `
@@ -2868,7 +2888,7 @@ async function syncUserDashboard(user) {
     activityEl.innerHTML = leaks.map(leak => {
       const statusColor = { detected:'var(--danger)', sent:'var(--blue)', removed:'var(--em)' }[leak.status] || 'var(--muted)';
       const date        = new Date(leak.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric' });
-      const urlShort    = leak.url.replace(/^https?:\/\//, '').slice(0, 54) + (leak.url.length > 56 ? '…' : '');
+      const urlShort    = (leak.url || '').replace(/^https?:\/\//, '').slice(0, 54) + ((leak.url||'').length > 56 ? '…' : '');
 
       const actionBtn = (leak.status !== 'removed')
         ? `<button onclick="triggerEraser('${escAttr(leak.id)}','${escAttr(leak.url)}','${escAttr(leak.platform)}')" class="btn-enforce">
@@ -2894,7 +2914,7 @@ async function syncUserDashboard(user) {
     console.error('[VANTAGE] syncUserDashboard error:', err.message);
     activityEl.innerHTML = `
       <div style="font-size:.78rem;color:var(--muted);text-align:center;padding:16px 0;font-family:'JetBrains Mono',monospace">
-        Activity feed unavailable — check Supabase RLS policy for the leaks table.
+        Activity feed unavailable.
       </div>`;
   }
 }
