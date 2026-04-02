@@ -2013,9 +2013,9 @@
 //    is a security risk. Use: /functions/v1/scout-engine
 // ── 2. Paddle Billing v2 ──────────────────────────────────────
 const PADDLE_CONFIG = {
-  clientToken: 'test_523c1a126b2cb0654b7aa1286cf',
-  fortressId:  'pri_01kn5wr6m4zsbvkq3mfx4s39mz',
-  shieldId:    'pri_01kn5wmtg980z9xwsv0526gyw7',
+  clientToken: 'live_4e3afa2446e61e38f58da632ac5',
+  fortressId:  'pri_01kn5xzdc7kevwrpn05jkbcak6',
+  shieldId:    'pri_01kn5y1b906k5ahdy5cqkm4xcr',
 };
 
 // ── 3. Supabase — Auth + Database ─────────────────────────────────────
@@ -2057,7 +2057,7 @@ const API_BASE = "https://vantage-backend-production-6b6e.up.railway.app";
 // ══════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof Paddle !== 'undefined') {
-    Paddle.Environment.set('sandbox');
+    
     Paddle.Initialize({
       token: PADDLE_CONFIG.clientToken,
       eventCallback: (event) => {
