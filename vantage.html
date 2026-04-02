@@ -2437,10 +2437,12 @@ function renderAuditResults(identifier, results) {
   listEl.innerHTML = '';
   displayResults.forEach((item, index) => {
     const isLocked = !isPremium && index >= CONFIG.PAYWALL_FREE_ROWS;
-    if (isLocked) return;
 
     const row = document.createElement('div');
     row.className = 'result-row';
+    if (isLocked) {
+      row.style.cssText = 'filter:blur(5px);opacity:.4;pointer-events:none;user-select:none';
+    }
     const erosionRate = EROSION_RATES[item.label] || EROSION_RATES['Default'];
     row.innerHTML = `
       <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
@@ -2950,17 +2952,24 @@ window._goToDashboard    = window.goToDashboard;
 */
 
 const EROSION_RATES = {
-  'Telegram':   500,
-  'Bunkrr':     1200,
-  'Fapello':    800,
-  'Kemono':     650,
-  'SimpCity':   450,
-  'GoFile':     380,
-  'CyberFile':  420,
-  'Instagram':  2400,
-  'TikTok':     2400,
-  'Reddit':     320,
-  'Default':    450,
+  'Telegram':         500,
+  'Telegram (t.me)':  500,
+  't.me':             500,
+  'Bunkrr':           1200,
+  'Fapello':          800,
+  'Kemono':           650,
+  'SimpCity':         450,
+  'GoFile':           380,
+  'CyberFile':        420,
+  'Instagram':        2400,
+  'TikTok':           2400,
+  'Reddit':           320,
+  'X / Twitter':      1800,
+  'Twitter':          1800,
+  'YouTube':          900,
+  'Internet Archive': 280,
+  'MEGA Cloud':       600,
+  'Default':          450,
 };
 
 function calculateErosion(leaks) {
