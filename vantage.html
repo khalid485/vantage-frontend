@@ -2243,23 +2243,28 @@ window.startScan = async function() {
 // ══════════════════════════════════════════════════════════════
 async function fetchScoutResults(identifier) {
   try {
+    const { data: { session } } = await db.auth.getSession();
+    const token = session?.access_token;
+    if (!token) {
+      console.warn('[VANTAGE] No session token — using demo fallback');
+      return generateDemoResults(identifier, 6);
+    }
     const response = await fetch(`${API_BASE}/api/discovery/scan`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer mysecret123'
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ query: identifier, identifier }),
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
     const raw = data.violations || data.results || data.data || [];
-    // Normalize to { url, label, tier } shape the UI expects
     return raw.map(r => ({
-      url:   r.url,
-      label: r.platform || 'Unknown',
-      tier:  'Web Index',
-      title: r.title || '',
+      url:     r.url,
+      label:   r.platform || 'Unknown',
+      tier:    'Web Index',
+      title:   r.title || '',
       snippet: r.snippet || '',
     }));
   } catch (error) {
