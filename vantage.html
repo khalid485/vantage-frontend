@@ -1750,13 +1750,13 @@
     </div>
     <div class="doc-section">
       <h2 class="doc-h2">How to Request a Refund</h2>
-      <p class="doc-p">Email <a href="mailto:support@vantage.co" style="color:var(--em)">support@vantage.co</a> with the subject line "Refund Request" and include your registered email address and reason for the request. We process all refunds within 5 business days.</p>
+      <p class="doc-p">Email <a href="/cdn-cgi/l/email-protection#c8bbbdb8b8a7babc88bea9a6bca9afade6aba7" style="color:var(--em)"><span class="__cf_email__" data-cfemail="84f7f1f4f4ebf6f0c4f2e5eaf0e5e3e1aae7eb">[email&#160;protected]</span></a> with the subject line "Refund Request" and include your registered email address and reason for the request. We process all refunds within 5 business days.</p>
     </div>
     <div class="doc-section">
       <h2 class="doc-h2">Exceptions</h2>
       <p class="doc-p">Refunds will not be issued in cases of abuse of the refund policy, accounts terminated for ToS violations, or requests made after the 7-day window under any circumstances.</p>
     </div>
-    <p style="font-size:.85rem;color:#9ca3af;margin-top:6px">Questions: <a href="mailto:support@vantage.co" style="color:var(--em)">support@vantage.co</a></p>
+    <p style="font-size:.85rem;color:#9ca3af;margin-top:6px">Questions: <a href="/cdn-cgi/l/email-protection#dcafa9acacb3aea89caabdb2a8bdbbb9f2bfb3" style="color:var(--em)"><span class="__cf_email__" data-cfemail="50232520203f22241026313e243137357e333f">[email&#160;protected]</span></a></p>
   </div>
 </section>
 <style>
@@ -2000,7 +2000,7 @@
 <!-- ══════════════════════════════════════════════════
      SCRIPTS
 ══════════════════════════════════════════════════ -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ╔══════════════════════════════════════════════════════════════════════╗
 //  ██████  VANTAGE — SURGICAL CONFIGURATION BLOCK  ██████
 //  ─────────────────────────────────────────────────────────────────────
@@ -2776,48 +2776,7 @@ window.goToDashboard = function() {
   showDashboard(currentUser);
 };
 
-window.previewDashboard = function() {
-  ['hero-section','protocol-section','pricing-section','agency-section'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('hidden');
-  });
-  document.getElementById('dashboard-view').classList.remove('hidden');
-  document.getElementById('dash-email').textContent       = 'demo@vantage.co (preview mode)';
-  document.getElementById('dash-takedowns').textContent   = '127';
-  document.getElementById('dash-plan').textContent        = 'Fortress';
-  document.getElementById('dash-plan-sub').textContent    = 'Active subscription';
-  document.getElementById('dash-upgrade').classList.add('hidden');
-  document.getElementById('dash-activity').innerHTML = `
-    <div class="activity-row">
-      <div><span class="mono" style="font-size:.67rem;color:var(--danger)">Bunkrr</span>
-        <p class="mono" style="font-size:.65rem;color:var(--muted);margin-top:2px">bunkrr.su/demo-asset/ab12cd34…</p></div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:.67rem;color:var(--muted)">Mar 28</span>
-        <button class="btn-enforce" onclick="showToast('⚠ Sign in to dispatch ERR notices.')">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Enforce
-        </button>
-      </div>
-    </div>
-    <div class="activity-row">
-      <div><span class="mono" style="font-size:.67rem;color:var(--blue)">Telegram</span>
-        <p class="mono" style="font-size:.65rem;color:var(--muted);margin-top:2px">t.me/leaked_channel/demo-asset</p></div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:.67rem;color:var(--muted)">Mar 27</span>
-        <span style="font-size:.67rem;color:var(--em)">✓ ERR sent</span>
-      </div>
-    </div>
-    <div class="activity-row">
-      <div><span class="mono" style="font-size:.67rem;color:var(--em)">Fapello</span>
-        <p class="mono" style="font-size:.65rem;color:var(--muted);margin-top:2px">fapello.com/demo-asset/…</p></div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:.67rem;color:var(--muted)">Mar 25</span>
-        <span style="font-size:.67rem;color:var(--em)">✓ removed</span>
-      </div>
-    </div>
-  `;
-  openAuditPanel();
-};
+
 
 // ══════════════════════════════════════════════════════════════
 //  DASHBOARD DATA SYNC
@@ -4698,13 +4657,4 @@ async function grantBiometricConsent() {
 
   // ── BOOT BOTH LAYERS ────────────────────────────────────────
   resize();                                          // size Layer 1 canvas + init nodes
-  requestAnimationFrame(draw);                       // 🔥 START Layer 1 neural net loop
-  window.addEventListener('resize', () => { resize(); resizeFxFull(); });
-
-  resizeFxFull();                                    // size Layer 2 canvas + init drops
-  (function fxLoop() { drawFx(); requestAnimationFrame(fxLoop); })(); // 🔥 START Layer 2 fx loop
-
-})();
-</script>
-</body>
-</html>
+  requestAnima
