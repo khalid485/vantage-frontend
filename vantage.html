@@ -2031,6 +2031,15 @@ document.addEventListener('DOMContentLoaded', () => {
       eventCallback: (event) => {
         console.log('[PADDLE EVENT]', event.name, event);
         if (event.name === 'checkout.completed') {
+          // Mark user as premium
+          window._isPremium = true;
+          try {
+            localStorage.setItem('vantage_subscription', JSON.stringify({
+              status: 'active',
+              tier: event.data?.items?.[0]?.price_id || 'fortress',
+              activated: new Date().toISOString(),
+            }));
+          } catch {}
           showToast('🛡 VANTAGE Activated — your protection is live.');
           closeModal();
           triggerEraserBot(currentUsername || '');
@@ -2483,8 +2492,17 @@ function renderAuditResults(identifier, results) {
 //  ENFORCEMENT — ERR Dispatch
 // ══════════════════════════════════════════════════════════════
 function checkPremium() {
-  // Lightweight local check; server-side validation is in syncUserDashboard
-  return false; // Overridden by Supabase plan data on dashboard load
+  // Check global premium state set by Paddle webhook or manual override
+  if (window._isPremium === true) return true;
+  // Check localStorage for Paddle subscription (set on successful checkout)
+  try {
+    const sub = localStorage.getItem('vantage_subscription');
+    if (sub) {
+      const { status, expires } = JSON.parse(sub);
+      if (status === 'active' && (!expires || new Date(expires) > new Date())) return true;
+    }
+  } catch {}
+  return false;
 }
 
 function triggerEraser(id, url, platform) {
