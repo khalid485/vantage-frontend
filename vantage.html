@@ -849,14 +849,13 @@
       <span style="font-weight:800;font-size:1.15rem;letter-spacing:-.04em;font-family:'Syne',sans-serif;display:inline-block;transform:scaleY(1.35)">VAN<span class="text-em">TAGE</span></span>
     </a>
 
-    <div class="hidden sm:flex items-center gap-10">
+    <div class="hidden sm:flex items-center gap-10" id="nav-links">
       <a href="#protocol-section" style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:-.01em;color:#9ca3af;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#9ca3af'">How It Works</a>
       <a href="#pricing-section"  style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:-.01em;color:#9ca3af;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#9ca3af'">Pricing</a>
     </div>
 
     <div class="flex items-center gap-2" id="auth-buttons">
       <button class="btn-ghost" style="padding:9px 18px;font-size:.83rem" onclick="openAuthModal('signin')">Sign In</button>
-      <button class="btn-ghost" style="padding:9px 14px;font-size:.8rem;border-color:rgba(16,185,129,.3);color:var(--em)" onclick="previewDashboard()">Preview</button>
       <button class="btn-primary" style="padding:9px 18px;font-size:.83rem" onclick="openAuthModal('signup')">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Get Protected
@@ -2695,19 +2694,23 @@ let _authMode = 'signin';
 
 function renderAuthNav(user) {
   const authButtons = document.getElementById('auth-buttons');
+  const navLinks = document.getElementById('nav-links');
   if (user) {
+    if (navLinks) navLinks.style.display = 'none';
+    authButtons.style.gap = '12px';
     authButtons.innerHTML = `
-      <span class="mono hidden sm:inline" style="font-size:.72rem;color:var(--muted)">${escHtml(user.email)}</span>
+      <span class="mono hidden sm:inline" style="font-size:.72rem;color:var(--muted);padding:0 4px">${escHtml(user.email)}</span>
       <button class="btn-primary" style="padding:9px 18px;font-size:.83rem" onclick="goToDashboard()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dashboard
       </button>
-      <button class="btn-ghost" style="padding:9px 14px;font-size:.8rem" onclick="handleSignOut()">Sign Out</button>
+      <button class="btn-ghost" style="padding:9px 16px;font-size:.83rem" onclick="handleSignOut()">Sign Out</button>
     `;
   } else {
+    if (navLinks) navLinks.style.display = '';
+    authButtons.style.gap = '';
     authButtons.innerHTML = `
       <button class="btn-ghost" style="padding:9px 18px;font-size:.83rem" onclick="openAuthModal('signin')">Sign In</button>
-      <button class="btn-ghost" style="padding:9px 14px;font-size:.8rem;border-color:rgba(16,185,129,.3);color:var(--em)" onclick="previewDashboard()">Preview</button>
       <button class="btn-primary" style="padding:9px 18px;font-size:.83rem" onclick="openAuthModal('signup')">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Get Protected
