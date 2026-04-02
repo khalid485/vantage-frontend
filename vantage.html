@@ -2368,7 +2368,19 @@ async function performAssetAudit(identifier) {
     addTerminalLine('OK', `[OK] Asset appears clean across monitored networks.`);
   }
   addTerminalLine('DONE', `Audit complete. Elapsed: ${(CONFIG.SCAN_MS / 1000).toFixed(1)}s`);
+  addTerminalLine('MESH', `[SOCIAL] Instagram/TikTok background scan running — results will appear in ~90s`);
   terminal.scrollTop = terminal.scrollHeight;
+
+  // Auto-refresh dashboard after 95s to pick up Apify social results
+  setTimeout(async () => {
+    if (currentUser) {
+      addTerminalLine('MESH', '[SOCIAL] Importing social scan results...');
+      terminal.scrollTop = terminal.scrollHeight;
+      await syncUserDashboard(currentUser);
+      addTerminalLine('OK', '[OK] Social results merged into dashboard.');
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+  }, 95000);
 
   // Persist to Supabase
   if (currentUser && results.length > 0) {
