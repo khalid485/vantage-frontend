@@ -836,6 +836,147 @@
     .db-sync-badge.syncing { color: #e5e7eb; border-color: rgba(16,185,129,.2); background: rgba(16,185,129,.05); }
     .db-sync-badge.error   { color: var(--danger); border-color: rgba(248,113,113,.25); background: rgba(248,113,113,.06); }
     .db-sync-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; animation: blink 1.4s ease infinite; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       AUDIT STATE-SWITCH SYSTEM
+       Hero/Audit-Panel shrinks → sticky mini-bar.
+       audit-dashboard reveals below with isolated, readable cards.
+    ═══════════════════════════════════════════════════════════════ */
+
+    /* ── Sticky audit mini-header (initially hidden) ── */
+    #audit-sticky-bar {
+      position: sticky;
+      top: 62px;           /* flush under main nav */
+      z-index: 45;
+      width: 100%;
+      background: rgba(4,4,4,.97);
+      border-bottom: 1px solid rgba(16,185,129,.18);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 4px 32px rgba(0,0,0,.7);
+
+      /* hidden state */
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        max-height .45s cubic-bezier(.22,1,.36,1),
+        opacity    .35s ease,
+        padding    .4s  cubic-bezier(.22,1,.36,1);
+    }
+    #audit-sticky-bar.visible {
+      max-height: 72px;
+      opacity: 1;
+      pointer-events: all;
+      padding: 10px 0;
+    }
+    #audit-sticky-bar .inner {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Audit panel collapse (shrinks away when results appear) ── */
+    #audit-panel-wrap {
+      transition:
+        max-height  .55s cubic-bezier(.22,1,.36,1),
+        opacity     .4s  ease,
+        margin      .4s  cubic-bezier(.22,1,.36,1),
+        padding     .4s  cubic-bezier(.22,1,.36,1);
+      max-height: 600px;
+      overflow: hidden;
+      opacity: 1;
+    }
+    #audit-panel-wrap.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-bottom: 0 !important;
+      pointer-events: none;
+    }
+
+    /* ── audit-dashboard: the main results container ── */
+    #audit-dashboard {
+      display: none;         /* JS sets display:block then triggers .revealed */
+      margin-top: 3rem;      /* mt-12 equivalent */
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity   .55s cubic-bezier(.22,1,.36,1) .08s,
+        transform .55s cubic-bezier(.22,1,.36,1) .08s;
+      scroll-margin-top: 140px;
+    }
+    #audit-dashboard.revealed {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Dashboard result cards — solid dark glass ── */
+    .ad-card {
+      background: rgba(6,6,9,.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 14px;
+      padding: 20px 22px;
+      border: 1px solid rgba(255,255,255,.07);
+    }
+    .ad-card-danger {
+      border-color: rgba(248,113,113,.22);
+      box-shadow: 0 0 32px rgba(248,113,113,.06), inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .ad-card-blue {
+      border-color: rgba(96,165,250,.22);
+      box-shadow: 0 0 32px rgba(96,165,250,.06), inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .ad-card-full {
+      border-color: rgba(248,113,113,.3);
+      box-shadow: 0 0 24px rgba(248,113,113,.08), inset 0 1px 0 rgba(255,255,255,.03);
+    }
+
+    /* ── Row 1: 2-col grid ── */
+    .ad-row-1 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 640px) { .ad-row-1 { grid-template-columns: 1fr; } }
+
+    /* ── Row 2: full-width ticker ── */
+    .ad-row-2 { margin-bottom: 14px; }
+
+    /* ── Row 3: social hijack ── */
+    .ad-row-3 { margin-bottom: 14px; }
+
+    /* ── Closing line ── */
+    #audit-closing-line {
+      text-align: center;
+      padding: 20px 24px;
+      background: rgba(6,6,9,.96);
+      border: 1px solid rgba(255,255,255,.05);
+      border-radius: 12px;
+      margin-top: 6px;
+    }
+
+    /* ── Progress mini-bar inside sticky ── */
+    .sticky-prog-track {
+      width: 140px; height: 2px;
+      background: rgba(16,185,129,.1);
+      border-radius: 99px; overflow: hidden;
+      flex-shrink: 0;
+    }
+    .sticky-prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--em-dim), var(--em));
+      width: 0%;
+      border-radius: 99px;
+      transition: width 220ms linear;
+    }
   </style>
 </head>
 
@@ -867,6 +1008,41 @@
   </div>
 </nav>
 
+<!-- ══ AUDIT STICKY MINI-HEADER ══════════════════════════════════ -->
+<div id="audit-sticky-bar">
+  <div class="inner">
+    <!-- Left: identifier + status -->
+    <div style="display:flex;align-items:center;gap:10px;min-width:0">
+      <div style="width:7px;height:7px;border-radius:50%;background:var(--danger);box-shadow:0 0 9px var(--danger);animation:blink 1.1s ease infinite;flex-shrink:0" id="asb-dot"></div>
+      <div style="min-width:0">
+        <div class="mono" style="font-size:.58rem;letter-spacing:.13em;color:var(--muted);text-transform:uppercase">// Audit Active</div>
+        <div style="font-weight:700;font-size:.88rem;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          Target: <span class="text-em" id="asb-identifier" style="font-family:'JetBrains Mono',monospace">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Centre: progress -->
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0" id="asb-progress-wrap">
+      <div class="sticky-prog-track">
+        <div class="sticky-prog-fill" id="asb-prog-fill"></div>
+      </div>
+      <span class="mono" style="font-size:.62rem;color:var(--em);width:32px" id="asb-pct">0%</span>
+      <span class="mono stage-anim" style="font-size:.6rem;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="asb-stage">Initializing…</span>
+    </div>
+
+    <!-- Right: controls -->
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <span id="asb-done-badge" style="display:none" class="badge badge-danger" style="font-size:.55rem">
+        <span style="width:5px;height:5px;border-radius:50%;background:var(--danger);display:inline-block"></span>&nbsp;Threats Found
+      </span>
+      <button onclick="collapseAuditToBar(false)" class="btn-ghost" style="font-size:.68rem;padding:5px 12px">
+        ← Reset
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════════════════
      DASHBOARD VIEW
 ══════════════════════════════════════════════════ -->
@@ -875,7 +1051,7 @@
   <!-- Dashboard header -->
   <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
     <div>
-      <div class="slabel mb-1">// Integrity Command Center</div>
+      <div class="slabel mb-1">// Identity Sovereignty</div>
       <h2 style="font-weight:800;font-size:1.35rem;letter-spacing:-.02em">
         Asset Dashboard — <span class="text-em" id="dash-email" style="font-size:1rem;font-weight:600">—</span>
       </h2>
@@ -892,7 +1068,7 @@
   <!-- ── REVENUE HEMORRHAGE ENGINE — Phase 1 ───────────────────────── -->
   <div class="glass mb-4" style="padding:18px 22px;border-color:rgba(16,185,129,.28);box-shadow:0 0 48px rgba(16,185,129,.1)">
     <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
-      <div class="slabel" style="color:var(--danger)">// Revenue Hemorrhage Monitor</div>
+      <div class="slabel" style="color:var(--danger)">// Revenue Erosion</div>
       <span class="db-sync-badge" id="db-sync-badge"><span class="db-sync-dot"></span>Supabase Sync</span>
     </div>
     <div class="flex items-start justify-between flex-wrap gap-4">
@@ -1066,7 +1242,8 @@
   </div>
 
   <!-- Audit Panel (hidden initially) -->
-  <div id="audit-panel" class="hidden mb-6">
+  <div id="audit-panel-wrap" class="mb-6 hidden">
+  <div id="audit-panel">
     <div class="glass" style="padding:22px">
       <div class="flex items-center justify-between mb-4">
         <div>
@@ -1164,6 +1341,8 @@
       </div>
     </div>
   </div>
+
+  </div><!-- /audit-panel-wrap -->
 
   <!-- ── SOCIAL HIJACK MODULE — Phase 3 ───────────────────────────── -->
   <div id="social-hijack-section" class="mb-6">
@@ -1263,6 +1442,155 @@
       <div style="font-size:.8rem;color:var(--muted);text-align:center;padding:24px 0" class="mono">Loading activity feed…</div>
     </div>
   </div>
+
+
+  <!-- ══════════════════════════════════════════════════
+       AUDIT DASHBOARD — isolated result grid
+       Appears after launchAudit completes
+  ══════════════════════════════════════════════════ -->
+  <div id="audit-dashboard">
+
+    <!-- Row 1: Revenue Erosion + Identity Sovereignty side-by-side -->
+    <div class="ad-row-1">
+
+      <!-- CARD A: Revenue Erosion -->
+      <div class="ad-card ad-card-danger">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:6px">
+          <div class="slabel" style="color:var(--danger)">// Revenue Erosion</div>
+          <span id="adb-sync-badge" class="db-sync-badge" style="font-size:.52rem"><span class="db-sync-dot"></span>Synced</span>
+        </div>
+
+        <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+          <div>
+            <div style="font-size:.68rem;color:var(--muted)">Monthly</div>
+            <div class="mono counter-animated" style="font-size:2rem;font-weight:800;color:var(--danger);letter-spacing:-.03em;line-height:1.1" id="adb-monthly">$0</div>
+          </div>
+          <div style="width:1px;height:36px;background:rgba(255,255,255,.05)"></div>
+          <div>
+            <div style="font-size:.68rem;color:var(--muted)">Annual Run Rate</div>
+            <div class="mono counter-animated" style="font-size:1.35rem;font-weight:700;color:var(--danger);letter-spacing:-.02em;line-height:1.1" id="adb-annual">$0</div>
+          </div>
+          <div style="width:1px;height:36px;background:rgba(255,255,255,.05)"></div>
+          <div>
+            <div style="font-size:.68rem;color:var(--muted)">Vectors</div>
+            <div class="mono counter-animated" style="font-size:1.35rem;font-weight:700;color:var(--em);letter-spacing:-.02em;line-height:1.1" id="adb-vectors">0</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div class="badge badge-danger" style="margin-bottom:6px;font-size:.55rem">
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--danger);display:inline-block;animation:blink 1.2s ease infinite"></span>
+            &nbsp;Capital Leak Detected
+          </div>
+          <p class="mono" style="font-size:.6rem;color:var(--muted)">Telegram · Bunkrr · Fapello · Social Impersonation</p>
+        </div>
+
+        <!-- Sparkline (if present) -->
+        <div id="adb-sparkline-wrap" style="display:none">
+          <div class="slabel mb-1" style="color:var(--muted);font-size:.52rem">// EROSION TREND — LAST 30 DAYS</div>
+          <svg id="adb-sparkline" style="width:100%;height:32px" preserveAspectRatio="none"></svg>
+        </div>
+
+        <!-- Rev chart -->
+        <div id="adb-rev-chart" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div class="slabel" style="color:var(--muted);font-size:.52rem">// Breakdown by Platform</div>
+            <button class="btn-export" onclick="exportReport()">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              EXPORT
+            </button>
+          </div>
+          <div id="adb-rev-bars"></div>
+        </div>
+      </div>
+
+      <!-- CARD B: Identity Sovereignty -->
+      <div class="ad-card ad-card-blue" style="display:flex;flex-direction:column;gap:14px">
+        <div class="slabel" style="color:var(--blue)">// Identity Sovereignty</div>
+
+        <!-- Biometric strip (mirrors existing IDs so JS still fires) -->
+        <div id="adb-biometric-strip">
+          <div class="biometric-wrap" style="margin-bottom:0">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+              <div class="slabel" style="color:#a78bfa;font-size:.58rem">// VISION ENGINE</div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span id="adb-bio-confidence" class="mono" style="font-size:.58rem;padding:2px 8px;border-radius:99px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);color:#a78bfa;display:none"></span>
+                <button onclick="openBiometricConsent()" class="btn-export" style="border-color:rgba(167,139,250,.3);color:#a78bfa;background:rgba(167,139,250,.08);font-size:.55rem">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  UPLOAD REF
+                </button>
+              </div>
+            </div>
+            <div class="biometric-grid">
+              <div class="face-scan-box">
+                <div class="face-scan-line"></div>
+                <div class="face-corner tl"></div><div class="face-corner tr"></div>
+                <div class="face-corner bl"></div><div class="face-corner br"></div>
+                <svg class="face-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="biometric-metrics">
+                <div class="bm-row"><span class="bm-label">MATCH</span><div class="bm-bar-track"><div class="bm-bar-fill" id="adb-bm-match" style="width:0%"></div></div><span class="bm-val" id="adb-bm-val-match">—</span></div>
+                <div class="bm-row"><span class="bm-label">GEOMETRY</span><div class="bm-bar-track"><div class="bm-bar-fill" id="adb-bm-geo" style="width:0%"></div></div><span class="bm-val" id="adb-bm-val-geo">—</span></div>
+                <div class="bm-row"><span class="bm-label">WATERMARK</span><div class="bm-bar-track"><div class="bm-bar-fill" id="adb-bm-wm" style="width:0%"></div></div><span class="bm-val" id="adb-bm-val-wm" style="color:var(--danger)">—</span></div>
+                <div class="bm-row"><span class="bm-label">DEEPFAKE</span><div class="bm-bar-track"><div class="bm-bar-fill" id="adb-bm-df" style="width:0%"></div></div><span class="bm-val" id="adb-bm-val-df" style="color:var(--em)">—</span></div>
+                <div style="margin-top:4px;padding-top:4px;border-top:1px solid rgba(167,139,250,.1)">
+                  <span class="mono" style="font-size:.58rem;color:#a78bfa;font-weight:700" id="adb-bio-verdict">Awaiting reference image…</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Negotiator preview inside sovereignty card -->
+        <div style="background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.18);border-radius:10px;padding:12px 14px">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--danger);box-shadow:0 0 7px var(--danger);animation:blink 1s ease infinite;flex-shrink:0"></div>
+            <span class="slabel" style="color:var(--danger);font-size:.6rem">// ENFORCEMENT AGENT</span>
+            <span class="mono" style="font-size:.58rem;color:var(--danger);font-weight:700;margin-left:auto" id="adb-neg-status">STANDBY</span>
+          </div>
+          <div class="negotiator-window" id="adb-neg-log" style="max-height:120px">
+            <div class="neg-line-system">[SYSTEM] Awaiting audit results…</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /ad-row-1 -->
+
+    <!-- Row 2: Live Threat Ticker (full-width) -->
+    <div class="ad-row-2">
+      <div class="ad-card ad-card-full" style="padding:6px 0;overflow:hidden" id="adb-ticker-wrap">
+        <div class="threat-ticker" id="adb-ticker-text">—</div>
+      </div>
+    </div>
+
+    <!-- Row 3: Social Hijacking -->
+    <div class="ad-row-3">
+      <div class="ad-card" style="border-color:rgba(251,191,36,.25);box-shadow:0 0 24px rgba(251,191,36,.05)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="hijack-badge"><span class="hijack-badge-dot"></span>Social Hijacking</span>
+          <span class="mono" style="font-size:.58rem;color:var(--muted);margin-left:auto">// Traffic Diversion Analysis</span>
+        </div>
+        <div id="adb-hijack-results">
+          <p class="mono" style="font-size:.65rem;color:var(--muted)">Run an audit to detect social hijacking.</p>
+        </div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(251,191,36,.12);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+          <span style="font-size:.7rem;color:var(--muted)">Total Estimated Monthly Funnel Loss:</span>
+          <span class="mono" style="font-size:1.05rem;font-weight:800;color:var(--danger)" id="adb-hijack-loss">—</span>
+        </div>
+      </div>
+    </div><!-- /ad-row-3 -->
+
+    <!-- Closing line -->
+    <div id="audit-closing-line">
+      <p style="font-size:.82rem;color:#9ca3af;line-height:1.85;font-style:italic;max-width:620px;margin:0 auto">
+        We don&rsquo;t ask them to stop &mdash; we make them
+        <span style="color:var(--em);font-weight:700">disappear</span>,
+        and we make them
+        <span style="color:var(--danger);font-weight:700">regret the breach</span>.
+      </p>
+    </div>
+
+  </div><!-- /audit-dashboard -->
 
   <!-- Upgrade CTA (free users) -->
   <div id="dash-upgrade" class="hidden mt-5 glass-hi" style="padding:20px;border-radius:16px">
@@ -2626,6 +2954,8 @@ function addTerminalLine(tag, text) {
 
 // ── Audit panel controls ───────────────────────────────────────────────
 function openAuditPanel() {
+  const wrap = document.getElementById('audit-panel-wrap');
+  if (wrap) { wrap.classList.remove('hidden'); wrap.classList.remove('collapsed'); }
   document.getElementById('audit-panel').classList.remove('hidden');
   document.getElementById('audit-identifier').focus();
   document.getElementById('audit-results').classList.add('hidden');
@@ -2637,6 +2967,39 @@ function closeAuditPanel() {
   document.getElementById('audit-panel').classList.add('hidden');
   auditRunning = false;
 }
+
+// ── Helper: collapse audit panel → sticky bar ─────────────────────────────
+window.collapseAuditToBar = function(show) {
+  const bar   = document.getElementById('audit-sticky-bar');
+  const wrap  = document.getElementById('audit-panel-wrap');
+  const panel = document.getElementById('audit-panel');
+  const dash  = document.getElementById('audit-dashboard');
+
+  if (show) {
+    // Collapse panel, show sticky bar
+    if (wrap) wrap.classList.add('collapsed');
+    if (panel) panel.classList.add('hidden');
+    if (bar) bar.classList.add('visible');
+  } else {
+    // Reset: expand panel, hide sticky bar + dashboard
+    if (wrap) wrap.classList.remove('collapsed');
+    if (panel) panel.classList.remove('hidden');
+    if (bar)  bar.classList.remove('visible');
+    if (dash) {
+      dash.classList.remove('revealed');
+      setTimeout(() => { dash.style.display = 'none'; }, 500);
+    }
+    // Reset sticky bar state
+    const asbDone = document.getElementById('asb-done-badge');
+    const asbProg = document.getElementById('asb-progress-wrap');
+    if (asbDone) asbDone.style.display = 'none';
+    if (asbProg) asbProg.style.display = 'flex';
+    const asbFill = document.getElementById('asb-prog-fill');
+    if (asbFill) asbFill.style.width = '0%';
+    const asbPct = document.getElementById('asb-pct');
+    if (asbPct) asbPct.textContent = '0%';
+  }
+};
 
 async function launchAudit() {
   if (auditRunning) return;
@@ -2650,16 +3013,142 @@ async function launchAudit() {
   document.getElementById('audit-results').classList.add('hidden');
   document.getElementById('audit-progress-wrap').classList.remove('hidden');
 
+  // ── State-switch: collapse panel to sticky bar ──
+  const asbId   = document.getElementById('asb-identifier');
+  const asbFill = document.getElementById('asb-prog-fill');
+  const asbPct  = document.getElementById('asb-pct');
+  const asbStage = document.getElementById('asb-stage');
+  if (asbId) asbId.textContent = identifier;
+  collapseAuditToBar(true);
+
+  // ── Patch performAssetAudit to mirror progress into sticky bar ──
+  const _origProgFill = document.getElementById('audit-prog-fill');
+  const _progObserver = new MutationObserver(() => {
+    const w = _origProgFill ? _origProgFill.style.width : '0%';
+    if (asbFill) asbFill.style.width = w;
+    const pctVal = Math.round(parseFloat(w) || 0);
+    if (asbPct)  asbPct.textContent  = pctVal + '%';
+  });
+  if (_origProgFill) _progObserver.observe(_origProgFill, { attributes: true, attributeFilter: ['style'] });
+
+  // Mirror stage text
+  const _origStage = document.getElementById('audit-stage');
+  const _stageObserver = new MutationObserver(() => {
+    if (asbStage && _origStage) asbStage.textContent = _origStage.textContent;
+  });
+  if (_origStage) _stageObserver.observe(_origStage, { childList: true, subtree: true, characterData: true });
+
   await delay(CONFIG.SCAN_MS);
   const results = await performAssetAudit(identifier);
   auditResults = results;
+
+  _progObserver.disconnect();
+  _stageObserver.disconnect();
 
   btn.disabled  = false;
   auditRunning  = false;
   document.body.classList.remove('scanning');
   document.getElementById('audit-progress-wrap').classList.add('hidden');
 
+  // ── Finalize sticky bar ──
+  if (asbFill) asbFill.style.width = '100%';
+  if (asbPct)  asbPct.textContent  = '100%';
+  const asbDoneBadge = document.getElementById('asb-done-badge');
+  const asbProgWrap  = document.getElementById('asb-progress-wrap');
+  if (asbDoneBadge) asbDoneBadge.style.display = 'inline-flex';
+  if (asbProgWrap)  asbProgWrap.style.display   = 'none';
+  if (results.length === 0 && asbDoneBadge) {
+    asbDoneBadge.innerHTML = '<span style="width:5px;height:5px;border-radius:50%;background:var(--em);display:inline-block"></span>&nbsp;Clean';
+    asbDoneBadge.className = 'badge';
+  }
+
   renderAuditResults(identifier, results);
+  renderAuditDashboard(identifier, results);
+}
+
+// ── Populate #audit-dashboard with live results ───────────────────────────
+function renderAuditDashboard(identifier, results) {
+  const dash = document.getElementById('audit-dashboard');
+  if (!dash) return;
+
+  const total      = results.length || 6;
+  const monthly    = total * 280;
+  const annual     = monthly * 12;
+
+  // KPI mirrors (audit-dashboard has its own IDs prefixed adb-)
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  set('adb-monthly',  '$' + monthly.toLocaleString());
+  set('adb-annual',   '$' + annual.toLocaleString());
+  set('adb-vectors',  total);
+
+  // Mirror sparkline if original rendered one
+  const origSpark = document.getElementById('sparkline-wrap');
+  const adbSpark  = document.getElementById('adb-sparkline-wrap');
+  if (origSpark && origSpark.style.display !== 'none' && adbSpark) {
+    adbSpark.style.display = 'block';
+    const origSvg = document.getElementById('erosion-sparkline');
+    const adbSvg  = document.getElementById('adb-sparkline');
+    if (origSvg && adbSvg) adbSvg.innerHTML = origSvg.innerHTML;
+  }
+
+  // Mirror rev chart
+  const origChart = document.getElementById('rev-chart-wrap');
+  const adbChart  = document.getElementById('adb-rev-chart');
+  if (origChart && origChart.style.display !== 'none' && adbChart) {
+    adbChart.style.display = 'block';
+    const origBars = document.getElementById('rev-chart-bars');
+    const adbBars  = document.getElementById('adb-rev-bars');
+    if (origBars && adbBars) adbBars.innerHTML = origBars.innerHTML;
+  }
+
+  // Mirror hijack results
+  const origHijack = document.getElementById('hijack-results');
+  const adbHijack  = document.getElementById('adb-hijack-results');
+  if (origHijack && adbHijack) adbHijack.innerHTML = origHijack.innerHTML;
+
+  const origLoss = document.getElementById('hijack-total-loss');
+  const adbLoss  = document.getElementById('adb-hijack-loss');
+  if (origLoss && adbLoss) adbLoss.textContent = origLoss.textContent;
+
+  // Mirror threat ticker
+  const origTicker = document.getElementById('threat-ticker-text');
+  const adbTicker  = document.getElementById('adb-ticker-text');
+  const adbTickerWrap = document.getElementById('adb-ticker-wrap');
+  if (origTicker && adbTicker) {
+    adbTicker.textContent = origTicker.textContent;
+    if (adbTickerWrap && origTicker.textContent.length > 3) {
+      adbTickerWrap.style.display = 'block';
+    }
+  }
+
+  // Mirror negotiator log
+  const origNeg = document.getElementById('negotiator-log');
+  const adbNeg  = document.getElementById('adb-neg-log');
+  if (origNeg && adbNeg) {
+    // Live-sync neg log content
+    adbNeg.innerHTML = origNeg.innerHTML;
+    new MutationObserver(() => { adbNeg.innerHTML = origNeg.innerHTML; adbNeg.scrollTop = adbNeg.scrollHeight; })
+      .observe(origNeg, { childList: true, subtree: true });
+  }
+
+  // Mirror negotiator status
+  const origNegStatus = document.getElementById('neg-status');
+  const adbNegStatus  = document.getElementById('adb-neg-status');
+  if (origNegStatus && adbNegStatus) {
+    adbNegStatus.textContent = origNegStatus.textContent;
+    new MutationObserver(() => { adbNegStatus.textContent = origNegStatus.textContent; })
+      .observe(origNegStatus, { childList: true, subtree: true, characterData: true });
+  }
+
+  // Reveal dashboard with animation
+  dash.style.display = 'block';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    dash.classList.add('revealed');
+    // Smooth scroll to top of results after a beat
+    setTimeout(() => {
+      dash.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 160);
+  }));
 }
 
 function renderAuditResults(identifier, results) {
@@ -3103,10 +3592,17 @@ async function syncUserDashboard(user, page) {
     const annualEl  = document.getElementById('kpi-annual-loss');
     if (monthlyEl && monthlyLoss > 0) monthlyEl.textContent = '$' + monthlyLoss.toLocaleString();
     if (annualEl  && annualLoss  > 0) annualEl.textContent  = '$' + annualLoss.toLocaleString();
+    // Mirror into audit-dashboard cards
+    const adbM = document.getElementById('adb-monthly');
+    const adbA = document.getElementById('adb-annual');
+    if (adbM && monthlyLoss > 0) adbM.textContent = '$' + monthlyLoss.toLocaleString();
+    if (adbA && annualLoss  > 0) adbA.textContent = '$' + annualLoss.toLocaleString();
 
     // Update vectors active
     const vectorsEl = document.getElementById('kpi-vectors');
     if (vectorsEl) vectorsEl.textContent = totalCount;
+    const adbV = document.getElementById('adb-vectors');
+    if (adbV) adbV.textContent = totalCount;
 
     if (!leaks || leaks.length === 0) {
       activityEl.innerHTML = `
@@ -5153,6 +5649,34 @@ async function grantBiometricConsent() {
 
     }
   };
+
+
+// ── Sync biometric data into audit-dashboard card ────────────────────────
+function syncBiometricToAdb() {
+  const pairs = [
+    ['bm-bar-match','adb-bm-match'], ['bm-val-match','adb-bm-val-match'],
+    ['bm-bar-geo',  'adb-bm-geo'],   ['bm-val-geo',  'adb-bm-val-geo'],
+    ['bm-bar-wm',   'adb-bm-wm'],    ['bm-val-wm',   'adb-bm-val-wm'],
+    ['bm-bar-df',   'adb-bm-df'],    ['bm-val-df',   'adb-bm-val-df'],
+  ];
+  pairs.forEach(([src, dst]) => {
+    const s = document.getElementById(src);
+    const d = document.getElementById(dst);
+    if (s && d) {
+      d.style.width   = s.style.width;
+      d.textContent   = s.textContent;
+    }
+  });
+  const verdict = document.getElementById('bio-verdict');
+  const adbV    = document.getElementById('adb-bio-verdict');
+  if (verdict && adbV) adbV.textContent = verdict.textContent;
+  const conf    = document.getElementById('bio-confidence-badge');
+  const adbC    = document.getElementById('adb-bio-confidence');
+  if (conf && adbC) {
+    adbC.textContent     = conf.textContent;
+    adbC.style.display   = conf.style.display;
+  }
+}
 
 })(); // End IIFE
 </script>
