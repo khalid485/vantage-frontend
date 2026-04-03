@@ -2686,9 +2686,18 @@ function renderAuditResults(identifier, results) {
   const paywallEl     = document.getElementById('paywall-overlay');
   const displayResults = total > 0 ? results : generateDemoResults(identifier, 6);
 
-  listEl.innerHTML = '';
-  displayResults.forEach((item, index) => {
-    const isLocked = !isPremium && index >= CONFIG.PAYWALL_FREE_ROWS;
+  // Show max 10 results at a time
+  const PAGE_SIZE = 10;
+  let auditPage = 0;
+
+  function renderPage() {
+    listEl.innerHTML = '';
+    const start = auditPage * PAGE_SIZE;
+    const pageResults = displayResults.slice(start, start + PAGE_SIZE);
+    const totalPages = Math.ceil(displayResults.length / PAGE_SIZE);
+
+    pageResults.forEach((item, index) => {
+    const isLocked = !isPremium && (start + index) >= CONFIG.PAYWALL_FREE_ROWS;
 
     const row = document.createElement('div');
     row.className = 'result-row';
@@ -2717,6 +2726,20 @@ function renderAuditResults(identifier, results) {
       </div>`;
     listEl.appendChild(row);
   });
+
+    // Pagination controls for audit results
+    if (totalPages > 1) {
+      const pgEl = document.createElement('div');
+      pgEl.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 0 4px;margin-top:8px;border-top:1px solid rgba(255,255,255,.04)';
+      pgEl.innerHTML = `
+        <button onclick="auditPage--;renderPage()" ${auditPage===0?'disabled':''} class="btn-ghost" style="font-size:.68rem;padding:5px 12px;opacity:${auditPage===0?'.3':'1'}">← Prev</button>
+        <span class="mono" style="font-size:.6rem;color:var(--muted)">Page ${auditPage+1} of ${totalPages} · ${displayResults.length} results</span>
+        <button onclick="auditPage++;renderPage()" ${auditPage>=totalPages-1?'disabled':''} class="btn-ghost" style="font-size:.68rem;padding:5px 12px;opacity:${auditPage>=totalPages-1?'.3':'1'}">Next →</button>
+      `;
+      listEl.appendChild(pgEl);
+    }
+  }
+  renderPage();
 
   // Paywall overlay for free tier
   if (!isPremium && displayResults.length > CONFIG.PAYWALL_FREE_ROWS) {
