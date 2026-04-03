@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -978,6 +979,89 @@
       transition: width 220ms linear;
     }
   </style>
+  <style>
+    /* ══ STATE-SWITCH: Hero Shrink + Sticky Scanner + Vault Grid ══════════ */
+
+    #hero-section {
+      transition: padding 0.6s cubic-bezier(0.4,0,0.2,1),
+                  min-height 0.6s cubic-bezier(0.4,0,0.2,1);
+    }
+    #hero-section.hero-shrunk {
+      padding: 1rem 0 !important;
+      min-height: auto !important;
+    }
+    #hero-section.hero-shrunk .badge.fi,
+    #hero-section.hero-shrunk .fi-2,
+    #hero-section.hero-shrunk .fi-3,
+    #hero-section.hero-shrunk .fi-5,
+    #hero-section.hero-shrunk .chevron-float {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      margin: 0 !important;
+      pointer-events: none;
+      transition: opacity 0.3s ease, max-height 0.4s ease;
+    }
+
+    #hero-scanner-card {
+      transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    #hero-scanner-card.scanner-sticky {
+      position: sticky;
+      top: 62px;
+      z-index: 100;
+      max-width: 100% !important;
+      border-radius: 0 !important;
+      border-left: none !important;
+      border-right: none !important;
+      border-top: none !important;
+      border-bottom: 1px solid rgba(16,185,129,.22) !important;
+      background: rgba(4,4,4,.98) !important;
+      backdrop-filter: blur(24px) !important;
+      -webkit-backdrop-filter: blur(24px) !important;
+      box-shadow: 0 4px 40px rgba(0,0,0,.8) !important;
+      margin-top: 0 !important;
+      padding: 14px 24px !important;
+    }
+    #hero-scanner-card.scanner-sticky .slabel { display: none; }
+
+    #audit-dashboard-vault {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1) 0.15s,
+                  transform 0.55s cubic-bezier(0.22,1,0.36,1) 0.15s;
+      position: relative;
+      z-index: 10;
+    }
+    #audit-dashboard-vault.vault-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* agent feed inside vault */
+    .vault-feed-line {
+      display: flex; gap: 10px; align-items: baseline;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,.025);
+      animation: feedIn .22s ease both;
+    }
+    .vault-feed-line:last-child { border-bottom: none; }
+    @keyframes feedIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+    .vault-feed-ts  { font-family:'JetBrains Mono',monospace; font-size:.58rem; color:rgba(99,102,241,.5); white-space:nowrap; flex-shrink:0; }
+    .vault-feed-msg { font-family:'JetBrains Mono',monospace; font-size:.65rem; line-height:1.55; }
+    .vault-msg-system  { color:#4b5563; }
+    .vault-msg-connect { color:#60a5fa; }
+    .vault-msg-agent   { color:#a5b4fc; font-weight:600; }
+    .vault-msg-success { color:#34d399; font-weight:700; }
+    .vault-msg-queued  { color:#fbbf24; }
+    .vault-msg-warn    { color:#f87171; }
+
+    @keyframes sovPulse {
+      0%  { transform:scale(.55); opacity:.8; }
+      70% { transform:scale(2.2); opacity:0; }
+      100%{ transform:scale(.55); opacity:0; }
+    }
+  </style>
 </head>
 
 <body>
@@ -1638,7 +1722,7 @@
     </p>
 
     <!-- SCANNER CARD -->
-    <div class="glass fi-4 w-full mt-6" style="max-width:520px;padding:22px 24px;border-color:rgba(16,185,129,.28)">
+    <div id="hero-scanner-card" class="glass fi-4 w-full mt-6" style="max-width:520px;padding:22px 24px;border-color:rgba(16,185,129,.28)">
       <div class="flex items-center gap-2 mb-3">
         <div style="width:5px;height:5px;border-radius:50%;background:var(--em);box-shadow:0 0 8px var(--em);animation:blink 1.4s ease infinite"></div>
         <div class="slabel">// Forensic Scan — Enter your creator username</div>
@@ -3894,6 +3978,245 @@ async function runNegotiatorSequence(results) {
 }
 
 // ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+//  STATE-SWITCH: REPORT VIEW ENGINE
+//  Called at end of every launchAudit chain.
+//  Shrinks hero → locks scanner sticky → builds vault grid A/B/C/D.
+// ══════════════════════════════════════════════════════════════
+
+function activateReportView(identifier, results) {
+  // 1. Shrink hero
+  const hero = document.getElementById('hero-section');
+  if (hero) hero.classList.add('hero-shrunk');
+
+  // 2. Lock scanner card sticky under nav
+  const scanCard = document.getElementById('hero-scanner-card');
+  if (scanCard) scanCard.classList.add('scanner-sticky');
+
+  // 3. Scroll to top — clean viewport
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // 4. Build + reveal vault grid
+  injectVaultGrid(identifier, results);
+}
+
+function injectVaultGrid(identifier, results) {
+  // Remove any previous vault
+  const old = document.getElementById('audit-dashboard-vault');
+  if (old) old.remove();
+
+  const total   = results.length || 6;
+  const monthly = total * 280;
+  const annual  = monthly * 12;
+  const slug    = escHtml(identifier);
+
+  // Sovereignty status
+  const atRisk      = total > 0;
+  const sColor      = atRisk ? '#f87171' : '#34d399';
+  const sBg         = atRisk ? 'rgba(248,113,113,.1)'  : 'rgba(16,185,129,.1)';
+  const sBorder     = atRisk ? 'rgba(248,113,113,.35)' : 'rgba(16,185,129,.35)';
+  const sLabel      = atRisk ? '⚠ AT RISK' : '✓ SECURE';
+
+  // Build URL rows for Block B
+  const displayList = results.length > 0 ? results : generateDemoResults(identifier, 5);
+  const urlRows = displayList.slice(0, 6).map(item => {
+    const erosion = (typeof EROSION_RATES !== 'undefined' && EROSION_RATES[item.label]) || 280;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:7px;background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.1);margin-bottom:5px">
+      <div style="display:flex;align-items:center;gap:8px;min-width:0">
+        <span style="width:5px;height:5px;border-radius:50%;background:var(--danger);flex-shrink:0;animation:blink 1.4s ease infinite"></span>
+        <div style="min-width:0">
+          <span class="mono" style="font-size:.6rem;color:var(--danger)">${escHtml(item.label)}</span>
+          <p class="mono" style="font-size:.58rem;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px">${escHtml(item.url)}</p>
+        </div>
+      </div>
+      <span class="mono" style="font-size:.6rem;font-weight:700;color:var(--em-bright);background:rgba(16,185,129,.09);border:1px solid rgba(16,185,129,.18);padding:2px 7px;border-radius:4px;flex-shrink:0">-$${erosion.toLocaleString()}/mo</span>
+    </div>`;
+  }).join('');
+
+  const vault = document.createElement('div');
+  vault.id = 'audit-dashboard-vault';
+  vault.style.cssText = 'max-width:80rem;margin:0 auto;padding:0 1.25rem 4rem';
+
+  vault.innerHTML = `
+    <!-- Report header + sovereignty badge -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:16px 0 12px">
+      <div>
+        <div class="slabel" style="color:var(--em);font-size:.54rem;margin-bottom:4px">// FORENSIC REPORT — TARGET: ${slug}</div>
+        <div style="font-family:'Syne',sans-serif;font-size:.92rem;font-weight:800;letter-spacing:-.02em;color:#e5e7eb">Asset Integrity Report</div>
+      </div>
+      <div style="display:inline-flex;align-items:center;gap:10px;padding:8px 16px;background:${sBg};border:1px solid ${sBorder};border-radius:999px;box-shadow:0 0 28px ${sBg}">
+        <div style="position:relative;width:10px;height:10px;flex-shrink:0">
+          <div style="position:absolute;inset:0;border-radius:50%;background:${sColor};animation:sovPulse 2s ease-out infinite;opacity:0"></div>
+          <div style="position:absolute;inset:0;border-radius:50%;background:${sColor};transform:scale(.55);box-shadow:0 0 10px ${sColor}"></div>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;color:${sColor};letter-spacing:.08em">${sLabel}</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <!-- ══ BLOCK A: THE PAIN ════════════════════════════════════════ -->
+      <div style="background:rgba(6,6,9,.96);border:1px solid rgba(248,113,113,.28);border-radius:14px;padding:22px 24px;box-shadow:0 0 40px rgba(248,113,113,.07)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:6px">
+          <span class="slabel" style="color:var(--danger)">// Revenue Erosion — Live Estimate</span>
+          <span class="badge badge-danger" style="font-size:.52rem"><span style="width:5px;height:5px;border-radius:50%;background:var(--danger);display:inline-block;animation:blink 1.2s ease infinite"></span>&nbsp;Capital Leak Active</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+          <div>
+            <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px">Monthly Erosion</div>
+            <div class="mono" style="font-size:clamp(3rem,7vw,5rem);font-weight:900;color:var(--danger);letter-spacing:-.06em;line-height:1;text-shadow:0 0 40px rgba(248,113,113,.3)">-$${monthly.toLocaleString()}</div>
+          </div>
+          <div style="width:1px;height:50px;background:rgba(255,255,255,.05);align-self:center;flex-shrink:0"></div>
+          <div>
+            <div style="font-size:.65rem;color:var(--muted);margin-bottom:2px">Annual Run Rate</div>
+            <div class="mono" style="font-size:1.5rem;font-weight:800;color:var(--danger);letter-spacing:-.03em">-$${annual.toLocaleString()}</div>
+            <div style="font-size:.6rem;color:var(--muted);margin-top:2px">if left unaddressed</div>
+          </div>
+          <div style="width:1px;height:50px;background:rgba(255,255,255,.05);align-self:center;flex-shrink:0"></div>
+          <div>
+            <div style="font-size:.65rem;color:var(--muted);margin-bottom:2px">Active Vectors</div>
+            <div class="mono" style="font-size:1.5rem;font-weight:800;color:var(--em);letter-spacing:-.03em">${total}</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">
+          ${['Telegram','Bunkrr','Fapello','Kemono','Social Impersonation'].map(p=>`<span class="mono" style="font-size:.56rem;padding:3px 9px;border-radius:99px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.18);color:var(--danger)">${p}</span>`).join('')}
+        </div>
+      </div>
+
+      <!-- ══ BLOCK B: THE PROOF ═══════════════════════════════════════ -->
+      <div style="background:rgba(6,6,9,.96);border:1px solid rgba(248,113,113,.18);border-radius:14px;padding:20px 22px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <span class="slabel" style="color:var(--danger)">// Live Threat Intelligence — Confirmed Vectors</span>
+          <span class="badge badge-danger" style="font-size:.52rem">${total} active</span>
+        </div>
+        <!-- Scrolling ticker -->
+        <div style="overflow:hidden;white-space:nowrap;background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.28);border-radius:6px;padding:5px 0;margin-bottom:12px">
+          <div id="vault-ticker-text" style="display:inline-block;animation:ticker-scroll 36s linear infinite;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--danger);letter-spacing:.04em;white-space:nowrap;padding-left:100%">Scanning threat vectors…</div>
+        </div>
+        <!-- URL rows -->
+        <div>${urlRows}</div>
+        ${results.length === 0 ? '<p class="mono" style="font-size:.6rem;color:#374151;margin-top:4px">Demo data shown — run a real scan for live results.</p>' : ''}
+      </div>
+
+      <!-- ══ BLOCK C: THE AGENT ════════════════════════════════════════ -->
+      <div style="background:linear-gradient(145deg,rgba(6,6,12,.97) 0%,rgba(10,10,20,.97) 100%);border:1px solid rgba(99,102,241,.22);border-radius:14px;padding:20px 22px;backdrop-filter:blur(32px);box-shadow:0 0 60px rgba(99,102,241,.08)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#818cf8;box-shadow:0 0 8px #6366f1;animation:blink 1.6s ease infinite"></div>
+            <span style="font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a5b4fc">// Live Enforcement Protocol</span>
+          </div>
+          <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.3);border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#818cf8;letter-spacing:.08em">
+            <span style="width:5px;height:5px;border-radius:50%;background:#818cf8;animation:blink 1.6s ease infinite"></span>
+            <span id="vault-agent-status">INITIALIZING</span>
+          </div>
+        </div>
+        <div id="vault-feed-scroll" style="height:186px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(99,102,241,.2) transparent">
+          <div id="vault-feed-lines">
+            <div class="vault-feed-line"><span class="vault-feed-ts">--:--:--</span><span class="vault-feed-msg vault-msg-system">Enforcement engine initializing for @${slug}…</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ BLOCK D: THE SOLUTION ═════════════════════════════════════ -->
+      <div style="background:rgba(6,6,9,.98);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:26px 24px;text-align:center">
+        <p style="font-size:.9rem;color:#9ca3af;line-height:1.9;font-style:italic;max-width:520px;margin:0 auto 20px">
+          We don&rsquo;t ask them to stop &mdash; we make them
+          <span style="color:var(--em);font-weight:700;font-style:normal">disappear</span>.
+          And we make them
+          <span style="color:var(--danger);font-weight:700;font-style:normal">regret the breach</span>.
+        </p>
+        <div style="max-width:400px;margin:0 auto">
+          <button onclick="openPaddleCheckout('fortress')"
+            onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 0 72px rgba(16,185,129,.65),0 8px 36px rgba(0,0,0,.7)'"
+            onmouseout="this.style.transform='';this.style.boxShadow='0 0 52px rgba(16,185,129,.5),0 4px 24px rgba(0,0,0,.6)'"
+            style="background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#040404;font-family:'Inter',sans-serif;font-weight:800;font-size:.95rem;border:none;border-radius:12px;padding:16px 28px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;box-shadow:0 0 52px rgba(16,185,129,.5),0 4px 24px rgba(0,0,0,.6);transition:transform .15s,box-shadow .25s;letter-spacing:-.02em">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Activate Fortress — $197/mo
+          </button>
+          <p style="font-family:'JetBrains Mono',monospace;font-size:.57rem;color:#374151;text-align:center;margin-top:10px">7-day guarantee · cancel anytime · your identity stays private</p>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  // Insert after hero section
+  const heroSection = document.getElementById('hero-section');
+  if (heroSection?.parentNode) {
+    heroSection.parentNode.insertBefore(vault, heroSection.nextSibling);
+  } else {
+    document.body.appendChild(vault);
+  }
+
+  // Animate in
+  requestAnimationFrame(() => requestAnimationFrame(() => vault.classList.add('vault-visible')));
+
+  // Populate ticker
+  const vaultTicker = document.getElementById('vault-ticker-text');
+  if (vaultTicker) {
+    const mainTicker = document.getElementById('threat-ticker-text');
+    if (mainTicker && mainTicker.textContent.length > 5) {
+      vaultTicker.textContent = mainTicker.textContent;
+      vaultTicker.style.paddingLeft = '';
+    } else {
+      const items = displayList.map(r => `⚠ ${r.label} — ${r.url}`).join('   ·   ');
+      vaultTicker.textContent = items;
+      vaultTicker.style.paddingLeft = '';
+    }
+    // Also sync later when threat ticker populates
+    setTimeout(() => {
+      const live = document.getElementById('threat-ticker-text');
+      if (live && live.textContent.length > 5) {
+        vaultTicker.textContent = live.textContent;
+      }
+    }, 2500);
+  }
+
+  // Start agent feed
+  startVaultAgentFeed(identifier, results);
+}
+
+function startVaultAgentFeed(identifier, results) {
+  const feedEl   = document.getElementById('vault-feed-lines');
+  const scrollEl = document.getElementById('vault-feed-scroll');
+  const statusEl = document.getElementById('vault-agent-status');
+  if (!feedEl) return;
+
+  const slug = identifier || 'creator';
+  const ts   = () => new Date().toTimeString().slice(0, 8);
+
+  function addLine(type, msg) {
+    const line = document.createElement('div');
+    line.className = 'vault-feed-line';
+    line.innerHTML = `<span class="vault-feed-ts">[${ts()}]</span><span class="vault-feed-msg vault-msg-${type}">${escHtml(msg)}</span>`;
+    feedEl.appendChild(line);
+    if (scrollEl) scrollEl.scrollTop = scrollEl.scrollHeight;
+  }
+
+  feedEl.innerHTML = '';
+  if (statusEl) statusEl.textContent = 'AGENT RUNNING';
+
+  const count = Math.min(results.length, 3) || 3;
+  const seq = [
+    [200,   'connect', `[AGENT] Handshake established with Bunkrr API Node…`],
+    [900,   'connect', `[AGENT] Identifying encrypted assets for @${slug}…`],
+    [1700,  'agent',   `[AGENT] NEGOTIATING: Automated Takedown Request Issued.`],
+    [2500,  'agent',   `[AGENT] STATUS: ${count} Assets Queued for De-listing.`],
+    [3300,  'connect', `[AGENT] Fapello Index: DMCA endpoint responding — forwarding ERR payload…`],
+    [4100,  'agent',   `[AGENT] Escalating Telegram cluster — admin fingerprint acquired.`],
+    [4900,  'queued',  `API RESPONSE: ${count} takedowns queued — pending host authorization.`],
+    [5700,  'success', `TAKEDOWN CONFIRMED: Bunkrr asset removed. Response time: 38 min.`],
+    [6500,  'queued',  `API RESPONSE: Fapello removal queued — est. 24h.`],
+    [7300,  'success', `GOOGLE DE-INDEX: Submitted. Visibility suppressed within 48h.`],
+    [8100,  'warn',    `REPEAT OFFENDER DETECTED — ISP-level escalation initiated.`],
+    [8900,  'agent',   `[AGENT] Fingerprint propagated to 12,847 enforcement nodes.`],
+    [9700,  'success', `ENFORCEMENT BATCH COMPLETE — assets removed, queued, or escalated.`],
+  ];
+
+  seq.forEach(([d, t, m]) => setTimeout(() => addLine(t, m), d));
+  setTimeout(() => { if (statusEl) statusEl.textContent = 'BATCH COMPLETE'; }, 10200);
+}
+
 //  V2 — ANIMATED COUNTER ENGINE
 // ══════════════════════════════════════════════════════════════
 
@@ -4222,6 +4545,9 @@ window.launchAudit = async function() {
 
   // ── Phase 5: Supabase persistence ───────────────────────────
   setTimeout(() => persistAuditV2(identifier, demoLeaks, monthlyTotal), 1800);
+
+  // ── STATE-SWITCH: shrink hero, sticky scanner, vault grid ────
+  activateReportView(identifier, results);
 };
 
 window._handleSignOut    = window.handleSignOut;
@@ -5647,6 +5973,8 @@ async function grantBiometricConsent() {
         window.launchThreatTickerReal(identifier, auditResults || []);
       }, 1000);
 
+      // ── STATE-SWITCH: hero shrink + vault grid ──────────────
+      activateReportView(identifier, auditResults || []);
     }
   };
 
