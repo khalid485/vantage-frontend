@@ -1061,7 +1061,7 @@
     </div>
     <div class="glass" style="padding:16px">
       <div class="slabel mb-1">SLA</div>
-      <div class="mono" style="font-size:1.6rem;font-weight:700;color:var(--em)">&lt;48h</div>
+      <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--em)">Zero Identity</div>
     </div>
   </div>
 
@@ -1355,7 +1355,7 @@
     <!-- Stats -->
     <div class="flex flex-wrap justify-center gap-2 mt-5 fi-5">
       <div class="stat-pill"><span class="text-em" style="font-weight:700">98.4%</span><span style="color:var(--muted)">takedown rate</span></div>
-      <div class="stat-pill"><span style="color:var(--danger);font-weight:700">&lt;48h</span><span style="color:var(--muted)">avg. removal</span></div>
+      <div class="stat-pill"><span style="color:var(--em);font-weight:700">Zero identity</span><span style="color:var(--muted)">exposure</span></div>
       <div class="stat-pill"><span class="text-em" style="font-weight:700">200+</span><span style="color:var(--muted)">leak networks</span></div>
       <div class="stat-pill"><span class="text-em" style="font-weight:700">24/7</span><span style="color:var(--muted)">monitoring</span></div>
     </div>
@@ -1420,27 +1420,27 @@
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
         <span class="mono" style="font-size:.68rem;color:#e5e7eb">Telegram <span style="color:var(--muted)">· 38 channels · avg 4,200 members</span></span>
         <span class="mono" style="font-size:.62rem;color:var(--muted)">$6–$12/sub · US/EU audience</span>
-        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--em)">$89,400/mo</span>
+        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--danger)">$89,400/mo</span>
       </div>
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
         <span class="mono" style="font-size:.68rem;color:#e5e7eb">Bunkrr <span style="color:var(--muted)">· 214 files · 18,700 unique views</span></span>
         <span class="mono" style="font-size:.62rem;color:var(--muted)">2.1% conv · $22 avg sub</span>
-        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--em)">$68,300/mo</span>
+        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--danger)">$68,300/mo</span>
       </div>
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
         <span class="mono" style="font-size:.68rem;color:#e5e7eb">Fapello <span style="color:var(--muted)">· 91 posts · 31,000 unique views</span></span>
         <span class="mono" style="font-size:.62rem;color:var(--muted)">1.8% conv · $18 avg sub</span>
-        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--em)">$48,200/mo</span>
+        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--danger)">$48,200/mo</span>
       </div>
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
         <span class="mono" style="font-size:.68rem;color:#e5e7eb">Kemono + other <span style="color:var(--muted)">· 159 vectors · mixed geo</span></span>
         <span class="mono" style="font-size:.62rem;color:var(--muted)">LATAM/SEA · $8 avg sub</span>
-        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--em)">$20,000/mo</span>
+        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--danger)">$20,000/mo</span>
       </div>
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:11px 0">
         <span class="mono" style="font-size:.7rem;font-weight:700;color:#e5e7eb">Total Erosion — 502 Vectors</span>
         <span></span>
-        <span class="mono" style="font-size:.95rem;font-weight:800;color:var(--em-bright)">$225,900/mo</span>
+        <span class="mono" style="font-size:.95rem;font-weight:800;color:var(--danger)">$225,900/mo</span>
       </div>
     </div>
 
@@ -1454,7 +1454,7 @@
 <!-- ══════════════════════════════════════════════════
      PRIVACY VAULT — LEGAL PROXY
 ══════════════════════════════════════════════════ -->
-<section class="relative z-10 max-w-5xl mx-auto px-5 pb-20" style="scroll-margin-top:62px">
+<section id="privacy-arch-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-20" style="scroll-margin-top:62px">
   <div class="slabel mb-2" data-sr="left">// Privacy Architecture</div>
   <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:20px;display:inline-block;transform:scaleY(1.28)" data-sr>The Privacy Vault: Your Real Name Never Leaves This Room.</h2>
 
@@ -2249,7 +2249,7 @@ const CONFIG = {
   ],
 };
 
-const API_BASE = "https://modelshield-backend-production-9369.up.railway.app";
+const API_BASE = "https://vantage-backend-production-9369.up.railway.app";
 
 // ══════════════════════════════════════════════════════════════
 //  PADDLE v2 INIT + CHECKOUT
@@ -2992,7 +2992,7 @@ window.goToDashboard = function() {
 //  DASHBOARD DATA SYNC
 // ══════════════════════════════════════════════════════════════
 async function showDashboard(user) {
-  ['hero-section','protocol-section','pricing-section','agency-section','privacy-view','terms-view','refund-view'].forEach(id => {
+  ['hero-section','protocol-section','pricing-section','pricing-cards','privacy-arch-section','agency-section','privacy-view','terms-view','refund-view'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.add('hidden');
   });
@@ -3016,7 +3016,7 @@ async function showDashboard(user) {
 }
 
 function showLanding() {
-  ['hero-section','protocol-section','pricing-section','agency-section'].forEach(id => {
+  ['hero-section','protocol-section','pricing-section','pricing-cards','privacy-arch-section','agency-section'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('hidden');
   });
@@ -3028,7 +3028,7 @@ function showLanding() {
 }
 
 function showLegal(page) {
-  ['hero-section','protocol-section','pricing-section','agency-section','dashboard-view'].forEach(id => {
+  ['hero-section','protocol-section','pricing-section','pricing-cards','privacy-arch-section','agency-section','dashboard-view'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.add('hidden');
   });
