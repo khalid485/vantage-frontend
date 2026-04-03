@@ -179,8 +179,8 @@
     .btn-ghost:hover { border-color:var(--em); color:var(--em); background:rgba(16,185,129,.05); box-shadow:0 0 16px rgba(16,185,129,.15); }
 
     .btn-enforce {
-      background: rgba(248,113,113,.08);
-      border: 1px solid rgba(248,113,113,.35);
+      background: var(--danger-bg);
+      border: 1px solid rgba(248,113,113,.25);
       color: var(--danger);
       font-family: 'JetBrains Mono', monospace;
       font-size: .68rem;
@@ -192,7 +192,7 @@
       transition: background .2s, border-color .2s, box-shadow .2s;
       display: inline-flex; align-items: center; gap: 5px;
     }
-    .btn-enforce:hover { background:rgba(248,113,113,.15); border-color:rgba(248,113,113,.6); box-shadow:0 0 12px rgba(248,113,113,.2); }
+    .btn-enforce:hover { background:rgba(248,113,113,.15); border-color:rgba(248,113,113,.5); box-shadow:0 0 12px rgba(248,113,113,.2); }
     .btn-enforce:disabled { opacity:.4; cursor:not-allowed; }
 
     /* ── PADDLE CTA ── */
@@ -322,10 +322,10 @@
     .tag-match  { background:rgba(248,113,113,.12); color:var(--danger);    border:1px solid rgba(248,113,113,.25); }
     .tag-init   { background:rgba(16,185,129,.1);   color:var(--em);        border:1px solid rgba(16,185,129,.2); }
     .tag-ok     { background:rgba(16,185,129,.1);   color:var(--em);        border:1px solid rgba(16,185,129,.2); }
-    .tag-warn   { background:rgba(16,185,129,.07);   color:#e5e7eb;          border:1px solid rgba(16,185,129,.18); }
+    .tag-warn   { background:rgba(251,191,36,.08);   color:#fbbf24;          border:1px solid rgba(251,191,36,.22); }
     .tag-done   { background:rgba(16,185,129,.15);  color:var(--em-bright); border:1px solid rgba(16,185,129,.3); }
     .tag-intel  { background:rgba(167,139,250,.12); color:#a78bfa;          border:1px solid rgba(167,139,250,.25); }
-    .tag-analysis { background:rgba(16,185,129,.07); color:#e5e7eb;          border:1px solid rgba(16,185,129,.2); }
+    .tag-analysis { background:rgba(251,191,36,.08); color:#fbbf24;          border:1px solid rgba(251,191,36,.22); }
     .tag-enforce { background:rgba(248,113,113,.12); color:var(--danger);   border:1px solid rgba(248,113,113,.28); }
 
     /* ── RESULT ROWS ── */
@@ -333,12 +333,12 @@
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
       padding: 10px 12px;
       border-radius: 8px;
-      background: rgba(16,185,129,.04);
-      border: 1px solid rgba(16,185,129,.1);
+      background: rgba(248,113,113,.04);
+      border: 1px solid rgba(248,113,113,.1);
       margin-bottom: 6px;
       transition: border-color .2s, background .2s;
     }
-    .result-row:hover { border-color:rgba(16,185,129,.25); background:rgba(16,185,129,.07); }
+    .result-row:hover { border-color:rgba(248,113,113,.25); background:rgba(248,113,113,.07); }
     .result-row.resolved { background:rgba(16,185,129,.04); border-color:rgba(16,185,129,.15); }
     .result-row.resolved:hover { border-color:rgba(16,185,129,.3); }
 
@@ -627,7 +627,7 @@
       font-family: 'JetBrains Mono', monospace; letter-spacing: .05em;
     }
     .pill-danger  { background: rgba(248,113,113,.12); color: var(--danger); border: 1px solid rgba(248,113,113,.25); }
-    .pill-warn    { background: rgba(16,185,129,.08);  color: #e5e7eb;       border: 1px solid rgba(16,185,129,.2); }
+    .pill-warn    { background: rgba(251,191,36,.1);   color: #fbbf24;       border: 1px solid rgba(251,191,36,.3); }
     .pill-em      { background: rgba(16,185,129,.10);  color: var(--em);     border: 1px solid var(--border); }
 
     .mesh-card::before {
@@ -661,8 +661,8 @@
 
     /* tag-biometric in terminal */
     .tag-biometric { background: rgba(167,139,250,.12); color: #a78bfa; border: 1px solid rgba(167,139,250,.28); }
-    .tag-loss      { background: rgba(16,185,129,.12);  color: var(--em-bright); border: 1px solid rgba(16,185,129,.32); font-weight: 700; }
-    .tag-hijack    { background: rgba(16,185,129,.08);  color: #e5e7eb;          border: 1px solid rgba(16,185,129,.24); }
+    .tag-loss      { background: rgba(248,113,113,.12);  color: var(--danger); border: 1px solid rgba(248,113,113,.32); font-weight: 700; }
+    .tag-hijack    { background: rgba(251,191,36,.08);  color: #fbbf24;          border: 1px solid rgba(251,191,36,.22); }
     .tag-agent     { background: rgba(248,113,113,.1);  color: var(--danger);    border: 1px solid rgba(248,113,113,.25); }
     .tag-mesh      { background: rgba(96,165,250,.1);   color: var(--blue);      border: 1px solid rgba(96,165,250,.22); }
 
@@ -1179,7 +1179,7 @@
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(16,185,129,.08)">
         <div class="flex items-baseline gap-2 flex-wrap">
           <span style="font-size:.72rem;color:var(--muted)">Total Estimated Monthly Funnel Loss:</span>
-          <span class="mono" style="font-size:1.1rem;font-weight:800;color:#e5e7eb" id="hijack-total-loss">—</span>
+          <span class="mono" style="font-size:1.1rem;font-weight:800;color:var(--danger)" id="hijack-total-loss">—</span>
         </div>
         <p class="mono" style="font-size:.62rem;color:var(--muted);margin-top:4px">Calculated at ~1% view-to-conversion · $22 avg. subscriber value</p>
       </div>
@@ -3021,6 +3021,9 @@ async function showDashboard(user) {
   });
   document.getElementById('dashboard-view').classList.remove('hidden');
   document.getElementById('dash-email').textContent = user.email;
+  // Always hide social hijack on dashboard load — only shows after scan
+  const shEl = document.getElementById('social-hijack-section');
+  if (shEl) shEl.classList.add('hidden');
 
   const { data } = await db
     .from(CONFIG.LEADS_TABLE)
@@ -4328,7 +4331,7 @@ function _renderLiveHijackCard(profiles, totalViews, totalConversions, totalLoss
               ${p.views.toLocaleString()} views · ${p.posts} posts · ${p.conversions.toLocaleString()} est. conversions lost
             </div>
           </div>
-          <div class="mono" style="font-size:.72rem;font-weight:700;color:#e5e7eb;white-space:nowrap">
+          <div class="mono" style="font-size:.72rem;font-weight:700;color:var(--danger);white-space:nowrap">
             −${fmtUSD(p.monthlyLoss)}/mo
           </div>
         </div>`;
@@ -4336,7 +4339,8 @@ function _renderLiveHijackCard(profiles, totalViews, totalConversions, totalLoss
   }
 
   if (totalEl) {
-    totalEl.textContent = `${fmtUSD(totalLoss)}/mo`;
+    totalEl.textContent = `-${fmtUSD(totalLoss)}/mo`;
+    totalEl.style.color = "var(--danger)";
   }
 }
 
@@ -5079,13 +5083,13 @@ async function grantBiometricConsent() {
           </div>
           <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap">
             <span class="mono" style="font-size:.58rem;color:#e5e7eb">[TRAFFIC HIJACK] ${(h.lostViews/1000).toFixed(0)}k DIVERTED → ~${h.lostConversions.toLocaleString()} LOST SUBS</span>
-            <span class="rev-loss-badge" style="color:#e5e7eb;background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.18)">-$${h.lostRevenue.toLocaleString()}/mo</span>
+            <span class="rev-loss-badge" style="color:var(--danger);background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.25)">-$${h.lostRevenue.toLocaleString()}/mo</span>
           </div>
         </div>`;
     }).join('');
 
     const totalLoss = hijacks.reduce((s, h) => s + h.lostRevenue, 0);
-    if (totalLossEl) totalLossEl.textContent = '-$' + totalLoss.toLocaleString() + '/mo';
+    if (totalLossEl) { totalLossEl.textContent = '-$' + totalLoss.toLocaleString() + '/mo'; totalLossEl.style.color = 'var(--danger)'; }
 
     // Log to terminal
     if (typeof addTerminalLine === 'function') {
