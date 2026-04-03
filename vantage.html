@@ -4285,13 +4285,8 @@ async function fetchImpersonatorData(username) {
 
   } catch (err) {
     console.warn('[Modelshield] Apify social scan fallback:', err.message);
-    // Fallback — clearly labelled as estimated data in the UI
-    profiles = [
-      { handle: `leaks.${username}`,     platform: 'Instagram', url: `https://instagram.com/leaks.${username}`,     views: 45200, posts: 38, source: 'estimated' },
-      { handle: `${username}_leaked`,    platform: 'TikTok',    url: `https://tiktok.com/@${username}_leaked`,      views: 33100, posts: 24, source: 'estimated' },
-      { handle: `real${username}free`,   platform: 'Instagram', url: `https://instagram.com/real${username}free`,   views: 12800, posts: 19, source: 'estimated' },
-    ];
-    addTerminalLine('HIJACK', `[HIJACK] Live scan unavailable — displaying estimated exposure data`);
+    profiles = []; // No fake data — show nothing when Apify unavailable
+    addTerminalLine('HIJACK', `[HIJACK] Live social scan unavailable`);
   }
 
   // Calculate revenue erosion per profile and totals
@@ -4320,6 +4315,12 @@ function _renderLiveHijackCard(profiles, totalViews, totalConversions, totalLoss
   if (!section) return;
 
   section.classList.remove('hidden');
+
+  if (profiles.length === 0) {
+    if (rowsEl) rowsEl.innerHTML = `<p class="mono" style="font-size:.65rem;color:var(--muted);padding:10px 0">No social hijacking detected.</p>`;
+    if (totalEl) { totalEl.textContent = '—'; }
+    return;
+  }
 
   if (rowsEl) {
     rowsEl.innerHTML = profiles.map(p => {
