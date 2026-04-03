@@ -528,7 +528,7 @@
     /* AI Negotiator window */
     .negotiator-window {
       background: #020203;
-      border: 1px solid rgba(16,185,129,.18);
+      border: 1px solid rgba(248,113,113,.25);
       border-radius: 12px;
       padding: 14px 16px;
       font-family: 'JetBrains Mono', monospace;
@@ -537,10 +537,10 @@
       max-height: 200px;
       overflow-y: auto;
       scrollbar-width: thin;
-      scrollbar-color: rgba(16,185,129,.2) transparent;
+      scrollbar-color: rgba(248,113,113,.2) transparent;
     }
     .negotiator-window::-webkit-scrollbar { width: 4px; }
-    .negotiator-window::-webkit-scrollbar-thumb { background: rgba(16,185,129,.2); border-radius: 4px; }
+    .negotiator-window::-webkit-scrollbar-thumb { background: rgba(248,113,113,.2); border-radius: 4px; }
 
     .neg-line-agent   { color: var(--danger); }
     .neg-line-success { color: var(--em-bright); font-weight: 700; }
@@ -550,8 +550,8 @@
     .negotiator-strip {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
       padding: 10px 14px;
-      background: rgba(16,185,129,.04);
-      border: 1px solid rgba(16,185,129,.14);
+      background: rgba(248,113,113,.04);
+      border: 1px solid rgba(248,113,113,.2);
       border-radius: 10px;
       margin-bottom: 10px;
     }
@@ -571,8 +571,8 @@
     /* Threat Intel Ticker */
     .threat-ticker-wrap {
       overflow: hidden; white-space: nowrap;
-      background: rgba(16,185,129,.06);
-      border: 1px solid rgba(16,185,129,.18);
+      background: rgba(248,113,113,.08);
+      border: 1px solid rgba(248,113,113,.4);
       border-radius: 6px; padding: 6px 0;
     }
     .threat-ticker {
@@ -905,7 +905,7 @@
         <div style="width:1px;height:40px;background:rgba(255,255,255,.06)"></div>
         <div>
           <span style="font-size:.72rem;color:var(--muted)">Annual Run Rate</span>
-          <div class="mono counter-animated" style="font-size:1.4rem;font-weight:700;color:#10b981;letter-spacing:-.02em;line-height:1.1" id="kpi-annual-loss">$0.00</div>
+          <div class="mono counter-animated" style="font-size:1.4rem;font-weight:700;color:var(--danger);letter-spacing:-.02em;line-height:1.1" id="kpi-annual-loss">$0.00</div>
         </div>
         <div style="width:1px;height:40px;background:rgba(255,255,255,.06)"></div>
         <div>
@@ -944,7 +944,7 @@
   </div>
 
   <!-- ── AI NEGOTIATOR — Phase 4 ──────────────────────────────────── -->
-  <div class="glass mb-4" style="padding:18px 22px;border-color:rgba(16,185,129,.2)">
+  <div class="glass mb-4" style="padding:18px 22px;border-color:rgba(248,113,113,.45);box-shadow:0 0 32px rgba(248,113,113,.1),inset 0 1px 0 rgba(255,255,255,.04)">
     <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
       <div class="flex items-center gap-2">
         <div style="width:8px;height:8px;border-radius:50%;background:var(--danger);box-shadow:0 0 10px var(--danger);animation:blink 1s ease infinite;flex-shrink:0"></div>
@@ -952,11 +952,11 @@
       </div>
       <div class="flex items-center gap-2">
         <!-- View toggle -->
-        <div style="display:flex;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;overflow:hidden">
+        <div style="display:flex;background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.3);border-radius:7px;overflow:hidden">
           <button id="neg-tab-log"      onclick="switchNegTab('log')"      class="mono" style="font-size:.58rem;padding:4px 10px;border:none;background:rgba(248,113,113,.15);color:var(--danger);cursor:pointer;letter-spacing:.06em;text-transform:uppercase">LOG</button>
-          <button id="neg-tab-timeline" onclick="switchNegTab('timeline')" class="mono" style="font-size:.58rem;padding:4px 10px;border:none;background:transparent;color:#374151;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s">TIMELINE</button>
+          <button id="neg-tab-timeline" onclick="switchNegTab('timeline')" class="mono" style="font-size:.58rem;padding:4px 10px;border:none;background:transparent;color:var(--danger);cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s">TIMELINE</button>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);border-radius:8px;padding:5px 12px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.4);border-radius:8px;padding:5px 12px;flex-shrink:0">
           <span class="mono" style="font-size:.6rem;color:var(--muted)">AGENT STATUS:</span>
           <span class="mono" style="font-size:.6rem;color:var(--danger);font-weight:700" id="neg-status">STANDBY</span>
         </div>
@@ -1125,15 +1125,15 @@
 
         <!-- Summary stats -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 results-stats-grid" style="position:relative;z-index:2">
-          <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
+          <div style="background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.35);border-radius:10px;padding:10px 12px">
             <div class="slabel" style="color:var(--danger)">Cloud Hosts</div>
             <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-cloud">—</div>
           </div>
-          <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
+          <div style="background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.35);border-radius:10px;padding:10px 12px">
             <div class="slabel" style="color:var(--danger)">Encrypted Indices</div>
             <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-enc">—</div>
           </div>
-          <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
+          <div style="background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.35);border-radius:10px;padding:10px 12px">
             <div class="slabel" style="color:var(--danger)">Data Aggregators</div>
             <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-agg">—</div>
           </div>
@@ -1187,7 +1187,7 @@
   </div>
 
   <!-- ── RISK SCORE CARD — V3 ──────────────────────────────────────── -->
-  <div id="risk-score-card" class="glass mb-4 hidden" style="padding:18px 22px;border-color:rgba(16,185,129,.22)">
+  <div id="risk-score-card" class="glass mb-4 hidden" style="padding:18px 22px;border-color:rgba(248,113,113,.55);box-shadow:0 0 32px rgba(248,113,113,.18),inset 0 1px 0 rgba(255,255,255,.04)">
     <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
       <div class="slabel" style="color:var(--danger)">// CREATOR RISK ASSESSMENT</div>
       <span class="mono" style="font-size:.6rem;color:var(--muted)" id="risk-timestamp">GENERATED: —</span>
@@ -1196,13 +1196,13 @@
       <!-- Gauge -->
       <div class="gauge-wrap" id="gauge-wrap">
         <svg viewBox="0 8 120 60" xmlns="http://www.w3.org/2000/svg" style="width:140px;height:70px;display:block">
-          <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(16,185,129,.15)" stroke-width="9"
+          <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(248,113,113,.15)" stroke-width="9"
             stroke-dasharray="138.2 138.2" stroke-linecap="round"
             transform="rotate(-180 60 60)"/>
           <circle cx="60" cy="60" r="44" fill="none" id="gauge-arc" stroke="var(--danger)" stroke-width="9"
-            stroke-dasharray="0 276.5" stroke-linecap="round"
+            stroke-dasharray="138.2 276.5" stroke-linecap="round"
             transform="rotate(-180 60 60)" style="transition:stroke-dasharray 1.4s cubic-bezier(.4,0,.2,1)"/>
-          <text x="60" y="57" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="17" font-weight="700" fill="#10b981" id="gauge-val">0</text>
+          <text x="60" y="57" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="17" font-weight="700" fill="#f87171" id="gauge-val">99</text>
           <text x="60" y="68" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#6b7280">RISK SCORE</text>
         </svg>
       </div>
@@ -3498,11 +3498,11 @@ function switchNegTab(tab) {
 
   if (tab === 'log') {
     logView.style.display = ''; tlView.style.display = 'none';
-    tabLog.style.background = 'rgba(16,185,129,.15)'; tabLog.style.color = 'var(--danger)';
+    tabLog.style.background = 'rgba(248,113,113,.15)'; tabLog.style.color = 'var(--danger)';
     tabTl.style.background  = 'transparent';            tabTl.style.color  = '#374151';
   } else {
     logView.style.display = 'none'; tlView.style.display = '';
-    tabTl.style.background  = 'rgba(16,185,129,.15)'; tabTl.style.color = 'var(--danger)';
+    tabTl.style.background  = 'rgba(248,113,113,.15)'; tabTl.style.color = 'var(--danger)';
     tabLog.style.background = 'transparent';            tabLog.style.color = '#374151';
   }
 }
@@ -3816,13 +3816,13 @@ function renderSparkline(monthlyTotal) {
   svg.innerHTML = `
     <defs>
       <linearGradient id="spk-grad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#10b981" stop-opacity="0.25"/>
-        <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+        <stop offset="0%"   stop-color="#f87171" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#f87171" stop-opacity="0"/>
       </linearGradient>
     </defs>
     <path d="${fill}" fill="url(#spk-grad)"/>
-    <path d="${d}" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="3" fill="#10b981"/>
+    <path d="${d}" fill="none" stroke="#f87171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="3" fill="#f87171"/>
   `;
   wrap.style.display = 'block';
 }
