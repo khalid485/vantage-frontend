@@ -1191,7 +1191,7 @@
           </div>
         </div>
       </div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(16,185,129,.08)">
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(251,191,36,.15)">
         <div class="flex items-baseline gap-2 flex-wrap">
           <span style="font-size:.72rem;color:var(--muted)">Total Estimated Monthly Funnel Loss:</span>
           <span class="mono" style="font-size:1.1rem;font-weight:800;color:var(--danger)" id="hijack-total-loss">—</span>
@@ -3036,9 +3036,7 @@ async function showDashboard(user) {
   });
   document.getElementById('dashboard-view').classList.remove('hidden');
   document.getElementById('dash-email').textContent = user.email;
-  // Always hide social hijack on dashboard load — only shows after scan
-  const shEl = document.getElementById('social-hijack-section');
-  if (shEl) shEl.classList.add('hidden');
+  // social-hijack-section always stays visible
 
   const { data } = await db
     .from(CONFIG.LEADS_TABLE)
@@ -4341,14 +4339,17 @@ function _renderLiveHijackCard(profiles, totalViews, totalConversions, totalLoss
   if (rowsEl) {
     rowsEl.innerHTML = profiles.map(p => {
       const sourceTag = p.source === 'estimated'
-        ? `<span style="font-size:.5rem;color:#6b7280;margin-left:4px">[est.]</span>`
-        : `<span style="font-size:.5rem;color:#10b981;margin-left:4px">[live]</span>`;
+        ? `<span style="font-size:.5rem;color:#fbbf24;margin-left:4px">[est.]</span>`
+        : `<span style="font-size:.5rem;color:#fbbf24;margin-left:4px">[live]</span>`;
+      const platformBadge = p.platform === 'TikTok'
+        ? `<span class="mono" style="font-size:.6rem;padding:2px 8px;border-radius:99px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.4);color:#a78bfa;font-weight:700">TikTok</span>`
+        : `<span class="mono" style="font-size:.6rem;padding:2px 8px;border-radius:99px;background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.4);color:#f472b6;font-weight:700">Instagram</span>`;
       return `
-        <div class="flex items-start justify-between gap-3 py-2" style="border-bottom:1px solid rgba(255,255,255,.04)">
+        <div class="flex items-start justify-between gap-3 py-2" style="border-bottom:1px solid rgba(251,191,36,.08)">
           <div>
             <div class="flex items-center gap-2 flex-wrap">
               <span class="mono" style="font-size:.7rem;color:#d1d5db">@${escHtml(p.handle)}</span>
-              <span class="platform-pill ${p.platform === 'TikTok' ? 'pill-warn' : 'pill-danger'}">${escHtml(p.platform)}</span>
+              ${platformBadge}
               ${sourceTag}
             </div>
             <div class="mono mt-1" style="font-size:.6rem;color:var(--muted)">
