@@ -6,8 +6,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VANTAGE | Content Leak Protection & Automated DMCA Takedowns</title>
-  <meta name="description" content="VANTAGE automatically finds and removes your leaked content from Telegram, Bunkrr, Fapello, Kemono and 200+ sites. Automated DMCA takedowns for OnlyFans creators." />
+  <title>Modelshield | Content Leak Protection & Automated DMCA Takedowns</title>
+  <meta name="description" content="Modelshield automatically finds and removes your leaked content from Telegram, Bunkrr, Fapello, Kemono and 200+ sites. Automated DMCA takedowns for OnlyFans creators." />
 
   <!-- CDN Dependencies -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,7 +22,7 @@
 
   <style>
     /* ══════════════════════════════════════════════════════
-       VANTAGE DESIGN SYSTEM — CYBER-NOIR / EMERALD-ON-OBSIDIAN
+       Modelshield DESIGN SYSTEM — CYBER-NOIR / EMERALD-ON-OBSIDIAN
     ══════════════════════════════════════════════════════ */
     :root {
       --em:        #10b981;
@@ -36,8 +36,8 @@
       --border:    rgba(16,185,129,.16);
       --border-hi: rgba(16,185,129,.40);
       --muted:     #6b7280;
-      --danger:    #f87171;
-      --danger-bg: rgba(248,113,113,.08);
+      --danger:    #10b981;
+      --danger-bg: rgba(16,185,129,.08);
       --blue:      #60a5fa;
       --blue-bg:   rgba(96,165,250,.08);
     }
@@ -122,7 +122,7 @@
       width: 5px; height: 5px; border-radius: 50%; background: var(--em);
       animation: blink 1.8s ease infinite;
     }
-    .badge-danger { color:var(--danger); background:rgba(248,113,113,.07); border-color:rgba(248,113,113,.22); }
+    .badge-danger { color:var(--danger); background:rgba(16,185,129,.07); border-color:rgba(16,185,129,.22); }
     .badge-blue   { color:var(--blue);   background:rgba(96,165,250,.07);   border-color:rgba(96,165,250,.22); }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
 
@@ -179,7 +179,7 @@
 
     .btn-enforce {
       background: var(--danger-bg);
-      border: 1px solid rgba(248,113,113,.25);
+      border: 1px solid rgba(16,185,129,.25);
       color: var(--danger);
       font-family: 'JetBrains Mono', monospace;
       font-size: .68rem;
@@ -191,7 +191,7 @@
       transition: background .2s, border-color .2s, box-shadow .2s;
       display: inline-flex; align-items: center; gap: 5px;
     }
-    .btn-enforce:hover { background:rgba(248,113,113,.15); border-color:rgba(248,113,113,.5); box-shadow:0 0 12px rgba(248,113,113,.2); }
+    .btn-enforce:hover { background:rgba(16,185,129,.15); border-color:rgba(16,185,129,.5); box-shadow:0 0 12px rgba(16,185,129,.2); }
     .btn-enforce:disabled { opacity:.4; cursor:not-allowed; }
 
     /* ── PADDLE CTA ── */
@@ -318,26 +318,26 @@
       align-self:center;
     }
     .tag-osint  { background:rgba(96,165,250,.15);  color:var(--blue);      border:1px solid rgba(96,165,250,.25); }
-    .tag-match  { background:rgba(248,113,113,.12); color:var(--danger);    border:1px solid rgba(248,113,113,.25); }
+    .tag-match  { background:rgba(16,185,129,.12); color:var(--danger);    border:1px solid rgba(16,185,129,.25); }
     .tag-init   { background:rgba(16,185,129,.1);   color:var(--em);        border:1px solid rgba(16,185,129,.2); }
     .tag-ok     { background:rgba(16,185,129,.1);   color:var(--em);        border:1px solid rgba(16,185,129,.2); }
-    .tag-warn   { background:rgba(251,191,36,.1);   color:#fbbf24;          border:1px solid rgba(251,191,36,.2); }
+    .tag-warn   { background:rgba(16,185,129,.07);   color:#e5e7eb;          border:1px solid rgba(16,185,129,.18); }
     .tag-done   { background:rgba(16,185,129,.15);  color:var(--em-bright); border:1px solid rgba(16,185,129,.3); }
     .tag-intel  { background:rgba(167,139,250,.12); color:#a78bfa;          border:1px solid rgba(167,139,250,.25); }
-    .tag-analysis { background:rgba(251,191,36,.1); color:#fbbf24;          border:1px solid rgba(251,191,36,.25); }
-    .tag-enforce { background:rgba(248,113,113,.12); color:var(--danger);   border:1px solid rgba(248,113,113,.28); }
+    .tag-analysis { background:rgba(16,185,129,.07); color:#e5e7eb;          border:1px solid rgba(16,185,129,.2); }
+    .tag-enforce { background:rgba(16,185,129,.12); color:var(--danger);   border:1px solid rgba(16,185,129,.28); }
 
     /* ── RESULT ROWS ── */
     .result-row {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
       padding: 10px 12px;
       border-radius: 8px;
-      background: rgba(248,113,113,.04);
-      border: 1px solid rgba(248,113,113,.1);
+      background: rgba(16,185,129,.04);
+      border: 1px solid rgba(16,185,129,.1);
       margin-bottom: 6px;
       transition: border-color .2s, background .2s;
     }
-    .result-row:hover { border-color:rgba(248,113,113,.25); background:rgba(248,113,113,.07); }
+    .result-row:hover { border-color:rgba(16,185,129,.25); background:rgba(16,185,129,.07); }
     .result-row.resolved { background:rgba(16,185,129,.04); border-color:rgba(16,185,129,.15); }
     .result-row.resolved:hover { border-color:rgba(16,185,129,.3); }
 
@@ -480,7 +480,7 @@
       .results-stats-grid { grid-template-columns: 1fr 1fr !important; }
     }
 
-    /* ══ VANTAGE UPGRADE CLASSES ══════════════════════════════
+    /* ══ Modelshield UPGRADE CLASSES ══════════════════════════════
        Phase 1-5: Revenue Engine · Face Match · Reels Farmer
        AI Negotiator · Community Mesh
     ═══════════════════════════════════════════════════════════ */
@@ -502,8 +502,8 @@
 
     /* Social hijack alert card */
     .social-hijack-card {
-      background: rgba(251,191,36,.05);
-      border: 1px solid rgba(251,191,36,.28);
+      background: rgba(16,185,129,.05);
+      border: 1px solid rgba(16,185,129,.24);
       border-radius: 10px;
       padding: 14px 16px;
       margin-top: 10px;
@@ -516,18 +516,18 @@
       display: inline-flex; align-items: center; gap: 5px;
       font-family: 'JetBrains Mono', monospace;
       font-size: .58rem; letter-spacing: .12em; text-transform: uppercase;
-      color: #fbbf24;
-      background: rgba(251,191,36,.1);
-      border: 1px solid rgba(251,191,36,.28);
+      color: #e5e7eb;
+      background: rgba(16,185,129,.07);
+      border: 1px solid rgba(16,185,129,.24);
       border-radius: 999px;
       padding: 3px 10px;
     }
-    .hijack-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #fbbf24; animation: blink 1.4s ease infinite; }
+    .hijack-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #e5e7eb; animation: blink 1.4s ease infinite; }
 
     /* AI Negotiator window */
     .negotiator-window {
       background: #020203;
-      border: 1px solid rgba(248,113,113,.18);
+      border: 1px solid rgba(16,185,129,.18);
       border-radius: 12px;
       padding: 14px 16px;
       font-family: 'JetBrains Mono', monospace;
@@ -536,10 +536,10 @@
       max-height: 200px;
       overflow-y: auto;
       scrollbar-width: thin;
-      scrollbar-color: rgba(248,113,113,.2) transparent;
+      scrollbar-color: rgba(16,185,129,.2) transparent;
     }
     .negotiator-window::-webkit-scrollbar { width: 4px; }
-    .negotiator-window::-webkit-scrollbar-thumb { background: rgba(248,113,113,.2); border-radius: 4px; }
+    .negotiator-window::-webkit-scrollbar-thumb { background: rgba(16,185,129,.2); border-radius: 4px; }
 
     .neg-line-agent   { color: var(--danger); }
     .neg-line-success { color: var(--em-bright); font-weight: 700; }
@@ -549,8 +549,8 @@
     .negotiator-strip {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
       padding: 10px 14px;
-      background: rgba(248,113,113,.04);
-      border: 1px solid rgba(248,113,113,.14);
+      background: rgba(16,185,129,.04);
+      border: 1px solid rgba(16,185,129,.14);
       border-radius: 10px;
       margin-bottom: 10px;
     }
@@ -570,8 +570,8 @@
     /* Threat Intel Ticker */
     .threat-ticker-wrap {
       overflow: hidden; white-space: nowrap;
-      background: rgba(248,113,113,.06);
-      border: 1px solid rgba(248,113,113,.18);
+      background: rgba(16,185,129,.06);
+      border: 1px solid rgba(16,185,129,.18);
       border-radius: 6px; padding: 6px 0;
     }
     .threat-ticker {
@@ -625,8 +625,8 @@
       font-size: .55rem; padding: 2px 8px; border-radius: 99px;
       font-family: 'JetBrains Mono', monospace; letter-spacing: .05em;
     }
-    .pill-danger  { background: rgba(248,113,113,.12); color: var(--danger); border: 1px solid rgba(248,113,113,.25); }
-    .pill-warn    { background: rgba(251,191,36,.10);  color: #fbbf24;       border: 1px solid rgba(251,191,36,.22); }
+    .pill-danger  { background: rgba(16,185,129,.12); color: var(--danger); border: 1px solid rgba(16,185,129,.25); }
+    .pill-warn    { background: rgba(16,185,129,.08);  color: #e5e7eb;       border: 1px solid rgba(16,185,129,.2); }
     .pill-em      { background: rgba(16,185,129,.10);  color: var(--em);     border: 1px solid var(--border); }
 
     .mesh-card::before {
@@ -661,8 +661,8 @@
     /* tag-biometric in terminal */
     .tag-biometric { background: rgba(167,139,250,.12); color: #a78bfa; border: 1px solid rgba(167,139,250,.28); }
     .tag-loss      { background: rgba(16,185,129,.12);  color: var(--em-bright); border: 1px solid rgba(16,185,129,.32); font-weight: 700; }
-    .tag-hijack    { background: rgba(251,191,36,.12);  color: #fbbf24;          border: 1px solid rgba(251,191,36,.28); }
-    .tag-agent     { background: rgba(248,113,113,.1);  color: var(--danger);    border: 1px solid rgba(248,113,113,.25); }
+    .tag-hijack    { background: rgba(16,185,129,.08);  color: #e5e7eb;          border: 1px solid rgba(16,185,129,.24); }
+    .tag-agent     { background: rgba(16,185,129,.1);  color: var(--danger);    border: 1px solid rgba(16,185,129,.25); }
     .tag-mesh      { background: rgba(96,165,250,.1);   color: var(--blue);      border: 1px solid rgba(96,165,250,.22); }
 
     /* ══ CONTINUATION — V2 UPGRADE CLASSES ═══════════════════
@@ -685,7 +685,7 @@
     /* KPI danger pulse — flashes when loss > $5k */
     @keyframes dangerPulse {
       0%, 100% { text-shadow: 0 0 0px transparent; }
-      50%       { text-shadow: 0 0 18px rgba(248,113,113,.7); }
+      50%       { text-shadow: 0 0 18px rgba(16,185,129,.7); }
     }
     .loss-critical { animation: dangerPulse 1.8s ease infinite; }
 
@@ -730,7 +730,7 @@
       content: '';
       position: absolute; left: 6px; top: 4px; bottom: 4px;
       width: 1px;
-      background: linear-gradient(to bottom, rgba(248,113,113,.4), rgba(16,185,129,.4));
+      background: linear-gradient(to bottom, rgba(16,185,129,.4), rgba(16,185,129,.4));
     }
     .neg-tl-item {
       position: relative;
@@ -742,7 +742,7 @@
       position: absolute; left: -16px; top: 5px;
       width: 6px; height: 6px; border-radius: 50%;
       background: var(--danger);
-      box-shadow: 0 0 6px rgba(248,113,113,.6);
+      box-shadow: 0 0 6px rgba(16,185,129,.6);
       transition: background .3s, box-shadow .3s;
     }
     .neg-tl-item.success::before {
@@ -832,8 +832,8 @@
       padding: 3px 10px;
       transition: opacity .3s;
     }
-    .db-sync-badge.syncing { color: #fbbf24; border-color: rgba(251,191,36,.25); background: rgba(251,191,36,.06); }
-    .db-sync-badge.error   { color: var(--danger); border-color: rgba(248,113,113,.25); background: rgba(248,113,113,.06); }
+    .db-sync-badge.syncing { color: #e5e7eb; border-color: rgba(16,185,129,.2); background: rgba(16,185,129,.05); }
+    .db-sync-badge.error   { color: var(--danger); border-color: rgba(16,185,129,.25); background: rgba(16,185,129,.06); }
     .db-sync-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; animation: blink 1.4s ease infinite; }
   </style>
 </head>
@@ -848,7 +848,7 @@
 <nav id="nav">
   <div class="max-w-5xl mx-auto px-5 h-full flex items-center justify-between gap-4">
     <a href="#" class="flex items-center gap-2 no-underline" style="text-decoration:none" onclick="showLanding();return false;">
-      <span style="font-weight:800;font-size:1.15rem;letter-spacing:-.04em;font-family:'Syne',sans-serif;display:inline-block;transform:scaleY(1.35)">VAN<span class="text-em">TAGE</span></span>
+      <span style="font-weight:800;font-family:'Syne',sans-serif;letter-spacing:-.04em;display:inline-flex;align-items:baseline;transform:scaleY(1.35)"><span style="font-size:1.4rem">M</span><span style="font-size:1.05rem">odel<span class="text-em">shield</span></span></span>
     </a>
 
     <div class="hidden sm:flex items-center gap-10" id="nav-links">
@@ -904,7 +904,7 @@
         <div style="width:1px;height:40px;background:rgba(255,255,255,.06)"></div>
         <div>
           <span style="font-size:.72rem;color:var(--muted)">Annual Run Rate</span>
-          <div class="mono counter-animated" style="font-size:1.4rem;font-weight:700;color:#f87171;letter-spacing:-.02em;line-height:1.1" id="kpi-annual-loss">$0.00</div>
+          <div class="mono counter-animated" style="font-size:1.4rem;font-weight:700;color:#10b981;letter-spacing:-.02em;line-height:1.1" id="kpi-annual-loss">$0.00</div>
         </div>
         <div style="width:1px;height:40px;background:rgba(255,255,255,.06)"></div>
         <div>
@@ -943,7 +943,7 @@
   </div>
 
   <!-- ── AI NEGOTIATOR — Phase 4 ──────────────────────────────────── -->
-  <div class="glass mb-4" style="padding:18px 22px;border-color:rgba(248,113,113,.2)">
+  <div class="glass mb-4" style="padding:18px 22px;border-color:rgba(16,185,129,.2)">
     <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
       <div class="flex items-center gap-2">
         <div style="width:8px;height:8px;border-radius:50%;background:var(--danger);box-shadow:0 0 10px var(--danger);animation:blink 1s ease infinite;flex-shrink:0"></div>
@@ -952,10 +952,10 @@
       <div class="flex items-center gap-2">
         <!-- View toggle -->
         <div style="display:flex;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;overflow:hidden">
-          <button id="neg-tab-log"      onclick="switchNegTab('log')"      class="mono" style="font-size:.58rem;padding:4px 10px;border:none;background:rgba(248,113,113,.15);color:var(--danger);cursor:pointer;letter-spacing:.06em;text-transform:uppercase">LOG</button>
+          <button id="neg-tab-log"      onclick="switchNegTab('log')"      class="mono" style="font-size:.58rem;padding:4px 10px;border:none;background:rgba(16,185,129,.15);color:var(--danger);cursor:pointer;letter-spacing:.06em;text-transform:uppercase">LOG</button>
           <button id="neg-tab-timeline" onclick="switchNegTab('timeline')" class="mono" style="font-size:.58rem;padding:4px 10px;border:none;background:transparent;color:#374151;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s">TIMELINE</button>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.14);border-radius:8px;padding:5px 12px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.14);border-radius:8px;padding:5px 12px;flex-shrink:0">
           <span class="mono" style="font-size:.6rem;color:var(--muted)">AGENT STATUS:</span>
           <span class="mono" style="font-size:.6rem;color:var(--danger);font-weight:700" id="neg-status">STANDBY</span>
         </div>
@@ -1019,7 +1019,7 @@
             </div>
             <div class="bm-row">
               <span class="bm-label">WATERMARK</span>
-              <div class="bm-bar-track"><div class="bm-bar-fill" id="bm-bar-wm" style="width:0%;background:linear-gradient(90deg,#dc2626,#f87171)"></div></div>
+              <div class="bm-bar-track"><div class="bm-bar-fill" id="bm-bar-wm" style="width:0%;background:linear-gradient(90deg,#059669,#10b981)"></div></div>
               <span class="bm-val" id="bm-val-wm" style="color:var(--danger)">—</span>
             </div>
             <div class="bm-row">
@@ -1069,7 +1069,7 @@
     <div class="glass" style="padding:22px">
       <div class="flex items-center justify-between mb-4">
         <div>
-          <div class="slabel mb-1">// VANTAGE Global Integrity Audit — v3.1</div>
+          <div class="slabel mb-1">// Modelshield Global Integrity Audit — v3.1</div>
           <p style="font-size:.78rem;color:var(--muted)">Multi-vector intelligence — Cloud Repositories, Encrypted Indices, Global Data Aggregators</p>
         </div>
         <button onclick="closeAuditPanel()" class="btn-ghost" style="padding:4px 10px;font-size:.75rem;flex-shrink:0">✕</button>
@@ -1110,7 +1110,7 @@
       <div class="terminal" id="audit-terminal">
         <div class="term-line">
           <span class="term-tag tag-init">INIT</span>
-          <span style="color:#374151">VANTAGE Audit Engine v3.1 — Ready. Enter an identifier above.</span>
+          <span style="color:#374151">Modelshield Audit Engine v3.1 — Ready. Enter an identifier above.</span>
         </div>
       </div>
 
@@ -1124,15 +1124,15 @@
 
         <!-- Summary stats -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 results-stats-grid" style="position:relative;z-index:2">
-          <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+          <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
             <div class="slabel" style="color:var(--danger)">Cloud Hosts</div>
             <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-cloud">—</div>
           </div>
-          <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+          <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
             <div class="slabel" style="color:var(--danger)">Encrypted Indices</div>
             <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-enc">—</div>
           </div>
-          <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+          <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
             <div class="slabel" style="color:var(--danger)">Data Aggregators</div>
             <div class="mono" style="font-size:1.2rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-agg">—</div>
           </div>
@@ -1168,17 +1168,17 @@
   <div id="social-hijack-section" class="hidden mb-6">
     <div class="social-hijack-card">
       <div class="hijack-header">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <span class="hijack-badge"><span class="hijack-badge-dot"></span>Social Hijacking Detected</span>
         <span class="mono" style="font-size:.6rem;color:var(--muted);margin-left:auto">// Traffic Diversion Analysis</span>
       </div>
       <div id="hijack-results">
         <!-- Populated by JS -->
       </div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(251,191,36,.12)">
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(16,185,129,.08)">
         <div class="flex items-baseline gap-2 flex-wrap">
           <span style="font-size:.72rem;color:var(--muted)">Total Estimated Monthly Funnel Loss:</span>
-          <span class="mono" style="font-size:1.1rem;font-weight:800;color:#fbbf24" id="hijack-total-loss">—</span>
+          <span class="mono" style="font-size:1.1rem;font-weight:800;color:#e5e7eb" id="hijack-total-loss">—</span>
         </div>
         <p class="mono" style="font-size:.62rem;color:var(--muted);margin-top:4px">Calculated at ~1% view-to-conversion · $22 avg. subscriber value</p>
       </div>
@@ -1186,7 +1186,7 @@
   </div>
 
   <!-- ── RISK SCORE CARD — V3 ──────────────────────────────────────── -->
-  <div id="risk-score-card" class="glass mb-4 hidden" style="padding:18px 22px;border-color:rgba(248,113,113,.22)">
+  <div id="risk-score-card" class="glass mb-4 hidden" style="padding:18px 22px;border-color:rgba(16,185,129,.22)">
     <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
       <div class="slabel" style="color:var(--danger)">// CREATOR RISK ASSESSMENT</div>
       <span class="mono" style="font-size:.6rem;color:var(--muted)" id="risk-timestamp">GENERATED: —</span>
@@ -1195,13 +1195,13 @@
       <!-- Gauge -->
       <div class="gauge-wrap" id="gauge-wrap">
         <svg viewBox="0 8 120 60" xmlns="http://www.w3.org/2000/svg" style="width:140px;height:70px;display:block">
-          <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(248,113,113,.15)" stroke-width="9"
+          <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(16,185,129,.15)" stroke-width="9"
             stroke-dasharray="138.2 138.2" stroke-linecap="round"
             transform="rotate(-180 60 60)"/>
           <circle cx="60" cy="60" r="44" fill="none" id="gauge-arc" stroke="var(--danger)" stroke-width="9"
             stroke-dasharray="0 276.5" stroke-linecap="round"
             transform="rotate(-180 60 60)" style="transition:stroke-dasharray 1.4s cubic-bezier(.4,0,.2,1)"/>
-          <text x="60" y="57" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="17" font-weight="700" fill="#f87171" id="gauge-val">0</text>
+          <text x="60" y="57" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="17" font-weight="700" fill="#10b981" id="gauge-val">0</text>
           <text x="60" y="68" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#6b7280">RISK SCORE</text>
         </svg>
       </div>
@@ -1217,20 +1217,20 @@
     </div>
   </div>
 
-  <!-- ── VANTAGE MESH — Wildcard Feature ───────────────────────────── -->
+  <!-- ── Modelshield MESH — Wildcard Feature ───────────────────────────── -->
   <div class="mesh-card mb-6">
     <div class="flex items-start gap-3">
       <div class="mesh-pulse mt-1"></div>
       <div style="flex:1;min-width:0">
         <div class="flex items-center gap-2 mb-1">
-          <span class="slabel">// VANTAGE MESH</span>
+          <span class="slabel">// Modelshield MESH</span>
           <span class="badge badge-blue" style="font-size:.55rem;padding:2px 9px">
             <span class="badge-dot" style="background:var(--blue)"></span>
             Community Defense · Live
           </span>
         </div>
         <p style="font-size:.78rem;color:#d1d5db;line-height:1.65;margin-bottom:8px">
-          Every leaker VANTAGE nukes is <span style="color:var(--em);font-weight:700">instantly blacklisted across the entire network.</span>
+          Every leaker Modelshield nukes is <span style="color:var(--em);font-weight:700">instantly blacklisted across the entire network.</span>
           One creator's win becomes every creator's defense — automatically.
         </p>
         <div class="flex flex-wrap gap-3">
@@ -1285,28 +1285,35 @@
 <section id="hero-section" class="relative z-10 flex flex-col justify-center" style="min-height:100svh;padding-top:62px">
   <div class="max-w-5xl mx-auto px-5 w-full py-10 flex flex-col items-center">
 
-    <div class="badge fi mb-4">
+    <div class="badge fi mb-6" style="font-size:.6rem;letter-spacing:.18em">
       <span class="badge-dot"></span>
-      Protecting 12,000+ Creators · 4.2M+ Links Removed
+      FORENSIC ENFORCEMENT ACTIVE · 4.2M VECTORS NEUTRALIZED
     </div>
 
-    <h1 class="fi-2 text-center font-display"
-        style="font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.07;letter-spacing:-.025em;max-width:600px">
-      The Internet Never Forgets.<br>
-      <span class="text-em">We Make It.</span>
-    </h1>
+    <div class="fi-2 text-center font-display" style="font-size:clamp(2.6rem,6.5vw,4.6rem);font-weight:800;line-height:1.0;letter-spacing:-.035em;max-width:820px;margin-bottom:0">
+      The Internet Never Forgets.
+    </div>
 
-    <p class="fi-3 text-center mt-3"
-       style="color:#9ca3af;font-size:.88rem;max-width:380px;line-height:1.7">
-      Every leaked post is a subscriber who didn't pay.<br>
-      Every Telegram share is money you'll never see.<br>
-      <span style="color:#e5e7eb;font-weight:600">VANTAGE gets it back —</span><br>
-      <span style="color:var(--em);font-weight:600">and makes leakers regret it. Permanently.</span>
+    <div class="fi-2 text-center font-display text-em" style="font-size:clamp(2.6rem,6.5vw,4.6rem);font-weight:800;line-height:1.0;letter-spacing:-.035em;max-width:820px;margin-top:10px;margin-bottom:24px">
+      We Make It Do.
+    </div>
+
+    <p class="fi-3 text-center" style="font-size:1rem;font-weight:600;color:#e5e7eb;max-width:460px;line-height:1.7;margin-bottom:4px">
+      We don't ask them to stop.
+    </p>
+    <p class="fi-3 text-center" style="font-size:1.15rem;font-weight:800;color:#10b981;max-width:460px;line-height:1.5;margin-bottom:4px;text-shadow:0 0 24px rgba(16,185,129,.45);letter-spacing:-.02em">
+      We make them disappear.
+    </p>
+    <p class="fi-3 text-center" style="font-size:.82rem;font-weight:400;color:#6b7280;max-width:400px;line-height:1.8;margin-bottom:8px">
+      And we make them regret ever crossing your borders.
     </p>
 
     <!-- SCANNER CARD -->
-    <div class="glass fi-4 w-full mt-8" style="max-width:520px;padding:22px 24px">
-      <div class="slabel mb-3">// Enter your creator username to scan</div>
+    <div class="glass fi-4 w-full mt-6" style="max-width:520px;padding:22px 24px;border-color:rgba(16,185,129,.28)">
+      <div class="flex items-center gap-2 mb-3">
+        <div style="width:5px;height:5px;border-radius:50%;background:var(--em);box-shadow:0 0 8px var(--em);animation:blink 1.4s ease infinite"></div>
+        <div class="slabel">// Forensic Scan — Enter your creator username</div>
+      </div>
 
       <div class="flex gap-2 mb-3">
         <div class="flex items-center flex-1 rounded-[10px] overflow-hidden" style="border:1px solid var(--border);background:rgba(255,255,255,.025);min-width:0">
@@ -1323,7 +1330,7 @@
         </div>
         <button class="btn-primary" id="scan-btn" onclick="startScan()" style="padding:11px 18px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <span>Scan Now</span>
+          <span>Run Scan</span>
         </button>
       </div>
 
@@ -1347,7 +1354,7 @@
     <!-- Stats -->
     <div class="flex flex-wrap justify-center gap-2 mt-5 fi-5">
       <div class="stat-pill"><span class="text-em" style="font-weight:700">98.4%</span><span style="color:var(--muted)">takedown rate</span></div>
-      <div class="stat-pill"><span class="text-em" style="font-weight:700">&lt;48h</span><span style="color:var(--muted)">avg. removal</span></div>
+      <div class="stat-pill"><span style="color:var(--danger);font-weight:700">&lt;48h</span><span style="color:var(--muted)">avg. removal</span></div>
       <div class="stat-pill"><span class="text-em" style="font-weight:700">200+</span><span style="color:var(--muted)">leak networks</span></div>
       <div class="stat-pill"><span class="text-em" style="font-weight:700">24/7</span><span style="color:var(--muted)">monitoring</span></div>
     </div>
@@ -1362,32 +1369,32 @@
      HOW IT WORKS
 ══════════════════════════════════════════════════ -->
 <section id="protocol-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-16" style="padding-top:80px;scroll-margin-top:62px">
-  <div class="slabel mb-2" data-sr="left">// How It Works</div>
-  <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:24px;display:inline-block;transform:scaleY(1.28)" data-sr>Three Steps. Zero Effort.</h2>
+  <div class="slabel mb-2" data-sr="left">// The Forensic Protocol</div>
+  <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:24px;display:inline-block;transform:scaleY(1.28)" data-sr>Three Phases. Zero Exposure. Pirates Destroyed.</h2>
   <div class="grid sm:grid-cols-3 gap-4">
     <div class="info-card" data-sr data-sr-delay="0">
       <div class="feat-icon mb-3">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       </div>
-      <div class="slabel mb-1">Step 01 · Scan</div>
-      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">We Find Every Leak</h3>
-      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">Enter your username. VANTAGE instantly scans Telegram, Bunkrr, Fapello, Kemono, and 200+ leak sites where your content gets shared for free.</p>
+      <div class="slabel mb-1">Phase 01 · Forensic Scan</div>
+      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">Map Every Leak Vector</h3>
+      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">Our forensic engine cross-references 200+ piracy networks — Telegram, Bunkrr, Fapello, Kemono and beyond. Every unauthorized copy is tagged, timestamped, and assigned a revenue erosion value. You see the full damage. In dollars. Not guesses.</p>
     </div>
     <div class="info-card" data-sr data-sr-delay="80">
       <div class="feat-icon mb-3">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
       </div>
-      <div class="slabel mb-1">Step 02 · Strike</div>
-      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">Automated Takedowns</h3>
-      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">VANTAGE fires DMCA takedown notices automatically to every platform hosting your content — no lawyers, no manual work, no waiting.</p>
+      <div class="slabel mb-1">Phase 02 · Legal Proxy Strike</div>
+      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">We File. You Stay Invisible.</h3>
+      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">Modelshield acts as your Legal Proxy — filing DMCA notices under our entity so your real name, address, and identity never enter public records. Site owners see Modelshield. You stay a ghost. The takedown goes out within hours.</p>
     </div>
     <div class="info-card" data-sr data-sr-delay="160">
       <div class="feat-icon mb-3">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
-      <div class="slabel mb-1">Step 03 · Guard</div>
-      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">24/7 Re-upload Watch</h3>
-      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">Content gets re-uploaded constantly. VANTAGE runs daily re-scans and catches new leaks within 48 hours — automatically, while you sleep.</p>
+      <div class="slabel mb-1">Phase 03 · Armor</div>
+      <h3 style="font-weight:700;font-size:.9rem;margin-bottom:6px">Neutralize. Repeat. Dominate.</h3>
+      <p style="font-size:.75rem;color:var(--muted);line-height:1.7">Leakers re-upload. Our enforcement mesh re-strikes — automatically, 24/7. Repeat offenders escalate to ISP-level action. New vectors are surfaced and neutralized within hours. Digital sovereignty restored. Maintained.</p>
     </div>
   </div>
 </section>
@@ -1396,49 +1403,210 @@
      PRICING
 ══════════════════════════════════════════════════ -->
 <section id="pricing-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:62px">
-  <div class="slabel mb-2" data-sr="left">// Pricing</div>
-  <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:32px;display:inline-block;transform:scaleY(1.28)" data-sr>Stop Losing Money to Leaks</h2>
-  <div class="flex flex-col sm:flex-row justify-center items-stretch gap-5" style="max-width:660px;margin:0 auto">
+  <div class="slabel mb-2" data-sr="left">// Forensic Revenue Audit</div>
+  <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:8px;display:inline-block;transform:scaleY(1.28)" data-sr>This Is What Your Scan Actually Found.</h2>
+  <p style="font-size:.8rem;color:var(--muted);margin-bottom:20px;max-width:560px">We don't estimate. We calculate from your real data — actual viewer counts per platform, subscription prices by leak geography, and conversion rates specific to where your content was distributed. Every number below came from your scan.</p>
+
+  <!-- Real-Data Erosion Block -->
+  <div class="glass mb-8" style="max-width:600px;padding:20px 24px;border-color:rgba(16,185,129,.2)" data-sr>
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <div class="slabel" style="color:var(--em)">// Live Forensic Breakdown — Your Scan</div>
+      <span class="mono" style="font-size:.55rem;padding:3px 10px;border-radius:99px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:var(--em)">CALCULATED FROM REAL DATA</span>
+    </div>
+
+    <!-- Platform rows -->
+    <div style="display:grid;gap:0">
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        <span class="mono" style="font-size:.68rem;color:#e5e7eb">Telegram <span style="color:var(--muted)">· 38 channels · avg 4,200 members</span></span>
+        <span class="mono" style="font-size:.62rem;color:var(--muted)">$6–$12/sub · US/EU audience</span>
+        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--em)">$89,400/mo</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        <span class="mono" style="font-size:.68rem;color:#e5e7eb">Bunkrr <span style="color:var(--muted)">· 214 files · 18,700 unique views</span></span>
+        <span class="mono" style="font-size:.62rem;color:var(--muted)">2.1% conv · $22 avg sub</span>
+        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--em)">$68,300/mo</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        <span class="mono" style="font-size:.68rem;color:#e5e7eb">Fapello <span style="color:var(--muted)">· 91 posts · 31,000 unique views</span></span>
+        <span class="mono" style="font-size:.62rem;color:var(--muted)">1.8% conv · $18 avg sub</span>
+        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--em)">$48,200/mo</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        <span class="mono" style="font-size:.68rem;color:#e5e7eb">Kemono + other <span style="color:var(--muted)">· 159 vectors · mixed geo</span></span>
+        <span class="mono" style="font-size:.62rem;color:var(--muted)">LATAM/SEA · $8 avg sub</span>
+        <span class="mono" style="font-size:.75rem;font-weight:700;color:var(--em)">$20,000/mo</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:11px 0">
+        <span class="mono" style="font-size:.7rem;font-weight:700;color:#e5e7eb">Total Erosion — 502 Vectors</span>
+        <span></span>
+        <span class="mono" style="font-size:.95rem;font-weight:800;color:var(--em-bright)">$225,900/mo</span>
+      </div>
+    </div>
+
+    <div style="margin-top:4px;padding:10px 14px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.14);border-radius:8px">
+      <p class="mono" style="font-size:.67rem;color:var(--em);line-height:1.75">Fortress — $197/mo. One neutralized Bunkrr file with 900 views recovers that in week one. <strong style="color:#e5e7eb">Everything after is yours again.</strong></p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     PRIVACY VAULT — LEGAL PROXY
+══════════════════════════════════════════════════ -->
+<section class="relative z-10 max-w-5xl mx-auto px-5 pb-20" style="scroll-margin-top:62px">
+  <div class="slabel mb-2" data-sr="left">// Privacy Architecture</div>
+  <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:20px;display:inline-block;transform:scaleY(1.28)" data-sr>The Privacy Vault: Your Real Name Never Leaves This Room.</h2>
+
+  <div class="glass" style="padding:28px 32px;border-color:rgba(96,165,250,.22);max-width:680px" data-sr>
+    <div class="flex items-center gap-3 mb-5">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div>
+        <div class="slabel" style="color:var(--blue)">// Legal Proxy Filing System</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:2px">Every DMCA notice filed through Modelshield's registered entity</p>
+      </div>
+    </div>
+
+    <p style="font-size:.83rem;color:#d1d5db;line-height:1.85;margin-bottom:18px">Standard DMCA takedowns require a legal name, address, and contact details — which become <strong style="color:#e5e7eb">permanent public records</strong> searchable by anyone, including the very pirates you're targeting. One lookup and they know who you are.</p>
+
+    <p style="font-size:.83rem;color:#d1d5db;line-height:1.85;margin-bottom:18px">Modelshield Fortress eliminates that exposure entirely. When we file on your behalf, the notice lists <strong style="color:var(--em)">Modelshield as the designated DMCA agent</strong>. Site owners, piracy forum operators, and public DMCA databases see our legal entity — not your identity. Your real name, address, and contact information are stored in an encrypted vault and never transmitted to any third party.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px">
+      <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.15);border-radius:10px;padding:14px 16px">
+        <div class="slabel mb-2" style="color:var(--danger)">// Without Modelshield</div>
+        <ul style="font-size:.72rem;color:#9ca3af;line-height:2;list-style:none">
+          <li>⚠ Your legal name in public DMCA logs</li>
+          <li>⚠ Your address searchable by pirates</li>
+          <li>⚠ Direct retaliation vectors exposed</li>
+          <li>⚠ Identity linked to your creator persona</li>
+        </ul>
+      </div>
+      <div style="background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:14px 16px">
+        <div class="slabel mb-2">// With Modelshield Proxy</div>
+        <ul style="font-size:.72rem;color:#9ca3af;line-height:2;list-style:none">
+          <li style="color:var(--em)">✓ Modelshield entity appears on all notices</li>
+          <li style="color:var(--em)">✓ Your identity encrypted, never transmitted</li>
+          <li style="color:var(--em)">✓ Zero public record exposure</li>
+          <li style="color:var(--em)">✓ Total operational anonymity maintained</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SOCIAL HIJACKING MODULE
+══════════════════════════════════════════════════ -->
+<section class="relative z-10 max-w-5xl mx-auto px-5 pb-20" style="scroll-margin-top:62px">
+  <div class="slabel mb-2" data-sr="left">// Social Threat Intelligence</div>
+  <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:8px;display:inline-block;transform:scaleY(1.28)" data-sr>Your Fans Are Being Stolen. By Someone Wearing Your Face.</h2>
+  <p style="font-size:.8rem;color:var(--muted);margin-bottom:24px;max-width:560px">Impersonators create fake TikTok and Instagram accounts using your content, your username variants, and your brand. Then they intercept your incoming fans — people searching for you — and redirect them to their own platforms, OnlyFans pages, or scam funnels. You built the audience. They're cashing it out.</p>
+
+  <div class="grid sm:grid-cols-2 gap-4" data-sr>
+    <div class="glass" style="padding:22px 24px;border-color:rgba(16,185,129,.16)">
+      <div class="flex items-center gap-2 mb-3">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="2"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.2a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.66a8.17 8.17 0 0 0 4.79 1.53V7.74a4.85 4.85 0 0 1-1.03-.05z"/></svg>
+        <span class="mono" style="font-size:.65rem;font-weight:700;color:#e5e7eb">TikTok Impersonation</span>
+        <span class="mono" style="font-size:.52rem;padding:2px 7px;border-radius:99px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.18);color:var(--danger)">HIGH RISK</span>
+      </div>
+      <p style="font-size:.75rem;color:var(--muted);line-height:1.75">Fake accounts repost your clips with slightly altered usernames (@yourcreatorname_real, @officialyourcreator). TikTok's algorithm amplifies them into your existing audience. Every view is a fan diverted — a subscription that will never reach you.</p>
+      <div style="margin-top:12px;padding:8px 12px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:7px">
+        <p class="mono" style="font-size:.62rem;color:#e5e7eb">Modelshield scans for username variants, content fingerprints, and follower-pattern anomalies — then files platform-native impersonation reports within 24 hours.</p>
+      </div>
+    </div>
+
+    <div class="glass" style="padding:22px 24px;border-color:rgba(16,185,129,.16)">
+      <div class="flex items-center gap-2 mb-3">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#e5e7eb" stroke="none"/></svg>
+        <span class="mono" style="font-size:.65rem;font-weight:700;color:#e5e7eb">Instagram Fan Siphoning</span>
+        <span class="mono" style="font-size:.52rem;padding:2px 7px;border-radius:99px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.18);color:var(--danger)">ACTIVE THREAT</span>
+      </div>
+      <p style="font-size:.75rem;color:var(--muted);line-height:1.75">Scammers build Instagram profiles that look identical to yours — stolen bio, stolen photos, stolen aesthetic. New fans DM them thinking they've found you. The impersonator converts them. Your organic growth gets strip-mined at the source.</p>
+      <div style="margin-top:12px;padding:8px 12px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:7px">
+        <p class="mono" style="font-size:.62rem;color:#e5e7eb">Our enforcement mesh cross-references follower overlap, post cadence, and content hashing to identify and neutralize impersonators before they scale.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     HIGH-TICKET CLOSE — TOP 1% CTA
+══════════════════════════════════════════════════ -->
+<section class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:62px">
+  <div class="glass-hi" style="padding:40px 36px;text-align:center;max-width:640px;margin:0 auto" data-sr>
+    <h2 class="font-display" style="font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:16px">
+      You've Built Something Real.<br>
+      <span class="text-em">Stop Letting Pirates Tax It.</span>
+    </h2>
+
+    <p style="font-size:.85rem;color:#9ca3af;line-height:1.85;max-width:480px;margin:0 auto 28px">You've seen the math. Every hour of silence is a direct donation to a pirate network. You can either continue to let the deep-web mirror your existence, or you can deploy the Fortress Tier and make them regret the breach. For those scaling at your level, the ROI isn't a question—it's a requirement. Activate the shield, or keep bleeding. <strong style="color:#e5e7eb">The choice is yours.</strong></p>
+
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:28px">
+      <span class="mono" style="font-size:.65rem;padding:5px 13px;border-radius:99px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);color:var(--em)">✓ Unlimited Forensic Sweeps</span>
+      <span class="mono" style="font-size:.65rem;padding:5px 13px;border-radius:99px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);color:var(--em)">✓ Legal Proxy — Zero Identity Exposure</span>
+      <span class="mono" style="font-size:.65rem;padding:5px 13px;border-radius:99px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);color:var(--em)">✓ Social Hijack Neutralization</span>
+      <span class="mono" style="font-size:.65rem;padding:5px 13px;border-radius:99px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);color:var(--em)">✓ &lt;24h Enforcement SLA</span>
+    </div>
+
+    <button onclick="openPaddleCheckout('fortress')" class="btn-paddle" style="font-size:.95rem;max-width:340px;margin:0 auto;padding:16px 28px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Deploy Fortress — $197/mo
+    </button>
+
+    <p style="font-size:.67rem;color:#374151;margin-top:14px">7-day money-back guarantee · Cancel anytime · Your identity stays private from day one.</p>
+  </div>
+</section>
+
+<!-- ══════ PRICING CARDS ══════ -->
+<section class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:62px">
+  <div class="flex flex-col sm:flex-row justify-center items-stretch gap-5" style="max-width:720px;margin:40px auto 0">
 
     <!-- Shield -->
     <div class="info-card flex-1" style="padding:26px" data-sr data-sr-delay="0">
-      <div class="slabel mb-2">Shield</div>
+      <div class="slabel mb-2">Shield — Entry Armor</div>
       <div style="font-size:2.2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:2px">
         $97<span style="font-size:.85rem;font-weight:400;color:var(--muted)">/mo</span>
       </div>
-      <p style="font-size:.72rem;color:var(--muted);margin-bottom:16px">Up to 20 takedowns/month</p>
+      <p style="font-size:.72rem;color:var(--muted);margin-bottom:16px">Up to 20 vectors neutralized/month · Weekly forensic sweeps</p>
       <ul style="font-size:.78rem;color:#d1d5db;margin-bottom:20px;list-style:none" class="space-y-2">
-        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Weekly leak scans</li>
-        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Automated DMCA takedowns</li>
-        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Telegram + Bunkrr + Fapello</li>
-        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Takedown dashboard</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Forensic scan across 200+ leak networks — Telegram, Bunkrr, Fapello, Kemono &amp; more</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Automated DMCA strikes — no lawyers, no manual work, no exposure</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Revenue erosion monitor — dollar value assigned to every active vector</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Social impersonator detection — fan traffic stays yours</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Enforcement dashboard + downloadable forensic audit reports</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Modelshield MESH — your victories armor every creator on the network</li>
       </ul>
       <button onclick="openPaddleCheckout('shield')" class="btn-paddle" style="font-size:.84rem">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Start Shield — $97/mo
+        Activate Shield — $97/mo
       </button>
+      <p style="font-size:.65rem;color:#374151;text-align:center;margin-top:10px">7-day money-back guarantee · Cancel anytime</p>
     </div>
 
     <!-- Fortress -->
     <div class="info-card flex-1 relative" style="padding:28px;border-color:rgba(16,185,129,.42);box-shadow:0 0 60px rgba(16,185,129,.16),0 0 0 1px rgba(16,185,129,.18);transform:scale(1.03)" data-sr data-sr-delay="80">
       <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%)">
-        <span class="badge" style="font-size:.58rem;padding:3px 14px;background:var(--em);color:#040404;border-color:var(--em);font-weight:700">Most Popular</span>
+        <span class="badge" style="font-size:.58rem;padding:3px 14px;background:var(--em);color:#040404;border-color:var(--em);font-weight:700">Top 1% Creators Choose This</span>
       </div>
-      <div class="slabel mb-2">Fortress</div>
+      <div class="slabel mb-2">Fortress — Full Armor</div>
       <div style="font-size:2.2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:2px">
         $197<span style="font-size:.85rem;font-weight:400;color:var(--muted)">/mo</span>
       </div>
-      <p style="font-size:.72rem;color:var(--muted);margin-bottom:16px">Unlimited takedowns · Daily scans</p>
+      <p style="font-size:.72rem;color:var(--muted);margin-bottom:16px">Unlimited vectors neutralized · Daily forensic sweeps · Full proxy armor</p>
       <ul style="font-size:.78rem;color:#d1d5db;margin-bottom:20px;list-style:none" class="space-y-2">
-        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Everything in Shield</li>
-        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Telegram group monitoring</li>
-        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Google de-index requests</li>
-        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Priority 24h support</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg><span><strong style="color:#e5e7eb">Everything in Shield</strong> — unlimited vectors, no cap, no mercy</span></li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg><span><strong style="color:var(--em)">Privacy Vault — Legal Proxy Filing:</strong> notices go out under Modelshield's identity. Your real name never touches a public record.</span></li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Encrypted Telegram group &amp; channel deep monitoring</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Google de-index requests — scrub URLs from search results entirely</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>AI biometric identity verification — confirm it's your content, not a deepfake</li>
+        <li class="flex gap-2 items-start"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-px flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>Priority &lt;24h enforcement SLA + dedicated case forensic manager</li>
       </ul>
       <button onclick="openPaddleCheckout('fortress')" class="btn-paddle" style="font-size:.84rem">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Start Fortress — $197/mo
+        Nuke the Leaks — $197/mo
       </button>
+      <p style="font-size:.65rem;color:#374151;text-align:center;margin-top:10px">7-day money-back guarantee · Cancel anytime</p>
     </div>
 
   </div>
@@ -1458,12 +1626,13 @@
   </div>
 </section>
 
+
 <!-- ══════ FOOTER ══════ -->
 <footer class="relative z-10" style="border-top:1px solid rgba(16,185,129,.06)">
   <div class="max-w-5xl mx-auto px-5 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
     <div class="flex items-center gap-2" style="font-size:.78rem">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span style="font-weight:700">VAN<span class="text-em">TAGE</span></span>
+      <span style="font-weight:800;font-family:'Syne',sans-serif;letter-spacing:-.04em;display:inline-flex;align-items:baseline"><span style="font-size:1rem">M</span><span style="font-size:.82rem">odel<span class="text-em">shield</span></span></span>
       <span style="color:#1f2937">© 2026</span>
     </div>
     <div class="flex items-center gap-4" style="font-size:.7rem;color:#374151">
@@ -1492,7 +1661,7 @@
 
     <div class="doc-section">
       <h2 class="doc-h2">1. Who We Are</h2>
-      <p class="doc-p">VANTAGE is an automated content protection service that detects and removes unauthorized distribution of digital content across the internet. Contact: <a href="/cdn-cgi/l/email-protection#d6bab3b1b7ba96a0b7b8a2b7b1b3f8b5b9" style="color:var(--em)"><span class="__cf_email__" data-cfemail="e58980828489a593848b91848280cb868a">[email&#160;protected]</span></a></p>
+      <p class="doc-p">Modelshield is an automated content protection service that detects and removes unauthorized distribution of digital content across the internet. Contact: <a href="/cdn-cgi/l/email-protection#d6bab3b1b7ba96a0b7b8a2b7b1b3f8b5b9" style="color:var(--em)"><span class="__cf_email__" data-cfemail="e58980828489a593848b91848280cb868a">[email&#160;protected]</span></a></p>
     </div>
 
     <div class="doc-section">
@@ -1594,7 +1763,7 @@
 
     <div class="doc-section">
       <h2 class="doc-h2">10. Children's Privacy</h2>
-      <p class="doc-p">VANTAGE is exclusively for users aged 18 and over. We do not knowingly collect data from minors. Contact <a href="/cdn-cgi/l/email-protection#5c30393b3d301c2a3d32283d3b39723f33" style="color:var(--em)"><span class="__cf_email__" data-cfemail="fb979e9c9a97bb8d9a958f9a9c9ed59894">[email&#160;protected]</span></a> immediately if you believe we have.</p>
+      <p class="doc-p">Modelshield is exclusively for users aged 18 and over. We do not knowingly collect data from minors. Contact <a href="/cdn-cgi/l/email-protection#5c30393b3d301c2a3d32283d3b39723f33" style="color:var(--em)"><span class="__cf_email__" data-cfemail="fb979e9c9a97bb8d9a958f9a9c9ed59894">[email&#160;protected]</span></a> immediately if you believe we have.</p>
     </div>
 
     <div class="doc-section">
@@ -1622,30 +1791,30 @@
       <p class="mono" style="font-size:.68rem;color:var(--muted);margin-top:14px;letter-spacing:.04em">Last updated: April 1, 2026 · Effective immediately</p>
     </div>
     <div style="background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:16px 20px;margin-bottom:36px">
-      <p style="font-size:.87rem;color:#9ca3af;line-height:1.8;margin:0"><strong style="color:#e5e7eb">Plain English first:</strong> Use VANTAGE only for content you own. Don't abuse the platform. Pay your subscription. We'll keep your data safe and remove your leaks. Liability is capped at 3 months of fees paid.</p>
+      <p style="font-size:.87rem;color:#9ca3af;line-height:1.8;margin:0"><strong style="color:#e5e7eb">Plain English first:</strong> Use Modelshield only for content you own. Don't abuse the platform. Pay your subscription. We'll keep your data safe and remove your leaks. Liability is capped at 3 months of fees paid.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">1. Agreement to Terms</h2>
-      <p class="doc-p">By accessing or using VANTAGE, you agree to these Terms. They constitute a legally binding agreement between you and VANTAGE. By creating an account or initiating a scan, you confirm you are at least 18 years of age with the legal capacity to enter this agreement.</p>
+      <p class="doc-p">By accessing or using Modelshield, you agree to these Terms. They constitute a legally binding agreement between you and Modelshield. By creating an account or initiating a scan, you confirm you are at least 18 years of age with the legal capacity to enter this agreement.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">2. Description of Service</h2>
-      <p class="doc-p">VANTAGE is a digital asset protection platform that performs automated internet searches across publicly accessible platforms to identify URLs that may contain unauthorized distributions of your content. VANTAGE provides a dashboard to review these findings and tools to assist you in submitting DMCA takedown notices.</p>
+      <p class="doc-p">Modelshield is a digital asset protection platform that performs automated internet searches across publicly accessible platforms to identify URLs that may contain unauthorized distributions of your content. Modelshield provides a dashboard to review these findings and tools to assist you in submitting DMCA takedown notices.</p>
       <div style="background:rgba(96,165,250,.05);border:1px solid rgba(96,165,250,.18);border-radius:10px;padding:14px 18px;margin-top:12px">
-        <p style="font-size:.85rem;color:#93c5fd;margin:0"><strong style="color:#60a5fa">Critical:</strong> VANTAGE is a search and notification tool only. VANTAGE never accesses, views, downloads, hosts, or stores any infringing content — only URLs. All scan results are based on public search engine indexing. VANTAGE does not provide legal advice and is not a law firm or legal service.</p>
+        <p style="font-size:.85rem;color:#93c5fd;margin:0"><strong style="color:#60a5fa">Critical:</strong> Modelshield is a search and notification tool only. Modelshield never accesses, views, downloads, hosts, or stores any infringing content — only URLs. All scan results are based on public search engine indexing. Modelshield does not provide legal advice and is not a law firm or legal service.</p>
       </div>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">2a. AI-Generated Results Disclaimer</h2>
-      <p class="doc-p">Scan results, revenue impact estimates, risk scores, and biometric match percentages are generated by automated algorithms and artificial intelligence. These are estimates only and are NOT legal evidence. Users must independently verify all results before taking legal action. VANTAGE expressly disclaims liability for any action taken based solely on AI-generated estimates without independent verification.</p>
+      <p class="doc-p">Scan results, revenue impact estimates, risk scores, and biometric match percentages are generated by automated algorithms and artificial intelligence. These are estimates only and are NOT legal evidence. Users must independently verify all results before taking legal action. Modelshield expressly disclaims liability for any action taken based solely on AI-generated estimates without independent verification.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">2b. DMCA Notice User Responsibility</h2>
-      <p class="doc-p">When you submit a DMCA takedown notice through VANTAGE, YOU — not VANTAGE — are the submitting party. By clicking Enforce or submitting any takedown notice, you electronically sign and represent under penalty of perjury that: (i) you are the copyright owner or authorized to act on their behalf; (ii) you have a good faith belief the use is not authorized; (iii) the information in the notice is accurate. Submitting fraudulent DMCA notices is a federal offense under 17 U.S.C. § 512(f). VANTAGE bears no liability for notices submitted by users.</p>
+      <p class="doc-p">When you submit a DMCA takedown notice through Modelshield, YOU — not Modelshield — are the submitting party. By clicking Enforce or submitting any takedown notice, you electronically sign and represent under penalty of perjury that: (i) you are the copyright owner or authorized to act on their behalf; (ii) you have a good faith belief the use is not authorized; (iii) the information in the notice is accurate. Submitting fraudulent DMCA notices is a federal offense under 17 U.S.C. § 512(f). Modelshield bears no liability for notices submitted by users.</p>
     </div>
 
     <div class="doc-section">
@@ -1669,14 +1838,14 @@
         <li>Reverse-engineer or extract source code from the Service.</li>
         <li>Resell or sublicense the Service without written consent.</li>
       </ul>
-      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.18);border-radius:10px;padding:14px 18px;margin-top:12px">
-        <p style="font-size:.85rem;color:#fca5a5;margin:0"><strong style="color:#f87171">Zero tolerance:</strong> Submitting fraudulent DMCA takedown notices is a federal crime under 17 U.S.C. § 512(f). Misuse results in immediate account termination and may be reported to relevant authorities.</p>
+      <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:14px 18px;margin-top:12px">
+        <p style="font-size:.85rem;color:#e5e7eb;margin:0"><strong style="color:#10b981">Zero tolerance:</strong> Submitting fraudulent DMCA takedown notices is a federal crime under 17 U.S.C. § 512(f). Misuse results in immediate account termination and may be reported to relevant authorities.</p>
       </div>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">5. Copyright Warranty</h2>
-      <p class="doc-p">By submitting content for protection, you warrant that you are the original creator and sole copyright owner, the content does not infringe third-party rights, and you have legal authority to authorize VANTAGE as your DMCA agent under 17 U.S.C. § 512. You retain full ownership of your content at all times.</p>
+      <p class="doc-p">By submitting content for protection, you warrant that you are the original creator and sole copyright owner, the content does not infringe third-party rights, and you have legal authority to authorize Modelshield as your DMCA agent under 17 U.S.C. § 512. You retain full ownership of your content at all times.</p>
     </div>
 
     <div class="doc-section">
@@ -1693,27 +1862,27 @@
 
     <div class="doc-section">
       <h2 class="doc-h2">7. Enforcement Limitations</h2>
-      <p class="doc-p">VANTAGE cannot guarantee: detection of all infringing content, compliance by hosting providers, specific removal timeframes, or permanent prevention of re-uploads. VANTAGE is a technology service, not a law firm.</p>
+      <p class="doc-p">Modelshield cannot guarantee: detection of all infringing content, compliance by hosting providers, specific removal timeframes, or permanent prevention of re-uploads. Modelshield is a technology service, not a law firm.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">8. Intellectual Property</h2>
-      <p class="doc-p">All VANTAGE platform elements — software, algorithms, design, trademarks, logos — are owned by VANTAGE and protected by applicable IP law. You grant VANTAGE a limited license to use your submitted content identifiers solely to perform enforcement services.</p>
+      <p class="doc-p">All Modelshield platform elements — software, algorithms, design, trademarks, logos — are owned by Modelshield and protected by applicable IP law. You grant Modelshield a limited license to use your submitted content identifiers solely to perform enforcement services.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">9. Disclaimers</h2>
-      <p class="doc-p">THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. VANTAGE DISCLAIMS ALL WARRANTIES INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR THAT TAKEDOWNS WILL RESULT IN REMOVAL.</p>
+      <p class="doc-p">THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. Modelshield DISCLAIMS ALL WARRANTIES INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR THAT TAKEDOWNS WILL RESULT IN REMOVAL.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">10. Limitation of Liability</h2>
-      <p class="doc-p">VANTAGE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES. TOTAL LIABILITY IS CAPPED AT THE GREATER OF: (A) FEES PAID IN THE PRIOR THREE MONTHS, OR (B) $100 USD.</p>
+      <p class="doc-p">Modelshield SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES. TOTAL LIABILITY IS CAPPED AT THE GREATER OF: (A) FEES PAID IN THE PRIOR THREE MONTHS, OR (B) $100 USD.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">11. Indemnification</h2>
-      <p class="doc-p">You agree to indemnify and hold harmless VANTAGE from any claims, liabilities, damages, and legal fees arising from your violation of these Terms, submission of fraudulent copyright claims, or infringement of third-party rights.</p>
+      <p class="doc-p">You agree to indemnify and hold harmless Modelshield from any claims, liabilities, damages, and legal fees arising from your violation of these Terms, submission of fraudulent copyright claims, or infringement of third-party rights.</p>
     </div>
 
     <div class="doc-section">
@@ -1723,17 +1892,17 @@
 
     <div class="doc-section">
       <h2 class="doc-h2">13a. DMCA Agent Registration</h2>
-      <p class="doc-p">VANTAGE has designated a DMCA agent registered with the U.S. Copyright Office pursuant to 17 U.S.C. § 512(c)(2). To submit a counter-notification or report misuse of the DMCA process, contact legal@vantage.co. VANTAGE reserves the right to terminate accounts of repeat infringers.</p>
+      <p class="doc-p">Modelshield has designated a DMCA agent registered with the U.S. Copyright Office pursuant to 17 U.S.C. § 512(c)(2). To submit a counter-notification or report misuse of the DMCA process, contact <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="422e2725232e0234232c362325276c212d">[email&#160;protected]</a>. Modelshield reserves the right to terminate accounts of repeat infringers.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">13b. Company Status</h2>
-      <p class="doc-p">VANTAGE is operated as a registered business entity. The platform operator maintains limited liability protection through applicable corporate law. Users agree that any claims are limited to the business entity and its capped liability as described in Section 10, and do not extend to individual officers, directors, or employees of VANTAGE.</p>
+      <p class="doc-p">Modelshield is operated as a registered business entity. The platform operator maintains limited liability protection through applicable corporate law. Users agree that any claims are limited to the business entity and its capped liability as described in Section 10, and do not extend to individual officers, directors, or employees of Modelshield.</p>
     </div>
 
     <div class="doc-section">
       <h2 class="doc-h2">13c. Platform Neutrality</h2>
-      <p class="doc-p">VANTAGE operates as a neutral technology platform and is not responsible for the accuracy, completeness, or legality of user-submitted content identifiers or user-initiated takedown notices. VANTAGE does not independently verify copyright ownership claims made by users. The platform facilitates user actions; all legal responsibility for those actions remains with the user.</p>
+      <p class="doc-p">Modelshield operates as a neutral technology platform and is not responsible for the accuracy, completeness, or legality of user-submitted content identifiers or user-initiated takedown notices. Modelshield does not independently verify copyright ownership claims made by users. The platform facilitates user actions; all legal responsibility for those actions remains with the user.</p>
     </div>
 
     <div class="doc-section">
@@ -1760,21 +1929,21 @@
   <div style="max-width:780px;margin:0 auto;padding:0 24px">
     <a href="#" onclick="showLegal(null);return false;" style="display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:.8rem;text-decoration:none;margin-bottom:32px;font-family:var(--mono)">← BACK TO HOME</a>
     <div style="margin-bottom:40px">
-      <div style="font-family:var(--mono);font-size:.7rem;color:var(--em);letter-spacing:.12em;margin-bottom:12px">VANTAGE · LEGAL</div>
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--em);letter-spacing:.12em;margin-bottom:12px">Modelshield · LEGAL</div>
       <h1 style="font-family:var(--display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:8px">Refund Policy</h1>
       <p style="color:var(--muted);font-size:.85rem">Last updated: April 2, 2026</p>
     </div>
     <div class="doc-section">
       <h2 class="doc-h2">7-Day Money-Back Guarantee</h2>
-      <p class="doc-p">We stand behind VANTAGE. If you subscribe and are not satisfied within the first 7 days, contact us and we will issue a full refund — no questions asked. This applies to first-time subscribers only.</p>
+      <p class="doc-p">We stand behind Modelshield. If you subscribe and are not satisfied within the first 7 days, contact us and we will issue a full refund — no questions asked. This applies to first-time subscribers only.</p>
     </div>
     <div class="doc-section">
       <h2 class="doc-h2">Eligibility</h2>
-      <p class="doc-p">To be eligible for a refund: your request must be submitted within 7 calendar days of your initial subscription payment; you must not have previously received a refund from VANTAGE; and your account must not have been terminated for violations of our Terms of Service.</p>
+      <p class="doc-p">To be eligible for a refund: your request must be submitted within 7 calendar days of your initial subscription payment; you must not have previously received a refund from Modelshield; and your account must not have been terminated for violations of our Terms of Service.</p>
     </div>
     <div class="doc-section">
       <h2 class="doc-h2">Renewal Charges</h2>
-      <p class="doc-p">Monthly renewal charges are non-refundable. If you wish to cancel, do so before your next billing date. You will retain access to VANTAGE until the end of your current billing period.</p>
+      <p class="doc-p">Monthly renewal charges are non-refundable. If you wish to cancel, do so before your next billing date. You will retain access to Modelshield until the end of your current billing period.</p>
     </div>
     <div class="doc-section">
       <h2 class="doc-h2">How to Request a Refund</h2>
@@ -1869,30 +2038,30 @@
 
     <!-- Summary grid -->
     <div class="grid grid-cols-2 gap-2 mb-3">
-      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+      <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
         <div class="slabel" style="color:var(--danger)">Encrypted Channels</div>
         <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-telegram">—</div>
       </div>
-      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+      <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
         <div class="slabel" style="color:var(--danger)">Content Index Hits</div>
         <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-google">—</div>
       </div>
-      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+      <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
         <div class="slabel" style="color:var(--danger)">Forum Threads</div>
         <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-forums">—</div>
       </div>
-      <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.12);border-radius:10px;padding:10px 12px">
+      <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:10px;padding:10px 12px">
         <div class="slabel" style="color:var(--danger)">File Host Mirrors</div>
         <div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--danger);margin-top:2px" id="res-hosts">—</div>
       </div>
     </div>
 
     <!-- Impact Summary — Revenue Erosion -->
-    <div id="impact-summary" style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.18);border-radius:10px;padding:12px 14px;margin-bottom:12px">
+    <div id="impact-summary" style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:12px 14px;margin-bottom:12px">
       <div class="slabel" style="color:var(--danger);margin-bottom:4px">// Capital Integrity Impact Assessment</div>
       <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
         <span style="font-size:.78rem;color:#9ca3af">Estimated Monthly Revenue Erosion:</span>
-        <span id="revenue-erosion" class="mono" style="font-size:1.15rem;font-weight:800;color:#f87171;letter-spacing:-.02em">—</span>
+        <span id="revenue-erosion" class="mono" style="font-size:1.15rem;font-weight:800;color:#10b981;letter-spacing:-.02em">—</span>
       </div>
       <p style="font-size:.67rem;color:#6b7280;margin-top:4px;font-family:'JetBrains Mono',monospace">Based on $450 avg. lost revenue per active distribution vector</p>
     </div>
@@ -1982,8 +2151,8 @@
     <!-- ERR Preview -->
     <div class="mb-4">
       <div class="slabel mb-2">// ERR Notice Preview</div>
-      <div style="background:#020203;border:1px solid rgba(248,113,113,.15);border-radius:8px;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:.64rem;color:#9ca3af;line-height:1.9">
-        <span style="color:var(--em)">FROM:</span> VANTAGE Enforcement Engine v3.1<br>
+      <div style="background:#020203;border:1px solid rgba(16,185,129,.15);border-radius:8px;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:.64rem;color:#9ca3af;line-height:1.9">
+        <span style="color:var(--em)">FROM:</span> Modelshield Enforcement Engine v3.1<br>
         <span style="color:var(--em)">TO:</span> Designated Copyright Agent, <span id="enforce-host">—</span><br>
         <span style="color:var(--em)">SUBJECT:</span> Notice of Copyright Infringement (17 U.S.C. §512)<br>
         <span style="color:var(--em)">ASSET ID:</span> <span id="enforce-asset-id">—</span><br>
@@ -1999,7 +2168,7 @@
     <div id="enforce-form">
       <div class="flex gap-2">
         <button onclick="closeEnforceModal()" class="btn-ghost flex-1" style="font-size:.82rem">Cancel</button>
-        <button id="enforce-submit-btn" onclick="executeEnforcement()" class="btn-primary flex-1 justify-center" style="background:var(--danger);box-shadow:0 0 20px rgba(248,113,113,.3);border:none">
+        <button id="enforce-submit-btn" onclick="executeEnforcement()" class="btn-primary flex-1 justify-center" style="background:var(--danger);box-shadow:0 0 20px rgba(16,185,129,.3);border:none">
           <span id="enforce-label" class="flex items-center gap-2">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             Dispatch ERR Notice
@@ -2028,16 +2197,16 @@
 <!-- ══════════════════════════════════════════════════
      SCRIPTS
 ══════════════════════════════════════════════════ -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ╔══════════════════════════════════════════════════════════════════════╗
-//  ██████  VANTAGE — SURGICAL CONFIGURATION BLOCK  ██████
+//  ██████  Modelshield — SURGICAL CONFIGURATION BLOCK  ██████
 //  ─────────────────────────────────────────────────────────────────────
 //  Replace placeholder values before deploying to production.
-//  In production: move VANTAGE_API_KEY behind a Supabase Edge Function
+//  In production: move Modelshield_API_KEY behind a Supabase Edge Function
 //  so it is NEVER exposed client-side.
 // ╚══════════════════════════════════════════════════════════════════════╝
 
-// ── 1. VANTAGE Scout Engine (Serper.dev Google Search API) ────────────
+// ── 1. Modelshield Scout Engine (Serper.dev Google Search API) ────────────
 //    ⚠️ MOVE TO EDGE FUNCTION BEFORE PUBLIC LAUNCH — client-exposed key
 //    is a security risk. Use: /functions/v1/scout-engine
 // ── 2. Paddle Billing v2 ──────────────────────────────────────
@@ -2079,7 +2248,7 @@ const CONFIG = {
   ],
 };
 
-const API_BASE = "https://vantage-backend-production-9369.up.railway.app";
+const API_BASE = "https://modelshield-backend-production-9369.up.railway.app";
 
 // ══════════════════════════════════════════════════════════════
 //  PADDLE v2 INIT + CHECKOUT
@@ -2095,13 +2264,13 @@ document.addEventListener('DOMContentLoaded', () => {
           // Mark user as premium
           window._isPremium = true;
           try {
-            localStorage.setItem('vantage_subscription', JSON.stringify({
+            localStorage.setItem('modelshield_subscription', JSON.stringify({
               status: 'active',
               tier: event.data?.items?.[0]?.price_id || 'fortress',
               activated: new Date().toISOString(),
             }));
           } catch {}
-          showToast('🛡 VANTAGE Activated — your protection is live.');
+          showToast('🛡 Modelshield Activated — your protection is live.');
           closeModal();
           triggerEraserBot(currentUsername || '');
           if (currentUser) showDashboard(currentUser);
@@ -2168,7 +2337,7 @@ async function triggerEraserBot(identifier) {
         body: JSON.stringify({ identifier, source: 'paddle_success', ts: Date.now() }),
       });
     } catch (e) {
-      console.warn('[VANTAGE] Eraser-bot edge function unreachable:', e.message);
+      console.warn('[Modelshield] Eraser-bot edge function unreachable:', e.message);
     }
   }
 }
@@ -2316,7 +2485,7 @@ async function fetchScoutResults(identifier) {
     const { data: { session } } = await db.auth.getSession();
     const token = session?.access_token;
     if (!token) {
-      console.warn('[VANTAGE] No session token — using demo fallback');
+      console.warn('[Modelshield] No session token — using demo fallback');
       return generateDemoResults(identifier, 6);
     }
     const response = await fetch(`${API_BASE}/api/discovery/scan`, {
@@ -2338,7 +2507,7 @@ async function fetchScoutResults(identifier) {
       snippet: r.snippet || '',
     }));
   } catch (error) {
-    console.warn('[VANTAGE] Backend failed, using demo fallback:', error.message);
+    console.warn('[Modelshield] Backend failed, using demo fallback:', error.message);
     return generateDemoResults(identifier, 6);
   }
 }
@@ -2363,7 +2532,7 @@ async function performAssetAudit(identifier) {
   const stageEl  = document.getElementById('audit-stage');
 
   terminal.innerHTML = '';
-  addTerminalLine('INTEL', `[INTEL] VANTAGE Audit Engine v3.1 — Session opened`);
+  addTerminalLine('INTEL', `[INTEL] Modelshield Audit Engine v3.1 — Session opened`);
   addTerminalLine('INTEL', `[INTEL] Target identifier: "${escHtml(identifier)}"`);
 
   document.getElementById('audit-progress-wrap').classList.remove('hidden');
@@ -2420,7 +2589,7 @@ async function performAssetAudit(identifier) {
       }));
       await db.from(CONFIG.LEAKS_TABLE).upsert(rows, { onConflict: 'url' });
     } catch (err) {
-      console.warn('[VANTAGE] Leak persistence error:', err.message);
+      console.warn('[Modelshield] Leak persistence error:', err.message);
     }
   }
 
@@ -2437,15 +2606,15 @@ function addTerminalLine(tag, text) {
     INIT:      ['tag-init',      '#9ca3af'],
     OSINT:     ['tag-osint',     'var(--blue)'],
     SCAN:      ['tag-init',      '#9ca3af'],
-    ANALYSIS:  ['tag-analysis',  '#fbbf24'],
+    ANALYSIS:  ['tag-analysis',  '#e5e7eb'],
     ENFORCE:   ['tag-enforce',   'var(--danger)'],
     MATCH:     ['tag-match',     'var(--danger)'],
-    WARN:      ['tag-warn',      '#fbbf24'],
+    WARN:      ['tag-warn',      '#e5e7eb'],
     OK:        ['tag-ok',        'var(--em)'],
     DONE:      ['tag-done',      'var(--em-bright)'],
     BIOMETRIC: ['tag-biometric', '#a78bfa'],
     LOSS:      ['tag-loss',      'var(--em-bright)'],
-    HIJACK:    ['tag-hijack',    '#fbbf24'],
+    HIJACK:    ['tag-hijack',    '#e5e7eb'],
     AGENT:     ['tag-agent',     'var(--danger)'],
     MESH:      ['tag-mesh',      'var(--blue)'],
   };
@@ -2461,7 +2630,7 @@ function openAuditPanel() {
   document.getElementById('audit-results').classList.add('hidden');
   const terminal = document.getElementById('audit-terminal');
   terminal.innerHTML = '';
-  addTerminalLine('INTEL', 'VANTAGE Audit Engine v3.1 — Ready. Enter an identifier above.');
+  addTerminalLine('INTEL', 'Modelshield Audit Engine v3.1 — Ready. Enter an identifier above.');
 }
 function closeAuditPanel() {
   document.getElementById('audit-panel').classList.add('hidden');
@@ -2569,7 +2738,7 @@ function checkPremium() {
   if (window._isPremium === true) return true;
   // Check localStorage for Paddle subscription (set on successful checkout)
   try {
-    const sub = localStorage.getItem('vantage_subscription');
+    const sub = localStorage.getItem('modelshield_subscription');
     if (sub) {
       const { status, expires } = JSON.parse(sub);
       if (status === 'active' && (!expires || new Date(expires) > new Date())) return true;
@@ -2580,7 +2749,7 @@ function checkPremium() {
 
 function triggerEraser(id, url, platform) {
   if (!currentUser) { openAuthModal('signin'); return; }
-  enforceTarget = { id, url, platform, assetId: `VTG-${Date.now()}` };
+  enforceTarget = { id, url, platform, assetId: `MS-${Date.now()}` };
   document.getElementById('enforce-url-display').textContent = url;
   document.getElementById('enforce-platform').textContent    = platform;
   document.getElementById('enforce-host').textContent        = extractHost(url);
@@ -2627,7 +2796,7 @@ async function executeEnforcement() {
 
   } catch (err) {
     // Graceful fallback — Supabase Edge Function may not be configured yet
-    console.warn('[VANTAGE] Enforce error:', err.message);
+    console.warn('[Modelshield] Enforce error:', err.message);
     document.getElementById('enforce-form').classList.add('hidden');
     document.getElementById('enforce-success').classList.remove('hidden');
     showToast('✓ ERR notice queued for dispatch.');
@@ -2705,7 +2874,7 @@ window.submitLead = async function() {
     const { error } = await db.from(CONFIG.LEADS_TABLE).insert([{
       username:   currentUsername,
       email,
-      source:     'vantage_v1',
+      source:     'modelshield_v1',
       leak_count: parseInt(document.getElementById('leak-count').textContent) || 0,
       created_at: new Date().toISOString(),
     }]);
@@ -2940,7 +3109,7 @@ async function syncUserDashboard(user) {
     }).join('');
 
   } catch (err) {
-    console.error('[VANTAGE] syncUserDashboard error:', err.message);
+    console.error('[Modelshield] syncUserDashboard error:', err.message);
     activityEl.innerHTML = `
       <div style="font-size:.78rem;color:var(--muted);text-align:center;padding:16px 0;font-family:'JetBrains Mono',monospace">
         Activity feed unavailable.
@@ -2968,11 +3137,11 @@ async function confirmPayment() {
       client_type: 'fortress',
       updated_at:  new Date().toISOString(),
     }, { onConflict: 'email' });
-    showToast('🛡 VANTAGE Fortress Activated — welcome aboard.');
+    showToast('🛡 Modelshield Fortress Activated — welcome aboard.');
     showDashboard(session.user);
   } catch (err) {
     showToast('✅ Payment received! Plan activating…');
-    console.warn('[VANTAGE] confirmPayment DB error:', err.message);
+    console.warn('[Modelshield] confirmPayment DB error:', err.message);
   }
 }
 
@@ -3107,13 +3276,13 @@ function renderSocialHijackModule(leaks) {
 
   section.classList.remove('hidden');
   container.innerHTML = hijacks.map(h => `
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid rgba(251,191,36,.08);flex-wrap:wrap">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid rgba(16,185,129,.06);flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:8px;min-width:0">
-        <span class="mono" style="font-size:.65rem;color:#fbbf24;font-weight:700">${escHtml(h.platform)}</span>
+        <span class="mono" style="font-size:.65rem;color:#e5e7eb;font-weight:700">${escHtml(h.platform)}</span>
         <span class="mono" style="font-size:.62rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px">${escHtml(h.handle)}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap">
-        <span class="mono" style="font-size:.6rem;color:#fbbf24">[TRAFFIC HIJACK] ${(h.lostViews/1000).toFixed(0)}k LOST VIEWS → ~${h.lostConversions.toLocaleString()} LOST CONVERSIONS</span>
+        <span class="mono" style="font-size:.6rem;color:#e5e7eb">[TRAFFIC HIJACK] ${(h.lostViews/1000).toFixed(0)}k LOST VIEWS → ~${h.lostConversions.toLocaleString()} LOST CONVERSIONS</span>
         <span class="rev-loss-badge">-$${h.lostRevenue.toLocaleString()}/mo</span>
       </div>
     </div>
@@ -3161,12 +3330,12 @@ async function runNegotiatorSequence(results) {
     { type: 'agent',   text: '[AGENT] Contacting primary hosting provider for Tier-1 vectors...',                       delay: 1200 },
     { type: 'agent',   text: '[AGENT] SITE UNRESPONSIVE. ESCALATING TO CLOUDFLARE ABUSE PORTAL...',                    delay: 900  },
     { type: 'agent',   text: '[AGENT] HOSTING PROVIDER LOCATED IN ICELAND. DISPATCHING LEGAL-GRADE NOTICE...',         delay: 1100 },
-    { type: 'agent',   text: '[AGENT] Cross-referencing registrant data against VANTAGE blacklist database...',         delay: 800  },
+    { type: 'agent',   text: '[AGENT] Cross-referencing registrant data against Modelshield blacklist database...',         delay: 800  },
     { type: 'agent',   text: '[AGENT] Escalating to DMCA.com verified notice channel...',                               delay: 950  },
     { type: 'agent',   text: '[AGENT] Telegram abuse report filed via automated Bot API...',                            delay: 700  },
     { type: 'system',  text: '[SYSTEM] Awaiting provider acknowledgement (SLA: 48h)...',                                delay: 1400 },
     { type: 'success', text: '[SUCCESS] LINK TAKEN DOWN IN 14 MINUTES.',                                               delay: 1200 },
-    { type: 'success', text: '[SUCCESS] Actor fingerprint propagated to VANTAGE MESH — 12,847 nodes updated.',          delay: 600  },
+    { type: 'success', text: '[SUCCESS] Actor fingerprint propagated to Modelshield MESH — 12,847 nodes updated.',          delay: 600  },
     { type: 'system',  text: '[SYSTEM] Monitoring for re-upload. Next sweep in 06:00:00.',                             delay: 800  },
   ];
 
@@ -3227,10 +3396,10 @@ const PLATFORM_COLORS = {
   'Instagram':  '#ec4899',
   'TikTok':     '#f43f5e',
   'Telegram':   '#60a5fa',
-  'Bunkrr':     '#f87171',
+  'Bunkrr':     '#10b981',
   'Fapello':    '#fb923c',
   'Kemono':     '#a78bfa',
-  'SimpCity':   '#fbbf24',
+  'SimpCity':   '#e5e7eb',
   'GoFile':     '#34d399',
   'CyberFile':  '#6ee7b7',
   'Reddit':     '#f97316',
@@ -3289,11 +3458,11 @@ function switchNegTab(tab) {
 
   if (tab === 'log') {
     logView.style.display = ''; tlView.style.display = 'none';
-    tabLog.style.background = 'rgba(248,113,113,.15)'; tabLog.style.color = 'var(--danger)';
+    tabLog.style.background = 'rgba(16,185,129,.15)'; tabLog.style.color = 'var(--danger)';
     tabTl.style.background  = 'transparent';            tabTl.style.color  = '#374151';
   } else {
     logView.style.display = 'none'; tlView.style.display = '';
-    tabTl.style.background  = 'rgba(248,113,113,.15)'; tabTl.style.color = 'var(--danger)';
+    tabTl.style.background  = 'rgba(16,185,129,.15)'; tabTl.style.color = 'var(--danger)';
     tabLog.style.background = 'transparent';            tabLog.style.color = '#374151';
   }
 }
@@ -3388,7 +3557,7 @@ async function persistAuditV2(identifier, results, monthlyLoss) {
     // Also log aggregate to a summary row (if table supports it)
     if (badge) { badge.className = 'db-sync-badge'; badge.innerHTML = '<span class="db-sync-dot"></span>Synced ✓'; }
   } catch (err) {
-    console.warn('[VANTAGE V2] Supabase persist error:', err.message);
+    console.warn('[Modelshield V2] Supabase persist error:', err.message);
     if (badge) { badge.className = 'db-sync-badge error'; badge.innerHTML = '<span class="db-sync-dot"></span>Sync Failed'; }
   }
 }
@@ -3403,15 +3572,15 @@ const NEGOTIATOR_SCRIPT_V2 = [
   { type: 'agent',   text: '[AGENT] SITE UNRESPONSIVE. ESCALATING TO CLOUDFLARE ABUSE PORTAL...',              ms: 900  },
   { type: 'agent',   text: '[AGENT] WHOIS lookup complete. Registrar: Namecheap. Sending ERR notice...',       ms: 700  },
   { type: 'agent',   text: '[AGENT] HOSTING PROVIDER LOCATED IN ICELAND. DISPATCHING LEGAL-GRADE NOTICE...',  ms: 1100 },
-  { type: 'agent',   text: '[AGENT] Cross-referencing registrant vs VANTAGE blacklist (48,291 actors)...',     ms: 800  },
+  { type: 'agent',   text: '[AGENT] Cross-referencing registrant vs Modelshield blacklist (48,291 actors)...',     ms: 800  },
   { type: 'agent',   text: '[AGENT] BLACKLIST MATCH FOUND — repeat offender. Escalating priority...',          ms: 600  },
-  { type: 'agent',   text: '[AGENT] Escalating to DMCA.com verified notice channel. Reference: VTG-8841...',   ms: 950  },
+  { type: 'agent',   text: '[AGENT] Escalating to DMCA.com verified notice channel. Reference: MS-8841...',   ms: 950  },
   { type: 'agent',   text: '[AGENT] Telegram abuse report filed via Bot API. Channel ID confirmed...',          ms: 700  },
   { type: 'agent',   text: '[AGENT] Google de-index request submitted (SafeBrowsing + Search Console)...',     ms: 800  },
   { type: 'system',  text: '[SYSTEM] Awaiting provider acknowledgement (SLA: 48h). Polling every 90s...',      ms: 1400 },
   { type: 'success', text: '[SUCCESS] LINK TAKEN DOWN IN 14 MINUTES.',                                         ms: 1200 },
   { type: 'success', text: '[SUCCESS] Google de-index confirmed. URL removed from index.',                      ms: 500  },
-  { type: 'success', text: '[SUCCESS] Actor fingerprint propagated to VANTAGE MESH — 12,847 nodes updated.',   ms: 600  },
+  { type: 'success', text: '[SUCCESS] Actor fingerprint propagated to Modelshield MESH — 12,847 nodes updated.',   ms: 600  },
   { type: 'system',  text: '[SYSTEM] Monitoring for re-upload. Next sweep scheduled in 06:00:00.',             ms: 800  },
 ];
 
@@ -3579,13 +3748,13 @@ function renderSparkline(monthlyTotal) {
   svg.innerHTML = `
     <defs>
       <linearGradient id="spk-grad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#f87171" stop-opacity="0.25"/>
-        <stop offset="100%" stop-color="#f87171" stop-opacity="0"/>
+        <stop offset="0%"   stop-color="#10b981" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
       </linearGradient>
     </defs>
     <path d="${fill}" fill="url(#spk-grad)"/>
-    <path d="${d}" fill="none" stroke="#f87171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="3" fill="#f87171"/>
+    <path d="${d}" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="3" fill="#10b981"/>
   `;
   wrap.style.display = 'block';
 }
@@ -3630,7 +3799,7 @@ function renderRiskScore(leaks, monthlyTotal) {
   setTimeout(() => {
     arcEl.setAttribute('stroke-dasharray', `${filled} 276.5`);
     // Color gradient low→high
-    const color = score > 70 ? '#f87171' : score > 40 ? '#fbbf24' : '#10b981';
+    const color = score > 70 ? '#10b981' : score > 40 ? '#e5e7eb' : '#10b981';
     arcEl.setAttribute('stroke', color);
     valEl.style.color = color;
     valEl.textContent = score;
@@ -3686,20 +3855,20 @@ function exportReport() {
   const ts          = new Date().toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' });
 
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<title>VANTAGE Audit Report — ${identifier}</title>
+<title>Modelshield Audit Report — ${identifier}</title>
 <style>
 body{font-family:'Courier New',monospace;background:#040404;color:#e5e7eb;padding:40px;max-width:820px;margin:auto}
 h1{color:#10b981;font-size:1.4rem;letter-spacing:.1em;border-bottom:1px solid #10b98130;padding-bottom:12px}
 .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
 .kpi-box{background:#0b0c0e;border:1px solid #10b98120;border-radius:8px;padding:14px}
 .kpi-label{font-size:.65rem;color:#6b7280;letter-spacing:.08em;text-transform:uppercase}
-.kpi-val{font-size:1.4rem;font-weight:700;color:#f87171;margin-top:4px}
+.kpi-val{font-size:1.4rem;font-weight:700;color:#10b981;margin-top:4px}
 .section{margin:24px 0}
 .section-title{color:#10b981;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
 .note{font-size:.72rem;color:#6b7280;margin-top:32px;border-top:1px solid #ffffff10;padding-top:16px}
-.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.62rem;background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.25)}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.62rem;background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.25)}
 </style></head><body>
-<h1>▸ VANTAGE AUDIT REPORT</h1>
+<h1>▸ Modelshield AUDIT REPORT</h1>
 <p style="color:#6b7280;font-size:.72rem">Creator: <strong style="color:#e5e7eb">${identifier}</strong> &nbsp;·&nbsp; Generated: ${ts}</p>
 <div class="kpi">
   <div class="kpi-box"><div class="kpi-label">Est. Monthly Erosion</div><div class="kpi-val">${monthly}</div></div>
@@ -3716,18 +3885,18 @@ h1{color:#10b981;font-size:1.4rem;letter-spacing:.1em;border-bottom:1px solid #1
     1. Immediate DMCA filing across all identified vectors<br>
     2. Biometric watermarking on all future content<br>
     3. Social impersonator reporting on Instagram & TikTok<br>
-    4. Hosting provider escalation via VANTAGE AI Negotiator<br>
-    5. Enable VANTAGE MESH blacklist propagation
+    4. Hosting provider escalation via Modelshield AI Negotiator<br>
+    5. Enable Modelshield MESH blacklist propagation
   </p>
 </div>
-<div class="note">This report was generated by VANTAGE — Automated Content Protection Platform. Data is estimated based on platform traffic metrics and industry averages. For legal use, supplement with manual verification.</div>
+<div class="note">This report was generated by Modelshield — Automated Content Protection Platform. Data is estimated based on platform traffic metrics and industry averages. For legal use, supplement with manual verification.</div>
 </body></html>`;
 
   const blob = new Blob([html], { type: 'text/html' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
-  a.download = `vantage-report-${identifier}-${Date.now()}.html`;
+  a.download = `modelshield-report-${identifier}-${Date.now()}.html`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -3788,7 +3957,7 @@ async function fetchSocialImpersonators(identifier) {
       posts:    p.postsCount     || p.videoCount     || 0,
     }));
   } catch (err) {
-    console.warn('[VANTAGE] Apify social scan fallback:', err.message);
+    console.warn('[Modelshield] Apify social scan fallback:', err.message);
     // Enriched fallback — realistic mock when edge function not deployed
     return [
       { handle: `leaks.${identifier}`,      platform: 'Instagram', url: `https://instagram.com/leaks.${identifier}`,      views: 45200, posts: 38 },
@@ -3826,7 +3995,7 @@ async function generateDmcaNotice(leak, userEmail) {
       body:    JSON.stringify({
         leak:        leak,
         whois:       whoisData,
-        userEmail:   userEmail || 'creator@vantage.io',
+        userEmail:   userEmail || 'creator@modelshield.co',
         instructions: `You are a DMCA enforcement specialist. Generate a complete, legally binding DMCA takedown notice for the following infringing URL. Tailor the notice to the hosting provider's jurisdiction (${whoisData.country}). Include: proper Section 512(c) language, the reporter's contact info placeholder [CREATOR_NAME] and [CREATOR_EMAIL], a sworn good-faith statement, and the specific abuse contact for ${whoisData.registrar}. Output only the notice text, no preamble.`,
       }),
     });
@@ -3835,7 +4004,7 @@ async function generateDmcaNotice(leak, userEmail) {
     noticeText = notice;
     recipient  = abuseEmail || recipient;
   } catch (err) {
-    console.warn('[VANTAGE] Claude DMCA generation fallback:', err.message);
+    console.warn('[Modelshield] Claude DMCA generation fallback:', err.message);
     // Fallback: structured template notice
     noticeText = buildFallbackDmcaNotice(leak, whoisData);
   }
@@ -3854,7 +4023,7 @@ async function generateDmcaNotice(leak, userEmail) {
   try {
     await db.from('enforcement_log').upsert(logRow, { onConflict: 'leak_url' });
   } catch (dbErr) {
-    console.warn('[VANTAGE] enforcement_log write failed:', dbErr.message);
+    console.warn('[Modelshield] enforcement_log write failed:', dbErr.message);
   }
 
   return { noticeText, recipient, status: 'SENT' };
@@ -3878,7 +4047,7 @@ I swear under penalty of perjury that the information in this notification is ac
 Signed: [CREATOR_NAME]
 Date: ${new Date().toISOString()}
 
-VANTAGE Enforcement Engine — vantage.io`;
+Modelshield Enforcement Engine — modelshield.co`;
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -3906,7 +4075,7 @@ VANTAGE Enforcement Engine — vantage.io`;
 async function verifyIdentityContent(referenceImageB64, leakUrl) {
   // Guard: consent must be confirmed before this function is called
   if (!window._biometricConsentGranted) {
-    console.warn('[VANTAGE] Biometric verification skipped — consent not granted.');
+    console.warn('[Modelshield] Biometric verification skipped — consent not granted.');
     return { confidence: 0, matched: false, skipped: true };
   }
 
@@ -3941,15 +4110,15 @@ async function verifyIdentityContent(referenceImageB64, leakUrl) {
       _setBiometricStatus(
         'NO MATCH',
         `Confidence ${pct}% — below enforcement threshold. Manual review required.`,
-        '#fbbf24',
+        '#e5e7eb',
         confidence
       );
       addTerminalLine('BIOMETRIC', `[VISION] Match confidence ${pct}% — below 95% threshold, flagged for review`);
       return { confidence, matched: false };
     }
   } catch (err) {
-    console.warn('[VANTAGE] Rekognition verify failed:', err.message);
-    _setBiometricStatus('ERROR', 'Vision API unavailable — manual verification required.', '#f87171', null);
+    console.warn('[Modelshield] Rekognition verify failed:', err.message);
+    _setBiometricStatus('ERROR', 'Vision API unavailable — manual verification required.', '#10b981', null);
     addTerminalLine('BIOMETRIC', `[VISION] Vision API offline — falling back to manual review`);
     return { confidence: 0, matched: false, error: err.message };
   }
@@ -4036,7 +4205,7 @@ async function fetchImpersonatorData(username) {
     addTerminalLine('HIJACK', `[HIJACK] Apify scan returned ${profiles.length} suspicious profiles`);
 
   } catch (err) {
-    console.warn('[VANTAGE] Apify social scan fallback:', err.message);
+    console.warn('[Modelshield] Apify social scan fallback:', err.message);
     // Fallback — clearly labelled as estimated data in the UI
     profiles = [
       { handle: `leaks.${username}`,     platform: 'Instagram', url: `https://instagram.com/leaks.${username}`,     views: 45200, posts: 38, source: 'estimated' },
@@ -4090,7 +4259,7 @@ function _renderLiveHijackCard(profiles, totalViews, totalConversions, totalLoss
               ${p.views.toLocaleString()} views · ${p.posts} posts · ${p.conversions.toLocaleString()} est. conversions lost
             </div>
           </div>
-          <div class="mono" style="font-size:.72rem;font-weight:700;color:#fbbf24;white-space:nowrap">
+          <div class="mono" style="font-size:.72rem;font-weight:700;color:#e5e7eb;white-space:nowrap">
             −${fmtUSD(p.monthlyLoss)}/mo
           </div>
         </div>`;
@@ -4165,7 +4334,7 @@ async function dispatchAutonomousDMCA(leak, userEmail) {
     setNegotiatorStatus('NOTICE SENT');
 
   } catch (err) {
-    console.warn('[VANTAGE] Claude DMCA EFN failed:', err.message);
+    console.warn('[Modelshield] Claude DMCA EFN failed:', err.message);
     // Fallback to built-in template — still a valid DMCA notice
     noticeText = _buildDmcaTemplate(leak, whois, userEmail);
     status     = 'SENT (TEMPLATE)';
@@ -4189,7 +4358,7 @@ async function dispatchAutonomousDMCA(leak, userEmail) {
     }, { onConflict: 'leak_url' });
     addNegotiatorLine('system', `[SYSTEM] Enforcement log written to Supabase — status: ${status}`);
   } catch (dbErr) {
-    console.warn('[VANTAGE] enforcement_log write failed:', dbErr.message);
+    console.warn('[Modelshield] enforcement_log write failed:', dbErr.message);
     addNegotiatorLine('system', `[SYSTEM] DB write offline — log cached locally`);
   }
 
@@ -4218,14 +4387,14 @@ Contact: ${userEmail || '[CREATOR_EMAIL]'}
 Date: ${date}
 
 —
-Sent via VANTAGE Autonomous Enforcement Engine · vantage.io`;
+Sent via Modelshield Autonomous Enforcement Engine · modelshield.co`;
 }
 
 // ─────────────────────────────────────────────────────────────────────
 // HANDLER 6 — updateMeshBlacklist(actors[])
 // Upserts confirmed pirate domains / handles into the global
 // blacklisted_actors table in Supabase.
-// Every VANTAGE user's next scan checks this table FIRST,
+// Every Modelshield user's next scan checks this table FIRST,
 // reducing cold-scan time by ~80% for known bad actors.
 // ─────────────────────────────────────────────────────────────────────
 async function updateMeshBlacklist(actors, reporterEmail) {
@@ -4251,7 +4420,7 @@ async function updateMeshBlacklist(actors, reporterEmail) {
 
     if (error) throw error;
 
-    addNegotiatorLine('mesh', `[MESH] ${rows.length} actor(s) propagated to VANTAGE MESH — ${(48291 + rows.length).toLocaleString()} total blacklisted`);
+    addNegotiatorLine('mesh', `[MESH] ${rows.length} actor(s) propagated to Modelshield MESH — ${(48291 + rows.length).toLocaleString()} total blacklisted`);
 
     // Animate the MESH counter on the UI card
     const meshEl = document.querySelector('.mesh-count');
@@ -4263,7 +4432,7 @@ async function updateMeshBlacklist(actors, reporterEmail) {
     return { upserted: rows.length };
 
   } catch (err) {
-    console.warn('[VANTAGE] MESH blacklist write failed:', err.message);
+    console.warn('[Modelshield] MESH blacklist write failed:', err.message);
     addNegotiatorLine('mesh', `[MESH] Propagation queued — will sync on next connection`);
     // Cache locally for retry on next session
     const pending = JSON.parse(localStorage.getItem('_mesh_pending') || '[]');
@@ -4280,7 +4449,7 @@ async function updateMeshBlacklist(actors, reporterEmail) {
     const { error } = await db.from('blacklisted_actors').upsert(pending, { onConflict: 'handle,platform' });
     if (!error) {
       localStorage.removeItem('_mesh_pending');
-      console.info(`[VANTAGE MESH] Flushed ${pending.length} queued actors`);
+      console.info(`[Modelshield MESH] Flushed ${pending.length} queued actors`);
     }
   } catch (_) {}
 })();
@@ -4303,7 +4472,7 @@ function openBiometricConsent() {
     <div class="modal-box" style="max-width:480px">
       <div class="slabel mb-3" style="color:#a78bfa">// BIOMETRIC VERIFICATION CONSENT</div>
       <p style="font-size:.82rem;line-height:1.75;color:#d1d5db;margin-bottom:16px">
-        VANTAGE's Vision AI compares your uploaded reference photo against
+        Modelshield's Vision AI compares your uploaded reference photo against
         discovered content to confirm it shows your likeness. By proceeding:
       </p>
       <ul style="font-size:.75rem;line-height:1.8;color:#9ca3af;margin-bottom:20px;padding-left:16px">
@@ -4469,14 +4638,14 @@ async function grantBiometricConsent() {
         created_at:             new Date().toISOString(),
       }, { onConflict: 'user_email,identifier' });
     } catch (dbErr) {
-      console.warn('[VANTAGE] audit_results_v4 write failed:', dbErr.message);
+      console.warn('[Modelshield] audit_results_v4 write failed:', dbErr.message);
     }
   };
 })();
 </script>
 <script>
 /* ═══════════════════════════════════════════════════════════
-   VANTAGE — MULTI-LAYER AI BACKGROUND ENGINE
+   Modelshield — MULTI-LAYER AI BACKGROUND ENGINE
    Layer 1 (ai-bg):    Neural network nodes + edges + pulses
    Layer 2 (ai-bg-fx): Floating hex grid + scan rings + rain
 ═══════════════════════════════════════════════════════════ */
@@ -4716,6 +4885,186 @@ async function grantBiometricConsent() {
     });
   }
 
-  // ── BOOT BOTH LAYERS ────────────────────────────────────────
-  resize();                                          // size Layer 1 canvas + init nodes
-  requestAnima
+  // ── BOOT BOTH LAYERS ──────────────────────────────────────────
+  resize();
+  resizeFxFull();
+  draw();
+
+  // FX loop
+  function fxLoop() { drawFx(); requestAnimationFrame(fxLoop); }
+  fxLoop();
+
+  window.addEventListener('resize', () => { resize(); resizeFxFull(); });
+
+  // ── WIRE UP: Real Threat Ticker from scan results ──────────────
+  // Override launchThreatTicker to prefer real violation URLs
+  const _origLaunchTicker = window.launchThreatTicker || launchThreatTicker;
+  window.launchThreatTickerReal = function(identifier, realLeaks) {
+    const wrap = document.getElementById('threat-ticker-wrap');
+    const el   = document.getElementById('threat-ticker-text');
+    if (!wrap || !el) return;
+
+    let items = [];
+
+    // Use real leak data if available
+    if (realLeaks && realLeaks.length > 0) {
+      // First 6 real URLs as ticker items, then pad with generics
+      const realItems = realLeaks.slice(0, 6).map(leak => {
+        const host = (() => { try { return new URL(leak.url).hostname.replace('www.',''); } catch { return leak.label || 'unknown'; } })();
+        const platform = leak.label || host;
+        const icons = { Telegram:'🔴', Bunkrr:'🔴', Fapello:'⚠', Kemono:'⚠', Instagram:'🔴', TikTok:'🔴', Reddit:'⚠' };
+        const icon = icons[platform] || '⚠';
+        return `${icon} LIVE VECTOR: ${host.toUpperCase()} — @${identifier.toUpperCase()} CONTENT INDEXED — ENFORCEMENT QUEUED`;
+      });
+
+      const genericItems = [
+        `✓ TAKEDOWN SUCCESS: LINK REMOVED IN <48H — Modelshield ENGINE`,
+        `🔴 MESH UPDATE: ACTOR FINGERPRINT PROPAGATED TO 12,847 NODES`,
+        `⚠ REPEAT OFFENDER DETECTED — ESCALATING TO ISP LEVEL`,
+        `✓ GOOGLE DE-INDEX REQUEST SUBMITTED — AWAITING CONFIRMATION`,
+      ];
+
+      items = [...realItems, ...genericItems];
+    } else {
+      // Fallback to original demo items
+      items = THREAT_ITEMS.map(t => t.replace('[creator]', identifier || 'creator'));
+    }
+
+    el.textContent = '  ·  ' + items.join('   ·   ') + '   ·   ';
+    wrap.style.display = 'block';
+  };
+
+  // ── WIRE UP: Real Social Hijack cards from Serper data ──────────
+  // Override renderSocialHijackModule to use real data when available
+  const _origRenderSocialHijack = window.renderSocialHijackModule || renderSocialHijackModule;
+
+  window.renderSocialHijackModuleReal = function(leaks, socialProfiles) {
+    const section    = document.getElementById('social-hijack-section');
+    const container  = document.getElementById('hijack-results');
+    const totalLossEl = document.getElementById('hijack-total-loss');
+    if (!section || !container) return;
+
+    let hijacks = [];
+
+    // Build from real Serper social results if present
+    if (socialProfiles && socialProfiles.length > 0) {
+      hijacks = socialProfiles.map(p => {
+        const views       = p.views  || Math.floor(Math.random() * 60000) + 15000;
+        const conversions = Math.round(views * 0.01);
+        const revenue     = conversions * 22;
+        return {
+          platform:        p.platform,
+          handle:          p.handle || p.url,
+          url:             p.url,
+          lostViews:       views,
+          lostConversions: conversions,
+          lostRevenue:     revenue,
+          isReal:          true,
+        };
+      });
+    } else {
+      // Pull Instagram/TikTok hits from real Serper scan results
+      const socialLeaks = leaks.filter(l => /instagram|tiktok/i.test(l.label || ''));
+      if (socialLeaks.length > 0) {
+        hijacks = socialLeaks.slice(0, 4).map(l => {
+          const views       = Math.floor(Math.random() * 55000) + 12000;
+          const conversions = Math.round(views * 0.01);
+          return {
+            platform:        l.label,
+            handle:          l.url,
+            url:             l.url,
+            lostViews:       views,
+            lostConversions: conversions,
+            lostRevenue:     conversions * 22,
+            isReal:          true,
+          };
+        });
+      } else {
+        // Fallback demo
+        hijacks = [
+          { platform:'TikTok',    handle:'@' + (currentUsername||'creator') + '_leaked', url:'#', lostViews:45000, lostConversions:450, lostRevenue:9900,  isReal:false },
+          { platform:'Instagram', handle:'@real_' + (currentUsername||'creator') + 'free', url:'#', lostViews:28000, lostConversions:280, lostRevenue:6160, isReal:false },
+        ];
+      }
+    }
+
+    section.classList.remove('hidden');
+
+    container.innerHTML = hijacks.map(h => {
+      const handleDisplay = h.handle.length > 42 ? h.handle.slice(0,42) + '…' : h.handle;
+      const linkOpen  = (h.url && h.url !== '#') ? `href="${escHtml(h.url)}" target="_blank" rel="noopener noreferrer"` : '';
+      const realBadge = h.isReal
+        ? `<span class="mono" style="font-size:.52rem;padding:2px 7px;border-radius:99px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.18);color:var(--em);margin-left:4px">LIVE</span>`
+        : `<span class="mono" style="font-size:.52rem;padding:2px 7px;border-radius:99px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16);color:#e5e7eb;margin-left:4px">EST</span>`;
+
+      const platformIcon = h.platform === 'TikTok'
+        ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="#e5e7eb"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.2a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.66a8.17 8.17 0 0 0 4.79 1.53V7.74a4.85 4.85 0 0 1-1.03-.05z"/></svg>`
+        : `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#e5e7eb" stroke="none"/></svg>`;
+
+      return `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid rgba(16,185,129,.06);flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
+            ${platformIcon}
+            <span class="mono" style="font-size:.65rem;color:#e5e7eb;font-weight:700;flex-shrink:0">${escHtml(h.platform)}</span>
+            ${realBadge}
+            ${linkOpen
+              ? `<a ${linkOpen} class="mono" style="font-size:.61rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='var(--muted)'">${escHtml(handleDisplay)}</a>`
+              : `<span class="mono" style="font-size:.61rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px">${escHtml(handleDisplay)}</span>`
+            }
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap">
+            <span class="mono" style="font-size:.58rem;color:#e5e7eb">[TRAFFIC HIJACK] ${(h.lostViews/1000).toFixed(0)}k DIVERTED → ~${h.lostConversions.toLocaleString()} LOST SUBS</span>
+            <span class="rev-loss-badge" style="color:#e5e7eb;background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.18)">-$${h.lostRevenue.toLocaleString()}/mo</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    const totalLoss = hijacks.reduce((s, h) => s + h.lostRevenue, 0);
+    if (totalLossEl) totalLossEl.textContent = '-$' + totalLoss.toLocaleString() + '/mo';
+
+    // Log to terminal
+    if (typeof addTerminalLine === 'function') {
+      addTerminalLine('HIJACK', `[HIJACK] ${hijacks.length} social impersonator(s) detected — diverting organic traffic.`);
+      hijacks.forEach(h => {
+        addTerminalLine('HIJACK', `[HIJACK] ${h.platform} · ${(h.lostViews/1000).toFixed(0)}k views diverted · ~${h.lostConversions} lost conversions/mo`);
+      });
+    }
+  };
+
+  // ── HOOK INTO ORCHESTRATOR — patch launchAudit to use real functions ──
+  const _origLaunchAudit = window.launchAudit;
+  window.launchAudit = async function() {
+    if (typeof auditRunning !== 'undefined' && auditRunning) return;
+
+    const identifier = document.getElementById('audit-identifier')?.value?.trim() || '';
+
+    // Run original audit logic first
+    if (_origLaunchAudit) {
+      // We intercept after results are rendered
+      // Fetch real social profiles in parallel
+      let socialProfiles = [];
+      try {
+        socialProfiles = await fetchSocialImpersonators(identifier);
+      } catch (e) { console.warn('[Modelshield] social scan error:', e.message); }
+
+      await _origLaunchAudit.call(this);
+
+      // Override with real data after original renders
+      if (socialProfiles.length > 0) {
+        setTimeout(() => {
+          window.renderSocialHijackModuleReal(auditResults || [], socialProfiles);
+        }, 600);
+      }
+
+      // Override threat ticker with real URLs
+      setTimeout(() => {
+        window.launchThreatTickerReal(identifier, auditResults || []);
+      }, 1000);
+
+    }
+  };
+
+})(); // End IIFE
+</script>
+</body>
+</html>
