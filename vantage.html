@@ -1454,7 +1454,7 @@
 <!-- ══════════════════════════════════════════════════
      PRIVACY VAULT — LEGAL PROXY
 ══════════════════════════════════════════════════ -->
-<section id="privacy-arch-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-20" style="scroll-margin-top:62px">
+<section id="privacy-arch-section" class="hidden relative z-10 max-w-5xl mx-auto px-5 pb-20" style="scroll-margin-top:62px">
   <div class="slabel mb-2" data-sr="left">// Privacy Architecture</div>
   <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:20px;display:inline-block;transform:scaleY(1.28)" data-sr>The Privacy Vault: Your Real Name Never Leaves This Room.</h2>
 
@@ -1499,7 +1499,7 @@
 <!-- ══════════════════════════════════════════════════
      SOCIAL HIJACKING MODULE
 ══════════════════════════════════════════════════ -->
-<section id="social-threat-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-20" style="scroll-margin-top:62px">
+<section id="social-threat-section" class="hidden relative z-10 max-w-5xl mx-auto px-5 pb-20" style="scroll-margin-top:62px">
   <div class="slabel mb-2" data-sr="left">// Social Threat Intelligence</div>
   <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:8px;display:inline-block;transform:scaleY(1.28)" data-sr>Your Fans Are Being Stolen. By Someone Wearing Your Face.</h2>
   <p style="font-size:.8rem;color:var(--muted);margin-bottom:24px;max-width:560px">Impersonators create fake TikTok and Instagram accounts using your content, your username variants, and your brand. Then they intercept your incoming fans — people searching for you — and redirect them to their own platforms, OnlyFans pages, or scam funnels. You built the audience. They're cashing it out.</p>
@@ -1534,7 +1534,7 @@
 <!-- ══════════════════════════════════════════════════
      HIGH-TICKET CLOSE — TOP 1% CTA
 ══════════════════════════════════════════════════ -->
-<section id="built-real-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:62px">
+<section id="built-real-section" class="hidden relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:62px">
   <div class="glass-hi" style="padding:40px 36px;text-align:center;max-width:640px;margin:0 auto" data-sr>
     <h2 class="font-display" style="font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:16px">
       You've Built Something Real.<br>
@@ -3037,7 +3037,12 @@ function showLegal(page) {
   window.scrollTo(0, 0);
 }
 
-async function syncUserDashboard(user) {
+// Pagination state
+let _dashPage = 0;
+const _dashPageSize = 10;
+
+async function syncUserDashboard(user, page) {
+  if (page !== undefined) _dashPage = page;
   const activityEl = document.getElementById('dash-activity');
   const countEl    = document.getElementById('dash-takedowns');
 
@@ -3046,14 +3051,18 @@ async function syncUserDashboard(user) {
     const token = session?.access_token;
     if (!token) return;
 
-    // Fetch latest 20 for activity feed
     const resp = await fetch(`${API_BASE}/api/discovery/violations`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!resp.ok) throw new Error(`violations fetch failed: ${resp.status}`);
     const json = await resp.json();
-    const leaks = json.violations || [];
-    const totalCount = json.total || leaks.length;
+    const allLeaks = json.violations || [];
+    const totalCount = json.total || allLeaks.length;
+
+    // Paginate client-side
+    const start = _dashPage * _dashPageSize;
+    const leaks = allLeaks.slice(start, start + _dashPageSize);
+    const totalPages = Math.ceil(allLeaks.length / _dashPageSize);
 
     // Update enforcement count
     const sent = leaks.filter(l => l.status === 'sent' || l.status === 'removed').length;
@@ -3108,6 +3117,16 @@ async function syncUserDashboard(user) {
           </div>
         </div>`;
     }).join('');
+
+    // Pagination controls
+    if (totalPages > 1) {
+      activityEl.innerHTML += `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 4px;margin-top:8px;border-top:1px solid rgba(255,255,255,.04)">
+          <button onclick="syncUserDashboard(currentUser, ${_dashPage - 1})" ${_dashPage === 0 ? 'disabled' : ''} class="btn-ghost" style="font-size:.68rem;padding:5px 12px;opacity:${_dashPage === 0 ? '.3' : '1'}">← Prev</button>
+          <span class="mono" style="font-size:.6rem;color:var(--muted)">Page ${_dashPage + 1} of ${totalPages} · ${allLeaks.length} total vectors</span>
+          <button onclick="syncUserDashboard(currentUser, ${_dashPage + 1})" ${_dashPage >= totalPages - 1 ? 'disabled' : ''} class="btn-ghost" style="font-size:.68rem;padding:5px 12px;opacity:${_dashPage >= totalPages - 1 ? '.3' : '1'}">Next →</button>
+        </div>`;
+    }
 
   } catch (err) {
     console.error('[Modelshield] syncUserDashboard error:', err.message);
@@ -3252,13 +3271,7 @@ const SOCIAL_PLATFORMS = ['Instagram', 'TikTok'];
 
 function detectSocialHijacking(leaks) {
   const socialLeaks = leaks.filter(l => SOCIAL_PLATFORMS.includes(l.label));
-  // If no real social leaks found, simulate realistic demo data
-  if (socialLeaks.length === 0) {
-    return [
-      { platform: 'TikTok',    handle: '@' + (currentUsername||'creator') + '_leaked', lostViews: 45000, lostConversions: 450, lostRevenue: 9900 },
-      { platform: 'Instagram', handle: '@real_' + (currentUsername||'creator') + 'free', lostViews: 28000, lostConversions: 280, lostRevenue: 6160 },
-    ];
-  }
+  if (socialLeaks.length === 0) return []; // No fake data — only show real results
   return socialLeaks.map(l => {
     const views = Math.floor(Math.random() * 60000) + 15000;
     const conversions = Math.round(views * 0.01);
@@ -5013,11 +5026,7 @@ async function grantBiometricConsent() {
           };
         });
       } else {
-        // Fallback demo
-        hijacks = [
-          { platform:'TikTok',    handle:'@' + (currentUsername||'creator') + '_leaked', url:'#', lostViews:45000, lostConversions:450, lostRevenue:9900,  isReal:false },
-          { platform:'Instagram', handle:'@real_' + (currentUsername||'creator') + 'free', url:'#', lostViews:28000, lostConversions:280, lostRevenue:6160, isReal:false },
-        ];
+        hijacks = []; // No fake data
       }
     }
 
