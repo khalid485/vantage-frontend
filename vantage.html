@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,8 +37,8 @@
       --border:    rgba(16,185,129,.16);
       --border-hi: rgba(16,185,129,.40);
       --muted:     #6b7280;
-      --danger:    #10b981;
-      --danger-bg: rgba(16,185,129,.08);
+      --danger:    #f87171;
+      --danger-bg: rgba(248,113,113,.08);
       --blue:      #60a5fa;
       --blue-bg:   rgba(96,165,250,.08);
     }
@@ -122,7 +123,7 @@
       width: 5px; height: 5px; border-radius: 50%; background: var(--em);
       animation: blink 1.8s ease infinite;
     }
-    .badge-danger { color:var(--danger); background:rgba(16,185,129,.07); border-color:rgba(16,185,129,.22); }
+    .badge-danger { color:var(--danger); background:rgba(248,113,113,.07); border-color:rgba(248,113,113,.22); }
     .badge-blue   { color:var(--blue);   background:rgba(96,165,250,.07);   border-color:rgba(96,165,250,.22); }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
 
@@ -318,14 +319,14 @@
       align-self:center;
     }
     .tag-osint  { background:rgba(96,165,250,.15);  color:var(--blue);      border:1px solid rgba(96,165,250,.25); }
-    .tag-match  { background:rgba(16,185,129,.12); color:var(--danger);    border:1px solid rgba(16,185,129,.25); }
+    .tag-match  { background:rgba(248,113,113,.12); color:var(--danger);    border:1px solid rgba(248,113,113,.25); }
     .tag-init   { background:rgba(16,185,129,.1);   color:var(--em);        border:1px solid rgba(16,185,129,.2); }
     .tag-ok     { background:rgba(16,185,129,.1);   color:var(--em);        border:1px solid rgba(16,185,129,.2); }
     .tag-warn   { background:rgba(16,185,129,.07);   color:#e5e7eb;          border:1px solid rgba(16,185,129,.18); }
     .tag-done   { background:rgba(16,185,129,.15);  color:var(--em-bright); border:1px solid rgba(16,185,129,.3); }
     .tag-intel  { background:rgba(167,139,250,.12); color:#a78bfa;          border:1px solid rgba(167,139,250,.25); }
     .tag-analysis { background:rgba(16,185,129,.07); color:#e5e7eb;          border:1px solid rgba(16,185,129,.2); }
-    .tag-enforce { background:rgba(16,185,129,.12); color:var(--danger);   border:1px solid rgba(16,185,129,.28); }
+    .tag-enforce { background:rgba(248,113,113,.12); color:var(--danger);   border:1px solid rgba(248,113,113,.28); }
 
     /* ── RESULT ROWS ── */
     .result-row {
@@ -625,7 +626,7 @@
       font-size: .55rem; padding: 2px 8px; border-radius: 99px;
       font-family: 'JetBrains Mono', monospace; letter-spacing: .05em;
     }
-    .pill-danger  { background: rgba(16,185,129,.12); color: var(--danger); border: 1px solid rgba(16,185,129,.25); }
+    .pill-danger  { background: rgba(248,113,113,.12); color: var(--danger); border: 1px solid rgba(248,113,113,.25); }
     .pill-warn    { background: rgba(16,185,129,.08);  color: #e5e7eb;       border: 1px solid rgba(16,185,129,.2); }
     .pill-em      { background: rgba(16,185,129,.10);  color: var(--em);     border: 1px solid var(--border); }
 
@@ -662,7 +663,7 @@
     .tag-biometric { background: rgba(167,139,250,.12); color: #a78bfa; border: 1px solid rgba(167,139,250,.28); }
     .tag-loss      { background: rgba(16,185,129,.12);  color: var(--em-bright); border: 1px solid rgba(16,185,129,.32); font-weight: 700; }
     .tag-hijack    { background: rgba(16,185,129,.08);  color: #e5e7eb;          border: 1px solid rgba(16,185,129,.24); }
-    .tag-agent     { background: rgba(16,185,129,.1);  color: var(--danger);    border: 1px solid rgba(16,185,129,.25); }
+    .tag-agent     { background: rgba(248,113,113,.1);  color: var(--danger);    border: 1px solid rgba(248,113,113,.25); }
     .tag-mesh      { background: rgba(96,165,250,.1);   color: var(--blue);      border: 1px solid rgba(96,165,250,.22); }
 
     /* ══ CONTINUATION — V2 UPGRADE CLASSES ═══════════════════
@@ -833,7 +834,7 @@
       transition: opacity .3s;
     }
     .db-sync-badge.syncing { color: #e5e7eb; border-color: rgba(16,185,129,.2); background: rgba(16,185,129,.05); }
-    .db-sync-badge.error   { color: var(--danger); border-color: rgba(16,185,129,.25); background: rgba(16,185,129,.06); }
+    .db-sync-badge.error   { color: var(--danger); border-color: rgba(248,113,113,.25); background: rgba(248,113,113,.06); }
     .db-sync-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; animation: blink 1.4s ease infinite; }
   </style>
 </head>
@@ -853,7 +854,7 @@
 
     <div class="hidden sm:flex items-center gap-10" id="nav-links">
       <a href="#protocol-section" style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:-.01em;color:#9ca3af;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#9ca3af'">How It Works</a>
-      <a href="#pricing-section"  style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:-.01em;color:#9ca3af;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#9ca3af'">Pricing</a>
+      <a href="#pricing-cards"  style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:-.01em;color:#9ca3af;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#9ca3af'">Pricing</a>
     </div>
 
     <div class="flex items-center gap-2" id="auth-buttons">
@@ -1402,7 +1403,7 @@
 <!-- ══════════════════════════════════════════════════
      PRICING
 ══════════════════════════════════════════════════ -->
-<section id="pricing-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:62px">
+<section id="pricing-section" class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:90px">
   <div class="slabel mb-2" data-sr="left">// Forensic Revenue Audit</div>
   <h2 class="font-display" style="font-size:1.15rem;font-weight:800;letter-spacing:-.04em;margin-bottom:8px;display:inline-block;transform:scaleY(1.28)" data-sr>This Is What Your Scan Actually Found.</h2>
   <p style="font-size:.8rem;color:var(--muted);margin-bottom:20px;max-width:560px">We don't estimate. We calculate from your real data — actual viewer counts per platform, subscription prices by leak geography, and conversion rates specific to where your content was distributed. Every number below came from your scan.</p>
@@ -1559,7 +1560,7 @@
 </section>
 
 <!-- ══════ PRICING CARDS ══════ -->
-<section class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:62px">
+<section id="pricing-cards" class="relative z-10 max-w-5xl mx-auto px-5 pb-24" style="scroll-margin-top:120px">
   <div class="flex flex-col sm:flex-row justify-center items-stretch gap-5" style="max-width:720px;margin:40px auto 0">
 
     <!-- Shield -->
