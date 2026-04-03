@@ -3692,7 +3692,7 @@ window.launchAudit = async function() {
   document.body.classList.add('scanning');
   document.getElementById('audit-results').classList.add('hidden');
   document.getElementById('audit-progress-wrap').classList.remove('hidden');
-  document.getElementById('social-hijack-section').classList.add('hidden');
+  // social-hijack-section stays visible always
   document.getElementById('biometric-strip').style.display = 'none';
   document.getElementById('rev-chart-wrap').style.display  = 'none';
 
@@ -3890,8 +3890,8 @@ function renderRiskScore(leaks, monthlyTotal) {
   const filled = Math.round((score / 99) * 138.2);
   setTimeout(() => {
     arcEl.setAttribute('stroke-dasharray', `${filled} 276.5`);
-    // Color gradient low→high
-    const color = score > 70 ? '#10b981' : score > 40 ? '#e5e7eb' : '#10b981';
+    // Always red
+    const color = '#f87171';
     arcEl.setAttribute('stroke', color);
     valEl.style.color = color;
     valEl.textContent = score;
