@@ -1166,7 +1166,7 @@
   </div>
 
   <!-- ── SOCIAL HIJACK MODULE — Phase 3 ───────────────────────────── -->
-  <div id="social-hijack-section" class="hidden mb-6">
+  <div id="social-hijack-section" class="mb-6">
     <div class="social-hijack-card">
       <div class="hijack-header">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -3312,7 +3312,12 @@ function renderSocialHijackModule(leaks) {
   if (!section || !container) return;
 
   const hijacks = detectSocialHijacking(leaks);
-  if (hijacks.length === 0) { section.classList.add('hidden'); return; }
+  if (hijacks.length === 0) {
+    section.classList.remove('hidden');
+    container.innerHTML = `<p class="mono" style="font-size:.65rem;color:var(--muted);padding:10px 0">No social hijacking detected.</p>`;
+    if (totalLossEl) totalLossEl.textContent = '—';
+    return;
+  }
 
   section.classList.remove('hidden');
   container.innerHTML = hijacks.map(h => `
@@ -5058,6 +5063,12 @@ async function grantBiometricConsent() {
     }
 
     section.classList.remove('hidden');
+
+    if (hijacks.length === 0) {
+      container.innerHTML = `<p class="mono" style="font-size:.65rem;color:var(--muted);padding:10px 0">No social hijacking detected.</p>`;
+      if (totalLossEl) { totalLossEl.textContent = '—'; }
+      return;
+    }
 
     container.innerHTML = hijacks.map(h => {
       const handleDisplay = h.handle.length > 42 ? h.handle.slice(0,42) + '…' : h.handle;
